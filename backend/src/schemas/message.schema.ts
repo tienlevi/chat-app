@@ -3,8 +3,6 @@ import { HydratedDocument, Types } from 'mongoose';
 
 @Schema({ versionKey: false, timestamps: true })
 export class Message {
-  _id: Types.ObjectId;
-
   @Prop({ required: true })
   senderId: string;
 
@@ -16,6 +14,9 @@ export class Message {
 
   @Prop({ _id: Types.ObjectId, default: [] })
   files: { type: 'file' | 'image' | 'video'; url: string }[];
+
+  @Prop({ default: false })
+  isDeleted: boolean;
 }
 
 export type MessageDocument = HydratedDocument<Message>;
