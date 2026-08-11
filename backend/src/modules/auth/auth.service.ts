@@ -10,7 +10,24 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async login(loginDto: LoginDto) {}
+  async login(loginDto: LoginDto) {
+    const user = await this.userModel.findOne({ email: loginDto.email });
+
+    if (!user) {
+      throw new HttpException("Account doesn't exist", HttpStatus.FORBIDDEN);
+    }
+
+    const isMatch = await bcrypt.compare(loginDto.password, user.password);
+
+    if (!isMatch) {
+      throw new HttpException(
+        'Email or password incorrect',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
+
+    return { message: 'Login successfully', data: loginDto };
+  }
 
   async register(registerDto: RegisterDto) {
     const { name, email, password, confirmPassword } = registerDto;
