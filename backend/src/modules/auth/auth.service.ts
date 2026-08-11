@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { User } from 'src/schemas/user.schema';
 import { LoginDto } from './dto/login.dto';
@@ -11,5 +12,29 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {}
 
-  async register(registerDto: RegisterDto) {}
+  async register(registerDto: RegisterDto) {
+    const { name, email, password } = registerDto;
+
+    const existUser = await this.userModel.findOne({ email });
+
+    if (existUser) {
+      throw new HttpException(
+        'This email already registered',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 8);
+
+    const user = await this.userModel.create({
+      name,
+      email,
+      password: hashedPassword,
+    });
+
+    return {
+      message: 'Register successfully',
+      data: user.toObject(),
+    };
+  }
 }
