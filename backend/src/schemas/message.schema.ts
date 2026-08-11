@@ -1,6 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
+@Schema({ versionKey: false, _id: true })
+class MessageFile {
+  _id: Types.ObjectId;
+
+  @Prop({ required: true, enum: ['file', 'image', 'video'] })
+  type: 'file' | 'image' | 'video';
+
+  @Prop({ required: true })
+  url: string;
+}
+
+const MessageFileSchema = SchemaFactory.createForClass(MessageFile);
+
 @Schema({ versionKey: false, timestamps: true })
 export class Message {
   @Prop({ required: true })
@@ -12,8 +25,8 @@ export class Message {
   @Prop({ required: true })
   text: string;
 
-  @Prop({ _id: Types.ObjectId, default: [] })
-  files: { type: 'file' | 'image' | 'video'; url: string }[];
+  @Prop({ type: [MessageFileSchema], default: [] })
+  files: MessageFile[];
 
   @Prop({ default: false })
   isDeleted: boolean;
