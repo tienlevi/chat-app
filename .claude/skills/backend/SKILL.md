@@ -1,5 +1,5 @@
 ---
-name: backend-development
+name: backend
 description: Build robust backend systems with modern technologies (Node.js, Python, Go, Rust), frameworks (NestJS, FastAPI, Django), databases (PostgreSQL, MongoDB, Redis), APIs (REST, GraphQL, gRPC), authentication (OAuth 2.1, JWT), testing strategies, security best practices (OWASP Top 10), performance optimization, scalability patterns (microservices, caching, sharding), DevOps practices (Docker, Kubernetes, CI/CD), and monitoring. Use when designing APIs, implementing authentication, optimizing database queries, setting up CI/CD pipelines, handling security vulnerabilities, building microservices, or developing production-ready backend systems.
 license: MIT
 version: 1.0.0
@@ -33,18 +33,22 @@ See: `references/backend-technologies.md` for detailed comparisons
 ## Reference Navigation
 
 **Core Technologies:**
+
 - `backend-technologies.md` - Languages, frameworks, databases, message queues, ORMs
 - `backend-api-design.md` - REST, GraphQL, gRPC patterns and best practices
 
 **Security & Authentication:**
+
 - `backend-security.md` - OWASP Top 10 2025, security best practices, input validation
 - `backend-authentication.md` - OAuth 2.1, JWT, RBAC, MFA, session management
 
 **Performance & Architecture:**
+
 - `backend-performance.md` - Caching, query optimization, load balancing, scaling
 - `backend-architecture.md` - Microservices, event-driven, CQRS, saga patterns
 
 **Quality & Operations:**
+
 - `backend-testing.md` - Testing strategies, frameworks, tools, CI/CD testing
 - `backend-code-quality.md` - SOLID principles, design patterns, clean code
 - `backend-devops.md` - Docker, Kubernetes, deployment strategies, monitoring
@@ -63,18 +67,18 @@ See: `references/backend-technologies.md` for detailed comparisons
 
 ## Quick Decision Matrix
 
-| Need | Choose |
-|------|--------|
-| Fast development | Node.js + NestJS |
+| Need                | Choose           |
+| ------------------- | ---------------- |
+| Fast development    | Node.js + NestJS |
 | Data/ML integration | Python + FastAPI |
-| High concurrency | Go + Gin |
-| Max performance | Rust + Axum |
-| ACID transactions | PostgreSQL |
-| Flexible schema | MongoDB |
-| Caching | Redis |
-| Internal services | gRPC |
-| Public APIs | GraphQL/REST |
-| Real-time events | Kafka |
+| High concurrency    | Go + Gin         |
+| Max performance     | Rust + Axum      |
+| ACID transactions   | PostgreSQL       |
+| Flexible schema     | MongoDB          |
+| Caching             | Redis            |
+| Internal services   | gRPC             |
+| Public APIs         | GraphQL/REST     |
+| Real-time events    | Kafka            |
 
 ## Implementation Checklist
 
