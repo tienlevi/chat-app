@@ -13,7 +13,14 @@ export class AuthService {
   async login(loginDto: LoginDto) {}
 
   async register(registerDto: RegisterDto) {
-    const { name, email, password } = registerDto;
+    const { name, email, password, confirmPassword } = registerDto;
+
+    if (password !== confirmPassword) {
+      throw new HttpException(
+        'Password and confirm password do not match',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     const existUser = await this.userModel.findOne({ email });
 
