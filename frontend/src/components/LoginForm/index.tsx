@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoginFormValues, loginSchema } from "@/utils/validations";
+import { Link } from "react-router-dom";
 
 export function LoginForm({
   className,
@@ -110,12 +111,12 @@ export function LoginForm({
 
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <a
-          href="#"
+        <Link
+          to="/register"
           className="font-semibold text-foreground hover:text-primary hover:underline"
         >
           Sign up now!
-        </a>
+        </Link>
       </p>
     </div>
   );

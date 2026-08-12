@@ -1,5 +1,6 @@
 import { Routes } from "@/interfaces/types";
 import Home from "@/pages/Home";
+import Register from "@/pages/Register";
 
 export const routers: Routes[] = [
   {
@@ -7,6 +8,12 @@ export const routers: Routes[] = [
     id: "home",
     name: "Home",
     element: <Home />,
+  },
+  {
+    href: "/register",
+    id: "register",
+    name: "Register",
+    element: <Register />,
   },
 
   // Add other routes as needed
