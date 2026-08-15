@@ -7,8 +7,41 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RegisterFormValues, registerSchema } from "@/utils/validations";
 import { Link } from "react-router-dom";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { useEffect, useRef, useState } from "react";
+import Avatar from "./Avatar";
 
 export function RegisterForm({ className }: { className?: string }) {
+  const imageRef = useRef<HTMLInputElement>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  const handleCropConfirm = (_: File, previewUrl: string) => {
+    setAvatarPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return previewUrl;
+    });
+  };
+
+  const handleCropCancel = () => {
+    setAvatarPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    if (imageRef.current) imageRef.current.value = "";
+  };
+
+  useEffect(() => {
+    return () => {
+      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    };
+  }, [avatarPreview]);
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
   const { control, handleSubmit } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
@@ -158,6 +191,25 @@ export function RegisterForm({ className }: { className?: string }) {
             </div>
           )}
         />
+        <Field>
+          <FieldLabel htmlFor="picture">Avatar</FieldLabel>
+          <div className="flex flex-col items-center gap-4">
+            <Avatar
+              src={avatarPreview}
+              className="w-full"
+              onCropConfirm={handleCropConfirm}
+              onCropCancel={handleCropCancel}
+            />
+            <Input
+              id="picture"
+              ref={imageRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+            />
+          </div>
+          <FieldDescription>Select a picture to upload.</FieldDescription>
+        </Field>
         <Button
           type="submit"
           className="mt-2 h-12 rounded-xl text-base font-semibold"
