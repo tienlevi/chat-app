@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { name, email, password, confirmPassword } = registerDto;
+    const { name, email, password, confirmPassword, avatar } = registerDto;
 
     if (password !== confirmPassword) {
       throw new HttpException(
@@ -53,6 +53,7 @@ export class AuthService {
     const user = await this.userModel.create({
       name,
       email,
+      avatar,
       password: hashedPassword,
     });
 

@@ -10,10 +10,16 @@ import { Link } from "react-router-dom";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { useEffect, useRef, useState } from "react";
 import Avatar from "./Avatar";
+import { uploadFile } from "@/services/cloudinary";
+import useRegister from "@/hooks/useRegister";
+import { toast } from "sonner";
 
-export function RegisterForm({ className }: { className?: string }) {
+export function RegisterForm() {
   const imageRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  console.log("🚀 ~ RegisterForm ~ avatarPreview:", avatarPreview);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const { mutate: handleRegister, isPending } = useRegister();
 
   const handleCropConfirm = (_: File, previewUrl: string) => {
     setAvatarPreview((prev) => {
@@ -44,21 +50,33 @@ export function RegisterForm({ className }: { className?: string }) {
 
   const { control, handleSubmit } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
-    mode: "onChange",
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
   });
+  console.log(imageRef.current?.files?.[0]);
 
-  function onSubmit(values: RegisterFormValues) {
-    console.log(values);
-  }
+  const onSubmit = async (values: RegisterFormValues) => {
+    const file = imageRef.current?.files?.[0];
+
+    if (file) {
+      try {
+        setIsUploadingAvatar(true);
+        const image = await uploadFile(file);
+        handleRegister({
+          ...values,
+          avatar: image?.secure_url,
+        });
+      } catch {
+        toast.error("Failed to upload avatar");
+        return;
+      } finally {
+        setIsUploadingAvatar(false);
+      }
+    } else {
+      handleRegister(values);
+    }
+  };
 
   return (
-    <div className={cn("flex flex-col gap-8", className)}>
+    <div className={cn("flex flex-col gap-8")}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <Controller
           control={control}
@@ -212,6 +230,7 @@ export function RegisterForm({ className }: { className?: string }) {
         </Field>
         <Button
           type="submit"
+          disabled={isUploadingAvatar || isPending}
           className="mt-2 h-12 rounded-xl text-base font-semibold"
         >
           Register
