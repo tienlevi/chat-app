@@ -9,21 +9,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoginFormValues, loginSchema } from "@/utils/validations";
 import { Link } from "react-router-dom";
+import useLogin from "@/hooks/useLogin";
 
 function LoginForm() {
   const { t, i18n } = useTranslation();
   const schema = useMemo(() => loginSchema(), [i18n.language]);
   const { control, handleSubmit } = useForm<LoginFormValues>({
     resolver: zodResolver(schema),
-    mode: "onChange",
-    defaultValues: {
-      email: "",
-      password: "",
-    },
   });
+  const { mutate: handleLogin } = useLogin();
 
   function onSubmit(values: LoginFormValues) {
-    console.log(values);
+    handleLogin(values);
   }
 
   return (

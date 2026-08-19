@@ -15,7 +15,8 @@
       "forgotPassword": "Quên mật khẩu?",
       "submit": "Đăng nhập",
       "noAccount": "Chưa có tài khoản?",
-      "signUp": "Đăng ký ngay!"
+      "signUp": "Đăng ký ngay!",
+      "loginSuccess": "Đăng nhập thành công"
     },
     "register": {
       "title": "Đăng ký",
