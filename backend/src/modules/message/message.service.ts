@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Message } from 'src/schemas/message.schema';
+import { Message } from '../../schemas/message.schema';
 import SendMessageDto from './dto/send-message.dto';
-import { User } from 'src/schemas/user.schema';
+import { User } from '../../schemas/user.schema';
 
 @Injectable()
 export class MessageService {
