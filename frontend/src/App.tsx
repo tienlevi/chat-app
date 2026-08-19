@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { QueryProvider } from "@/provider/queryProvider";
 import { routers } from "@/routes/routes";
 import { Toaster } from "@/components/ui/sonner";
 import "./utils/i18n";
+import { QueryContext } from "./contexts/QueryContext";
 
 function App() {
   return (
-    <QueryProvider>
+    <QueryContext>
       <BrowserRouter>
         <Routes>
           <Route>
@@ -18,7 +18,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       <Toaster position="top-right" />
-    </QueryProvider>
+    </QueryContext>
   );
 }
 
