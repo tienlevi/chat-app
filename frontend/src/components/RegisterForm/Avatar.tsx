@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Cropper from "react-easy-crop";
 import type { Area, Point } from "react-easy-crop";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar as AvatarPrimitive, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -25,6 +26,7 @@ interface AvatarProps {
 }
 
 function Avatar({ src, className, onCropConfirm, onCropCancel }: AvatarProps) {
+  const { t } = useTranslation();
   const rawSrcRef = useRef<string | null>(null);
   const [displaySrc, setDisplaySrc] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -81,9 +83,9 @@ function Avatar({ src, className, onCropConfirm, onCropCancel }: AvatarProps) {
       <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Crop your photo</DialogTitle>
+            <DialogTitle>{t("auth.register.cropTitle")}</DialogTitle>
             <DialogDescription>
-              Drag to reposition and use the slider to zoom.
+              {t("auth.register.cropDescription")}
             </DialogDescription>
           </DialogHeader>
 
@@ -104,7 +106,7 @@ function Avatar({ src, className, onCropConfirm, onCropCancel }: AvatarProps) {
           </div>
 
           <div className="flex items-center gap-3 px-1">
-            <span className="text-sm text-muted-foreground">Zoom</span>
+            <span className="text-sm text-muted-foreground">{t("common.zoom")}</span>
             <Slider
               value={[zoom]}
               min={1}
@@ -121,7 +123,7 @@ function Avatar({ src, className, onCropConfirm, onCropCancel }: AvatarProps) {
               onClick={() => handleOpenChange(false)}
               disabled={isProcessing}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               type="button"
@@ -131,7 +133,7 @@ function Avatar({ src, className, onCropConfirm, onCropCancel }: AvatarProps) {
               {isProcessing ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
-                "Save"
+                t("common.save")
               )}
             </Button>
           </DialogFooter>

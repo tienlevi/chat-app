@@ -1,0 +1,47 @@
+{
+  "common": {
+    "appName": "ChatApp",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "zoom": "Thu phóng"
+  },
+  "auth": {
+    "login": {
+      "title": "Đăng nhập",
+      "subtitle": "để giữ ngọn lửa tiếp tục cháy",
+      "emailLabel": "Email",
+      "emailPlaceholder": "ban@example.com",
+      "passwordLabel": "Mật khẩu",
+      "forgotPassword": "Quên mật khẩu?",
+      "submit": "Đăng nhập",
+      "noAccount": "Chưa có tài khoản?",
+      "signUp": "Đăng ký ngay!"
+    },
+    "register": {
+      "title": "Đăng ký",
+      "nameLabel": "Họ tên",
+      "namePlaceholder": "Tên của bạn",
+      "emailLabel": "Email",
+      "emailPlaceholder": "ban@example.com",
+      "passwordLabel": "Mật khẩu",
+      "confirmPasswordLabel": "Xác nhận mật khẩu",
+      "avatarLabel": "Ảnh đại diện",
+      "avatarDescription": "Chọn một ảnh để tải lên.",
+      "submit": "Đăng ký",
+      "haveAccount": "Đã có tài khoản?",
+      "logIn": "Đăng nhập",
+      "cropTitle": "Cắt ảnh của bạn",
+      "cropDescription": "Kéo để định vị và dùng thanh trượt để thu phóng.",
+      "uploadAvatarFailed": "Tải ảnh đại diện thất bại",
+      "registerSuccess": "Đăng ký thành công"
+    },
+    "validation": {
+      "emailInvalid": "Vui lòng nhập email hợp lệ",
+      "emailRequired": "Email là bắt buộc",
+      "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+      "nameMin": "Họ tên phải có ít nhất 2 ký tự",
+      "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
+      "passwordMismatch": "Mật khẩu xác nhận không khớp"
+    }
+  }
+}

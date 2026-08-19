@@ -1,6 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,16 +9,16 @@ import { Label } from "@/components/ui/label";
 import { RegisterFormValues, registerSchema } from "@/utils/validations";
 import { Link } from "react-router-dom";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Avatar from "./Avatar";
 import { uploadFile } from "@/services/cloudinary";
 import useRegister from "@/hooks/useRegister";
 import { toast } from "sonner";
 
-export function RegisterForm() {
+function RegisterForm() {
+  const { t, i18n } = useTranslation();
   const imageRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  console.log("🚀 ~ RegisterForm ~ avatarPreview:", avatarPreview);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const { mutate: handleRegister, isPending } = useRegister();
 
@@ -48,10 +49,10 @@ export function RegisterForm() {
     setAvatarPreview(URL.createObjectURL(file));
   };
 
+  const schema = useMemo(() => registerSchema(), [i18n.language]);
   const { control, handleSubmit } = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(schema),
   });
-  console.log(imageRef.current?.files?.[0]);
 
   const onSubmit = async (values: RegisterFormValues) => {
     const file = imageRef.current?.files?.[0];
@@ -65,7 +66,7 @@ export function RegisterForm() {
           avatar: image?.secure_url,
         });
       } catch {
-        toast.error("Failed to upload avatar");
+        toast.error(t("auth.register.uploadAvatarFailed"));
         return;
       } finally {
         setIsUploadingAvatar(false);
@@ -89,12 +90,12 @@ export function RegisterForm() {
                   htmlFor="name"
                   className={cn(fieldState.error && "text-destructive")}
                 >
-                  Name
+                  {t("auth.register.nameLabel")}
                 </Label>
                 <div className="relative">
                   <Input
                     type="text"
-                    placeholder="Your name"
+                    placeholder={t("auth.register.namePlaceholder")}
                     className={cn(
                       "h-12 rounded-xl pr-10 text-base font-medium",
                       isValid &&
@@ -129,12 +130,12 @@ export function RegisterForm() {
                   htmlFor="email"
                   className={cn(fieldState.error && "text-destructive")}
                 >
-                  Email
+                  {t("auth.register.emailLabel")}
                 </Label>
                 <div className="relative">
                   <Input
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder={t("auth.register.emailPlaceholder")}
                     className={cn(
                       "h-12 rounded-xl pr-10 text-base font-medium",
                       isValid &&
@@ -167,7 +168,7 @@ export function RegisterForm() {
                 htmlFor="password"
                 className={cn(fieldState.error && "text-destructive")}
               >
-                Password
+                {t("auth.register.passwordLabel")}
               </Label>
               <Input
                 type="password"
@@ -191,7 +192,7 @@ export function RegisterForm() {
                 htmlFor="confirmPassword"
                 className={cn(fieldState.error && "text-destructive")}
               >
-                Confirm password
+                {t("auth.register.confirmPasswordLabel")}
               </Label>
               <Input
                 type="password"
@@ -210,7 +211,9 @@ export function RegisterForm() {
           )}
         />
         <Field>
-          <FieldLabel htmlFor="picture">Avatar</FieldLabel>
+          <FieldLabel htmlFor="picture">
+            {t("auth.register.avatarLabel")}
+          </FieldLabel>
           <div className="flex flex-col items-center gap-4">
             <Avatar
               src={avatarPreview}
@@ -226,26 +229,29 @@ export function RegisterForm() {
               onChange={handleAvatarChange}
             />
           </div>
-          <FieldDescription>Select a picture to upload.</FieldDescription>
+          <FieldDescription>
+            {t("auth.register.avatarDescription")}
+          </FieldDescription>
         </Field>
         <Button
           type="submit"
           disabled={isUploadingAvatar || isPending}
           className="mt-2 h-12 rounded-xl text-base font-semibold"
         >
-          Register
+          {t("auth.register.submit")}
         </Button>
       </form>
 
       <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
+        {t("auth.register.haveAccount")}{" "}
         <Link
           to="/"
           className="font-semibold text-foreground hover:text-primary hover:underline"
         >
-          Log in
+          {t("auth.register.logIn")}
         </Link>
       </p>
     </div>
   );
 }
+export default RegisterForm;

@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +10,11 @@ import { Label } from "@/components/ui/label";
 import { LoginFormValues, loginSchema } from "@/utils/validations";
 import { Link } from "react-router-dom";
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+function LoginForm() {
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(() => loginSchema(), [i18n.language]);
   const { control, handleSubmit } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
     mode: "onChange",
     defaultValues: {
       email: "",
@@ -26,7 +27,7 @@ export function LoginForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-8", className)} {...props}>
+    <div className={cn("flex flex-col gap-8")}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <Controller
           control={control}
@@ -39,12 +40,12 @@ export function LoginForm({
                   htmlFor="email"
                   className={cn(fieldState.error && "text-destructive")}
                 >
-                  Email
+                  {t("auth.login.emailLabel")}
                 </Label>
                 <div className="relative">
                   <Input
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder={t("auth.login.emailPlaceholder")}
                     className={cn(
                       "h-12 rounded-xl pr-10 text-base font-medium",
                       isValid &&
@@ -78,13 +79,13 @@ export function LoginForm({
                   htmlFor="password"
                   className={cn(fieldState.error && "text-destructive")}
                 >
-                  Password
+                  {t("auth.login.passwordLabel")}
                 </Label>
                 <a
                   href="#"
                   className="ml-auto text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
                 >
-                  Forgot password?
+                  {t("auth.login.forgotPassword")}
                 </a>
               </div>
               <Input
@@ -104,20 +105,22 @@ export function LoginForm({
           type="submit"
           className="mt-2 h-12 rounded-xl text-base font-semibold"
         >
-          Log in
+          {t("auth.login.submit")}
           <ArrowRight className="size-4" strokeWidth={2.5} />
         </Button>
       </form>
 
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{" "}
+        {t("auth.login.noAccount")}{" "}
         <Link
           to="/register"
           className="font-semibold text-foreground hover:text-primary hover:underline"
         >
-          Sign up now!
+          {t("auth.login.signUp")}
         </Link>
       </p>
     </div>
   );
 }
+
+export default LoginForm;

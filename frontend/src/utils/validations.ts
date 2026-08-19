@@ -1,22 +1,31 @@
+import i18n from "@/utils/i18n";
 import { z } from "zod";
 
-export const loginSchema = z.object({
-  email: z.email("Enter a valid email").min(1, "Email is required"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-export type LoginFormValues = z.infer<typeof loginSchema>;
-
-export const registerSchema = z
-  .object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.email("Enter a valid email").min(1, "Email is required"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(1, "Confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
+export const loginSchema = () =>
+  z.object({
+    email: z
+      .email(i18n.t("auth.validation.emailInvalid"))
+      .min(1, i18n.t("auth.validation.emailRequired")),
+    password: z.string().min(6, i18n.t("auth.validation.passwordMin")),
   });
 
-export type RegisterFormValues = z.infer<typeof registerSchema>;
+export type LoginFormValues = z.infer<ReturnType<typeof loginSchema>>;
+
+export const registerSchema = () =>
+  z
+    .object({
+      name: z.string().min(2, i18n.t("auth.validation.nameMin")),
+      email: z
+        .email(i18n.t("auth.validation.emailInvalid"))
+        .min(1, i18n.t("auth.validation.emailRequired")),
+      password: z.string().min(6, i18n.t("auth.validation.passwordMin")),
+      confirmPassword: z
+        .string()
+        .min(1, i18n.t("auth.validation.confirmPasswordRequired")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: i18n.t("auth.validation.passwordMismatch"),
+      path: ["confirmPassword"],
+    });
+
+export type RegisterFormValues = z.infer<ReturnType<typeof registerSchema>>;

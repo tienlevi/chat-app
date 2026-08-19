@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryProvider } from "@/provider/queryProvider";
 import { routers } from "@/routes/routes";
 import { Toaster } from "@/components/ui/sonner";
+import "./utils/i18n";
 
 function App() {
   return (
