@@ -2,12 +2,14 @@ import { useTranslation } from "react-i18next";
 import LoginForm from "@/components/LoginForm";
 import Wordmark from "@/components/Wordmark";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   const { t } = useTranslation();
   return (
     <div className="relative flex min-h-svh items-center justify-center overflow-hidden bg-background px-6 py-12">
       <LanguageSwitcher className="absolute top-6 right-6" />
+      <ThemeToggle className="absolute top-6 right-28" />
       <div className="relative w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-700">
         <Wordmark className="mb-8" />
 

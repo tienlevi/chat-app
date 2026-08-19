@@ -3,22 +3,29 @@ import { routers } from "@/routes/routes";
 import { Toaster } from "@/components/ui/sonner";
 import "./utils/i18n";
 import { QueryContext } from "./contexts/QueryContext";
+import ThemeContext from "./contexts/ThemeContext";
 
 function App() {
   return (
-    <QueryContext>
-      <BrowserRouter>
-        <Routes>
-          <Route>
-            {routers.map((route) => (
-              <Route key={route.id} path={route.href} element={route.element} />
-            ))}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-      <Toaster position="top-right" />
-    </QueryContext>
+    <ThemeContext>
+      <QueryContext>
+        <BrowserRouter>
+          <Routes>
+            <Route>
+              {routers.map((route) => (
+                <Route
+                  key={route.id}
+                  path={route.href}
+                  element={route.element}
+                />
+              ))}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <Toaster position="top-right" />
+      </QueryContext>
+    </ThemeContext>
   );
 }
 
