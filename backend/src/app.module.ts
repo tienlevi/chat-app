@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { MessageModule } from './modules/message/message.module';
+import { JwtModule } from '@nestjs/jwt';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -14,6 +16,11 @@ import { MessageModule } from './modules/message/message.module';
     MongooseModule.forRoot(process.env.MONGODB_URI as string),
     AuthModule,
     MessageModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_TOKEN,
+    }),
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
