@@ -3,7 +3,7 @@ interface IUser {
   name: string;
   email: string;
   password: string;
-  isConfirmEmail: boolean;
+  isAuthenticated: boolean;
   avatar: string;
   createdAt: Date;
   updatedAt: Date;

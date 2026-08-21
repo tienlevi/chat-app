@@ -14,7 +14,7 @@ export class User {
   password: string;
 
   @Prop({ default: false })
-  isConfirmEmail: boolean;
+  isAuthenticated: boolean;
 
   @Prop({ default: defaultAvatar })
   avatar: string;
