@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MessageModule } from './modules/message/message.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from './mail/mail.module';
+import { OtpModule } from './modules/otp/otp.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MailModule } from './mail/mail.module';
       secret: process.env.JWT_TOKEN,
     }),
     MailModule,
+    OtpModule,
   ],
   controllers: [AppController],
   providers: [AppService],
