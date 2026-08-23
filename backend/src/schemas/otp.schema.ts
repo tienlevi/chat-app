@@ -7,8 +7,8 @@ export class Otp {
   @Prop({ required: true })
   code: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  userId: Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.String, ref: 'User', required: true })
+  email: string;
 
   @Prop({ required: true })
   type: OTPType;
