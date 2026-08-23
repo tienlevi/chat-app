@@ -21,7 +21,7 @@ import { MailService } from './mail.service';
           },
         },
         defaults: {
-          from: `"No Reply" <${configService.get<string>('SMTP_USER')}>`,
+          from: `ChatApp`,
         },
         template: {
           dir: join(__dirname, 'templates'),
