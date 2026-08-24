@@ -13,12 +13,16 @@ function useLogin() {
     mutationFn: async (data: { email: string; password: string }) => {
       return await login(data);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER] });
-      toast.success(t("auth.login.loginSuccess"));
+    onSuccess: (data) => {
+      if (data) {
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER] });
+        toast.success(t("auth.login.loginSuccess"));
+        localStorage.setItem("accessToken", data.accessToken);
+      }
     },
     onError: (error: any) => {
-      toast.error(error.response.data.message);
+      const { code } = error.response.data;
+      toast.error(t(`errors.${code}`));
     },
   });
 }

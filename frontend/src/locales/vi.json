@@ -44,5 +44,11 @@
       "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
       "passwordMismatch": "Mật khẩu xác nhận không khớp"
     }
+  },
+  "errors": {
+    "ACCOUNT_NOT_FOUND": "Tài khoản không tồn tại",
+    "ACCOUNT_NOT_AUTHENTICATED": "Vui lòng xác thực email trước khi đăng nhập",
+    "INVALID_CREDENTIALS": "Email hoặc mật khẩu không đúng",
+    "default": "Đã có lỗi xảy ra, vui lòng thử lại"
   }
 }

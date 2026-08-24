@@ -44,5 +44,11 @@
       "confirmPasswordRequired": "Confirm your password",
       "passwordMismatch": "Passwords do not match"
     }
+  },
+  "errors": {
+    "ACCOUNT_NOT_FOUND": "Account doesn't exist",
+    "ACCOUNT_NOT_AUTHENTICATED": "Please verify your email before logging in",
+    "INVALID_CREDENTIALS": "Email or password is incorrect",
+    "default": "Something went wrong, please try again"
   }
 }

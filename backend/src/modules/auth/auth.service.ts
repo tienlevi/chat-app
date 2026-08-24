@@ -6,7 +6,7 @@ import { User } from '../../schemas/user.schema';
 import { LoginDto } from './dto/login.dto';
 import { Otp } from '../../schemas/otp.schema';
 import { MailService } from '../../mail/mail.service';
-import { baseApi } from '../../constants';
+import { baseApi, ResponseCode } from '../../constants';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from '../../schemas/token.schema';
 
@@ -24,19 +24,58 @@ export class AuthService {
     const user = await this.userModel.findOne({ email: loginDto.email });
 
     if (!user) {
-      throw new HttpException("Account doesn't exist", HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        {
+          message: "Account doesn't exist",
+          code: ResponseCode.ACCOUNT_NOT_FOUND,
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    if (!user.isAuthenticated) {
+      throw new HttpException(
+        {
+          message: 'User not authenticate, please check your email to authenticate',
+          code: ResponseCode.ACCOUNT_NOT_AUTHENTICATED,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const isMatch = await bcrypt.compare(loginDto.password, user.password);
 
     if (!isMatch) {
       throw new HttpException(
-        'Email or password incorrect',
+        {
+          message: 'Email or password incorrect',
+          code: ResponseCode.INVALID_CREDENTIALS,
+        },
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
 
-    return { message: 'Login successfully', data: loginDto };
+    const payload = { userId: user._id };
+
+    const accessToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '6h',
+    });
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      expiresIn: '3d',
+    });
+
+    await this.tokenModel.findOneAndUpdate(
+      { userId: user._id },
+      { refreshToken, userId: user._id },
+      { new: true, upsert: true },
+    );
+
+    return {
+      message: 'Login successfully',
+      data: user.toObject(),
+      accessToken,
+      refreshToken,
+    };
   }
 
   async register(req: any) {
@@ -55,12 +94,6 @@ export class AuthService {
       { name, email, avatar, password: hashedPassword },
       { new: true, upsert: true },
     );
-    const payload = { name, email, avatar, userId: user._id };
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '3d',
-    });
-
-    await this.tokenModel.create({ refreshToken, userId: user._id });
 
     const verifyUrl = `${baseApi}/auth/verify-email?email=${email}&code=${req.code}&otpId=${optId}`;
     await this.mailService.verifyEmail(email, name, req.code, verifyUrl);

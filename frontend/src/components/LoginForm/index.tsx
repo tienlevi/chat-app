@@ -17,7 +17,7 @@ function LoginForm() {
   const { control, handleSubmit } = useForm<LoginFormValues>({
     resolver: zodResolver(schema),
   });
-  const { mutate: handleLogin } = useLogin();
+  const { mutate: handleLogin, isPending } = useLogin();
 
   function onSubmit(values: LoginFormValues) {
     handleLogin(values);
@@ -99,6 +99,7 @@ function LoginForm() {
           )}
         />
         <Button
+          disabled={isPending}
           type="submit"
           className="mt-2 h-12 rounded-xl text-base font-semibold"
         >
