@@ -34,7 +34,7 @@
       "cropTitle": "Crop your photo",
       "cropDescription": "Drag to reposition and use the slider to zoom.",
       "uploadAvatarFailed": "Failed to upload avatar",
-      "registerSuccess": "Register successfully"
+      "registerSuccess": "Register successfully please check email to verify user"
     },
     "validation": {
       "emailInvalid": "Enter a valid email",

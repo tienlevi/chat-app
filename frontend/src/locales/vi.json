@@ -34,7 +34,7 @@
       "cropTitle": "Cắt ảnh của bạn",
       "cropDescription": "Kéo để định vị và dùng thanh trượt để thu phóng.",
       "uploadAvatarFailed": "Tải ảnh đại diện thất bại",
-      "registerSuccess": "Đăng ký thành công"
+      "registerSuccess": "Đăng ký thành công kiểm tra email để xác thực người dùng"
     },
     "validation": {
       "emailInvalid": "Vui lòng nhập email hợp lệ",
