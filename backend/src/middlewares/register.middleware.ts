@@ -7,6 +7,7 @@ import {
 import { Response, NextFunction } from 'express';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import bcrypt from 'bcrypt';
 import { RegisterDto } from '../modules/auth/dto/register.dto';
 import { Otp } from '../schemas/otp.schema';
 import { generateRandomOtpCode } from '../utils/random';
@@ -25,8 +26,15 @@ export class RegisterMiddleware implements NestMiddleware {
     const code = generateRandomOtpCode();
     const now = new Date().getTime();
     const timeLeftRegister = 1000 * 60 * 5; // 5 minutes
-
     const otpList = await this.otpModel.find({ email: data.email });
+    const user = await this.userModel.findOne({ email: data.email });
+
+    if (user?.isAuthenticated) {
+      throw new HttpException(
+        'This email is authenticated',
+        HttpStatus.FORBIDDEN,
+      );
+    }
 
     const isRateLimit = otpList.some((o) => o.expiresAt > now);
     if (isRateLimit) {
@@ -36,16 +44,9 @@ export class RegisterMiddleware implements NestMiddleware {
       );
     }
 
-    const existUser = await this.userModel.findOne({ email: data.email });
-    if (existUser?.isAuthenticated) {
-      throw new HttpException(
-        'This email is authenticated',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
+    const hashedOtp = await bcrypt.hash(code, 6);
     const otp = await this.otpModel.create({
-      code,
+      code: hashedOtp,
       email: data.email,
       expiresAt: now + timeLeftRegister,
       type: 'verify',
@@ -53,6 +54,7 @@ export class RegisterMiddleware implements NestMiddleware {
 
     req['registerDto'] = data;
     req['otp'] = otp.toObject();
+    req['code'] = code;
     next();
   }
 }

@@ -4,19 +4,20 @@ import bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { User } from '../../schemas/user.schema';
 import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
-import { JwtService } from '@nestjs/jwt';
-import { Token } from '../../schemas/token.schema';
+import { Otp } from '../../schemas/otp.schema';
 import { MailService } from '../../mail/mail.service';
 import { baseApi } from '../../constants';
+import { JwtService } from '@nestjs/jwt';
+import { Token } from '../../schemas/token.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Otp.name) private otpModel: Model<Otp>,
     @InjectModel(Token.name) private tokenModel: Model<Token>,
-    private jwtService: JwtService,
     private mailService: MailService,
+    private jwtService: JwtService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -38,9 +39,9 @@ export class AuthService {
     return { message: 'Login successfully', data: loginDto };
   }
 
-  async register(registerDto: RegisterDto) {
-    const { name, email, password, confirmPassword, avatar } = registerDto;
-
+  async register(req: any) {
+    const { _id: optId } = req.otp;
+    const { name, email, password, confirmPassword, avatar } = req.registerDto;
     if (password !== confirmPassword) {
       throw new HttpException(
         'Password and confirm password do not match',
@@ -48,65 +49,54 @@ export class AuthService {
       );
     }
 
-    const existUser = await this.userModel.findOne({ email });
-
-    if (existUser) {
-      throw new HttpException(
-        'This email already registered',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-
     const hashedPassword = await bcrypt.hash(password, 8);
-
-    const user = await this.userModel.create({
-      name,
-      email,
-      avatar,
-      password: hashedPassword,
-    });
+    const user = await this.userModel.findOneAndUpdate(
+      { email },
+      { name, email, avatar, password: hashedPassword },
+      { new: true, upsert: true },
+    );
     const payload = { name, email, avatar, userId: user._id };
-
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: '3d',
     });
-    const verifyUrl = `${baseApi}/auth/verify-email?refreshToken=${refreshToken}`;
 
-    await this.mailService.verifyEmail(email, name, verifyUrl);
+    await this.tokenModel.create({ refreshToken, userId: user._id });
+
+    const verifyUrl = `${baseApi}/auth/verify-email?email=${email}&code=${req.code}&otpId=${optId}`;
+    await this.mailService.verifyEmail(email, name, req.code, verifyUrl);
 
     return {
       message: 'Register successfully please check email to verify user',
-
       data: { ...user.toObject() },
     };
   }
 
-  async verifyEmail(refreshToken: string) {
-    if (!refreshToken)
-      throw new HttpException('Token not found', HttpStatus.NOT_FOUND);
+  async verifyEmail(email: string, otpCode: string, otpId: string) {
+    if (!otpId || !otpCode || !email)
+      throw new HttpException('OTP or email not found', HttpStatus.NOT_FOUND);
+    const otp = await this.otpModel.findById(otpId);
+    const isMatchOtp = await bcrypt.compare(otpCode, otp?.code || '');
+    const now = new Date().getTime();
+    const isExpiredVerify = now > (otp?.expiresAt || 0);
 
-    const verifyUser = await this.jwtService.verifyAsync(refreshToken, {
-      secret: process.env.JWT_TOKEN,
-    });
-
-    if (!verifyUser) {
-      throw new HttpException('Email not found', HttpStatus.UNAUTHORIZED);
+    if (!isMatchOtp) {
+      throw new HttpException('Verify email failed', HttpStatus.UNAUTHORIZED);
     }
 
-    const existToken = await this.tokenModel.findOne({
-      userId: verifyUser.userId,
-    });
-
-    if (existToken) {
+    if (isExpiredVerify) {
       throw new HttpException(
-        'You have just verified your email.',
-        HttpStatus.NOT_ACCEPTABLE,
+        'This OTP has expired to verify',
+        HttpStatus.UNAUTHORIZED,
       );
     }
 
-    await this.tokenModel.create({ refreshToken, userId: verifyUser.userId });
-    await this.userModel.findByIdAndUpdate(
-      verifyUser.userId,
+    await this.otpModel.findByIdAndUpdate(
+      otpId,
+      { isUsed: true },
+      { new: true },
+    );
+    await this.userModel.findOneAndUpdate(
+      { email },
       { isAuthenticated: true },
       { new: true },
     );
