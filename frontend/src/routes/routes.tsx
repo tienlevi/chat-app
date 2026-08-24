@@ -1,4 +1,4 @@
-import { Routes } from "@/interfaces/types";
+import { Routes } from "@/interfaces/routes";
 import Home from "@/pages/Home";
 import Register from "@/pages/Register";
 
