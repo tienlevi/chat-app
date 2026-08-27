@@ -52,6 +52,12 @@ function RegisterForm() {
   const schema = useMemo(() => registerSchema(), [i18n.language]);
   const { control, handleSubmit } = useForm<RegisterFormValues>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const onSubmit = async (values: RegisterFormValues) => {

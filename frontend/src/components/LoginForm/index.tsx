@@ -16,6 +16,10 @@ function LoginForm() {
   const schema = useMemo(() => loginSchema(), [i18n.language]);
   const { control, handleSubmit } = useForm<LoginFormValues>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
   const { mutate: handleLogin, isPending } = useLogin();
 
