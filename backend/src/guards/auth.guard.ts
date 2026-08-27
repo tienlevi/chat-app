@@ -6,13 +6,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AuthenticatedRequest, JwtPayload } from '../interfaces/request';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const authHeaders = request.headers.authorization;
 
     if (!authHeaders || !authHeaders.startsWith('Bearer ')) {
