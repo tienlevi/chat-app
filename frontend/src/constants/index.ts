@@ -8,3 +8,6 @@ export const cloudinaryApiKey = import.meta.env.VITE_CLOUDINARY_API_KEY;
 export const cloudinaryApiKeySecret = import.meta.env
   .VITE_CLOUDINARY_API_KEY_SECRET;
 export const baseCloudinaryV1 = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}`;
+
+export const ACCESS_TOKEN_KEY = "accessToken";
+export const REFRESH_TOKEN_KEY = "refreshToken";

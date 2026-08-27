@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { login } from "@/services/auth";
 import { QUERY_KEY } from "@/constants/query-key";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/constants";
 
 function useLogin() {
   const queryClient = useQueryClient();
@@ -17,7 +19,13 @@ function useLogin() {
       if (data) {
         queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER] });
         toast.success(t("auth.login.loginSuccess"));
-        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
+        Cookies.set(REFRESH_TOKEN_KEY, data.refreshToken, {
+          expires: 3,
+          path: "/",
+          secure: true,
+          sameSite: "Strict",
+        });
       }
     },
     onError: (error: any) => {
