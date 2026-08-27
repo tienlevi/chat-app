@@ -36,7 +36,8 @@ export class AuthService {
     if (!user.isAuthenticated) {
       throw new HttpException(
         {
-          message: 'User not authenticate, please check your email to authenticate',
+          message:
+            'User not authenticate, please check your email to authenticate',
           code: ResponseCode.ACCOUNT_NOT_AUTHENTICATED,
         },
         HttpStatus.UNAUTHORIZED,
@@ -58,7 +59,7 @@ export class AuthService {
     const payload = { userId: user._id };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '6h',
+      expiresIn: '30s',
     });
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: '3d',

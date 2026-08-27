@@ -17,7 +17,7 @@ export class TokenService {
     const payload = { userId };
 
     const newAccessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '6h',
+      expiresIn: '30s',
     });
     const newRefreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: '3d',
