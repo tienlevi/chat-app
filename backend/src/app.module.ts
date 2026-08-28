@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from './mail/mail.module';
 import { OtpModule } from './modules/otp/otp.module';
 import { TokenModule } from './modules/token/token.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TokenModule } from './modules/token/token.module';
     MailModule,
     OtpModule,
     TokenModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
