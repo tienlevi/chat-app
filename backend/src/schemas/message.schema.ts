@@ -30,6 +30,12 @@ export class Message {
 
   @Prop({ default: false })
   isDeleted: boolean;
+
+  @Prop({ default: false })
+  isRead: boolean;
+
+  @Prop()
+  emoji: string;
 }
 
 export type MessageDocument = HydratedDocument<Message>;
