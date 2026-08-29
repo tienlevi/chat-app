@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Message } from '../../schemas/message.schema';
 import SendMessageDto from './dto/send-message.dto';
 import { User } from '../../schemas/user.schema';
+import { AuthenticatedRequest } from '../../interfaces/request';
 
 @Injectable()
 export class MessageService {
@@ -17,10 +18,9 @@ export class MessageService {
     receiverId: string,
     data: SendMessageDto,
   ) {
-    const sender = await this.userModel.findById(senderId);
     const receiver = await this.userModel.findById(receiverId);
-    if (!sender || !receiver) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!receiver) {
+      throw new HttpException('Receiver not found', HttpStatus.NOT_FOUND);
     }
 
     const message = await this.messageModel.create({
