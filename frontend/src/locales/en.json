@@ -45,6 +45,72 @@
       "passwordMismatch": "Passwords do not match"
     }
   },
+
+  "chat": {
+    "nav": {
+      "label": "Main navigation",
+      "chats": "Chats",
+      "contacts": "Contacts",
+      "saved": "Saved",
+      "archive": "Archive",
+      "settings": "Settings",
+      "logout": "Log out"
+    },
+    "list": {
+      "label": "Conversations",
+      "title": "Messages",
+      "unreadSummary_one": "{{count}} unread message",
+      "unreadSummary_other": "{{count}} unread messages",
+      "allCaughtUp": "You're all caught up",
+      "compose": "New message",
+      "searchPlaceholder": "Search conversations",
+      "filters": {
+        "all": "All",
+        "unread": "Unread",
+        "groups": "Groups"
+      },
+      "empty": "No conversations found"
+    },
+    "header": {
+      "back": "Back to conversations",
+      "details": "Conversation details",
+      "more": "More options",
+      "mute": "Mute notifications",
+      "search": "Search in conversation",
+      "delete": "Delete conversation"
+    },
+    "thread": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "deleted": "This message was deleted",
+      "typingShort": "Typing…",
+      "status": {
+        "sent": "Sent",
+        "read": "Read"
+      }
+    },
+    "composer": {
+      "placeholder": "Message {{name}}",
+      "attach": "Attach a file",
+      "emoji": "Add an emoji",
+      "send": "Send message",
+      "voice": "Record a voice message",
+      "hint": "Press Enter to send, Shift + Enter for a new line"
+    },
+    "emoji": {
+      "like": "Like",
+      "dislike": "Dislike",
+      "heart": "Love",
+      "smile": "Smile",
+      "sad": "Sad",
+      "angry": "Angry"
+    },
+    "empty": {
+      "title": "No conversation selected",
+      "subtitle": "Pick a conversation from the list to start chatting."
+    }
+  },
+
   "errors": {
     "ACCOUNT_NOT_FOUND": "Account doesn't exist",
     "ACCOUNT_NOT_AUTHENTICATED": "Please verify your email before logging in",

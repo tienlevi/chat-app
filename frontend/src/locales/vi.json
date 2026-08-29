@@ -45,6 +45,71 @@
       "passwordMismatch": "Mật khẩu xác nhận không khớp"
     }
   },
+
+  "chat": {
+    "nav": {
+      "label": "Điều hướng chính",
+      "chats": "Trò chuyện",
+      "contacts": "Danh bạ",
+      "saved": "Đã lưu",
+      "archive": "Lưu trữ",
+      "settings": "Cài đặt",
+      "logout": "Đăng xuất"
+    },
+    "list": {
+      "label": "Cuộc trò chuyện",
+      "title": "Tin nhắn",
+      "unreadSummary_other": "{{count}} tin nhắn chưa đọc",
+      "allCaughtUp": "Bạn đã đọc hết tin nhắn",
+      "compose": "Tin nhắn mới",
+      "searchPlaceholder": "Tìm cuộc trò chuyện",
+      "filters": {
+        "all": "Tất cả",
+        "unread": "Chưa đọc",
+        "groups": "Nhóm"
+      },
+      "empty": "Không tìm thấy cuộc trò chuyện nào"
+    },
+    "header": {
+      "back": "Quay lại danh sách trò chuyện",
+      "details": "Thông tin cuộc trò chuyện",
+      "more": "Tùy chọn khác",
+      "mute": "Tắt thông báo",
+      "search": "Tìm trong cuộc trò chuyện",
+      "delete": "Xóa cuộc trò chuyện"
+    },
+    "thread": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "deleted": "Tin nhắn này đã bị thu hồi",
+      "typingShort": "Đang nhập…",
+      "status": {
+        "sent": "Đã gửi",
+        "read": "Đã xem"
+      }
+    },
+    "composer": {
+      "placeholder": "Nhắn cho {{name}}",
+      "attach": "Đính kèm tệp",
+      "emoji": "Thêm biểu tượng cảm xúc",
+      "send": "Gửi tin nhắn",
+      "voice": "Ghi âm tin nhắn thoại",
+      "hint": "Nhấn Enter để gửi, Shift + Enter để xuống dòng"
+    },
+    "emoji": {
+      "like": "Thích",
+      "dislike": "Không thích",
+      "heart": "Yêu thích",
+      "smile": "Cười",
+      "sad": "Buồn",
+      "angry": "Phẫn nộ"
+    },
+    "empty": {
+      "title": "Chưa chọn cuộc trò chuyện",
+      "subtitle": "Chọn một cuộc trò chuyện trong danh sách để bắt đầu nhắn tin."
+    }
+  },
+
   "errors": {
     "ACCOUNT_NOT_FOUND": "Tài khoản không tồn tại",
     "ACCOUNT_NOT_AUTHENTICATED": "Vui lòng xác thực email trước khi đăng nhập",
