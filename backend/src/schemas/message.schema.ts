@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
 
 @Schema({ versionKey: false, _id: true })
 class MessageFile {
@@ -16,10 +16,10 @@ const MessageFileSchema = SchemaFactory.createForClass(MessageFile);
 
 @Schema({ versionKey: false, timestamps: true })
 export class Message {
-  @Prop({ required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   senderId: string;
 
-  @Prop({ required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   receiverId: string;
 
   @Prop({ required: true })

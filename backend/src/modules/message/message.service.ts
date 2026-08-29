@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { Message } from '../../schemas/message.schema';
 import SendMessageDto from './dto/send-message.dto';
 import { User } from '../../schemas/user.schema';
@@ -29,5 +29,19 @@ export class MessageService {
     });
 
     return { message: 'Send message successfully', data: message.toObject() };
+  }
+
+  async getMessagesByReceiverId(receiverId: string, senderId: string) {
+    if (!receiverId || !senderId) {
+      throw new HttpException(
+        'Sender or receiver not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return await this.messageModel.find({
+      senderId,
+      receiverId,
+    });
   }
 }

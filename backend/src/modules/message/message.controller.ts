@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Param,
@@ -32,5 +33,19 @@ export class MessageController {
       );
     }
     return await this.messageService.sendMessage(senderId, receiverId, data);
+  }
+
+  @Get('receiver/:receiverId')
+  @UseGuards(AuthGuard)
+  async getMessagesBySenderId(
+    @Param('receiverId') receiverId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const senderId = req.user.userId;
+
+    return await this.messageService.getMessagesByReceiverId(
+      receiverId,
+      senderId,
+    );
   }
 }
