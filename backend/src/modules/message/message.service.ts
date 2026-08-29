@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { Message } from '../../schemas/message.schema';
 import SendMessageDto from './dto/send-message.dto';
 import { User } from '../../schemas/user.schema';
-import { AuthenticatedRequest } from '../../interfaces/request';
 
 @Injectable()
 export class MessageService {

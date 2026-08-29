@@ -34,7 +34,7 @@ export class Message {
   @Prop({ default: false })
   isRead: boolean;
 
-  @Prop()
+  @Prop({ default: '' })
   emoji: string;
 }
 
