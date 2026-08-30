@@ -33,6 +33,6 @@ export class Friend {
   friendsRequest: string[];
 }
 
-export type OtpDocument = HydratedDocument<Friend>;
+export type FriendDocument = HydratedDocument<Friend>;
 
-export const OtpSchema = SchemaFactory.createForClass(Friend);
+export const FriendSchema = SchemaFactory.createForClass(Friend);
