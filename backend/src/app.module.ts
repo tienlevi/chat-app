@@ -10,6 +10,7 @@ import { MailModule } from './mail/mail.module';
 import { OtpModule } from './modules/otp/otp.module';
 import { TokenModule } from './modules/token/token.module';
 import { UserModule } from './modules/user/user.module';
+import { FriendModule } from './modules/friend/friend.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserModule } from './modules/user/user.module';
     OtpModule,
     TokenModule,
     UserModule,
+    FriendModule,
   ],
   controllers: [AppController],
   providers: [AppService],
