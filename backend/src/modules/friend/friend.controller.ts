@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { FriendService } from './friend.service';
 import { AuthGuard } from '../../guards/auth.guard';
 import { AuthenticatedRequest } from '../../interfaces/request';
@@ -30,5 +22,15 @@ export class FriendController {
   ) {
     const userId = req.user.userId;
     return await this.friendService.addFriend(userId, friendId);
+  }
+
+  @Post('accept/:friendId')
+  @UseGuards(AuthGuard)
+  async handleAcceptFriend(
+    @Req() req: AuthenticatedRequest,
+    @Param('friendId') friendId: string,
+  ) {
+    const userId = req.user.userId;
+    return await this.friendService.acceptFriend(userId, friendId);
   }
 }

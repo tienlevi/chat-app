@@ -38,10 +38,39 @@ export class FriendService {
       throw new BadRequestException('You are already friends');
     }
 
-    return await this.friendModel.findOneAndUpdate(
+    await this.friendModel.findOneAndUpdate(
       { userId },
       { $addToSet: { friendsRequest: friendId } },
-      { new: true, upsert: true },
+      { returnDocument: 'after', upsert: true },
     );
+
+    return { message: 'Send request successfully' };
+  }
+
+  async acceptFriend(userId: string, friendId: string) {
+    const friend = await this.userModel.findById(friendId);
+    if (!friend) {
+      throw new NotFoundException('Friend not found');
+    }
+
+    const alreadyFriends = await this.friendModel.findOne({
+      userId,
+      'friends.userId': friendId,
+    });
+
+    if (alreadyFriends) {
+      throw new BadRequestException('You are already friends');
+    }
+
+    const newFriend = await this.friendModel.findOneAndUpdate(
+      { userId },
+      {
+        $push: { friends: { userId: friendId } },
+        $pull: { friendsRequest: friendId },
+      },
+      { returnDocument: 'after', upsert: true },
+    );
+
+    return { message: 'Accept friend successfully', data: newFriend };
   }
 }
