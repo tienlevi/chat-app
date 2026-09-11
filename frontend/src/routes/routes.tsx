@@ -1,3 +1,4 @@
+import ChatLayout from "@/components/layouts/ChatLayout";
 import { Routes } from "@/interfaces/routes";
 import Chat from "@/pages/Chat";
 import Home from "@/pages/Home";
@@ -20,7 +21,11 @@ export const routers: Routes[] = [
     href: "/chat",
     id: "chat",
     name: "Chat",
-    element: <Chat />,
+    element: (
+      <ChatLayout>
+        <Chat />
+      </ChatLayout>
+    ),
   },
 
   // Add other routes as needed
