@@ -1,24 +1,26 @@
 import Conversations from "@/components/Conversations";
 import Message from "@/components/Message";
 import { useCallback, useState } from "react";
-import { Conversation } from "@/interfaces/chat";
-import { CONVERSATIONS } from "@/constants/mock-chat";
+import type { IMessage } from "@/interfaces/message";
+import { CURRENT_USER_ID, MESSAGES, USERS } from "@/constants/mock-chat";
 import { cn } from "@/lib/utils";
 
 function Chat() {
-  const [conversations, setConversations] =
-    useState<Conversation[]>(CONVERSATIONS);
-  const [activeId, setActiveId] = useState(CONVERSATIONS[0].id);
+  // TODO: swap for the friends and messages endpoints once they are wired up.
+  const [messages, setMessages] = useState<IMessage[]>(MESSAGES);
+  const [activeId, setActiveId] = useState(USERS[0]?._id);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
 
-  const handleSelect = useCallback((id: string) => {
-    setActiveId(id);
+  const handleSelect = useCallback((userId: string) => {
+    setActiveId(userId);
     setMobilePane("thread");
-    setConversations((current) =>
-      current.map((conversation) =>
-        conversation.id === id
-          ? { ...conversation, unreadCount: 0 }
-          : conversation,
+    setMessages((current) =>
+      current.map((message) =>
+        message.senderId === userId &&
+        message.receiverId === CURRENT_USER_ID &&
+        !message.isRead
+          ? { ...message, isRead: true }
+          : message,
       ),
     );
   }, []);
@@ -26,13 +28,17 @@ function Chat() {
   return (
     <>
       <Conversations
-        conversations={conversations}
+        users={USERS}
+        messages={messages}
+        currentUserId={CURRENT_USER_ID}
         activeId={activeId}
         onSelect={handleSelect}
         className={cn(mobilePane === "thread" && "hidden md:flex")}
       />
       <Message
-        conversations={conversations}
+        users={USERS}
+        messages={messages}
+        currentUserId={CURRENT_USER_ID}
         activeId={activeId}
         mobilePane={mobilePane}
         onBack={() => setMobilePane("list")}

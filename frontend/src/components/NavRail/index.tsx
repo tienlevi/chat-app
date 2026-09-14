@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserAvatar from "@/components/UserAvatar";
-import { CURRENT_USER_ID, PARTICIPANTS } from "@/constants/mock-chat";
+import { CURRENT_USER } from "@/constants/mock-chat";
 
 type NavItemId = "chats" | "contacts" | "saved" | "archive";
 
@@ -33,7 +33,7 @@ interface NavRailProps {
 
 function NavRail({ active = "chats", onSelect, className }: NavRailProps) {
   const { t } = useTranslation();
-  const me = PARTICIPANTS[CURRENT_USER_ID];
+  const me = CURRENT_USER;
 
   return (
     <nav
@@ -102,8 +102,8 @@ function NavRail({ active = "chats", onSelect, className }: NavRailProps) {
 
         <UserAvatar
           name={me.name}
-          seed={me.id}
-          status={me.status}
+          seed={me._id}
+          src={me.avatar}
           size="md"
           className="mt-1"
         />

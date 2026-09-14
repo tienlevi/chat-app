@@ -66,9 +66,9 @@
       "searchPlaceholder": "Search conversations",
       "filters": {
         "all": "All",
-        "unread": "Unread",
-        "groups": "Groups"
+        "unread": "Unread"
       },
+      "youPrefix": "You: {{text}}",
       "empty": "No conversations found"
     },
     "header": {

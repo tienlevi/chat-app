@@ -22,10 +22,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import UserAvatar from "@/components/UserAvatar";
-import type { Conversation } from "@/interfaces/chat";
+import type IUser from "@/interfaces/user";
 
 interface Props {
-  conversation: Conversation;
+  user: IUser;
   detailsOpen: boolean;
   onToggleDetails: () => void;
   onBack: () => void;
@@ -33,14 +33,13 @@ interface Props {
 }
 
 function MessageHeader({
-  conversation,
+  user,
   detailsOpen,
   onToggleDetails,
   onBack,
   className,
 }: Props) {
   const { t } = useTranslation();
-  const primary = conversation.participants[0];
 
   return (
     <header
@@ -60,9 +59,9 @@ function MessageHeader({
       </Button>
 
       <UserAvatar
-        name={conversation.name}
-        seed={conversation.id}
-        status={conversation.kind === "direct" ? primary?.status : undefined}
+        name={user.name}
+        seed={user._id}
+        src={user.avatar}
         size="md"
       />
 

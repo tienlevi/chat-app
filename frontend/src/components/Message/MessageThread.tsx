@@ -1,16 +1,15 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { CURRENT_USER_ID, MESSAGES, PARTICIPANTS } from "@/constants/mock-chat";
 import {
   dayKey,
   daysAgo,
   formatDayDivider,
   minutesBetween,
 } from "@/utils/datetime";
-import type { Conversation } from "@/interfaces/chat";
+import type { IMessage } from "@/interfaces/message";
+import type IUser from "@/interfaces/user";
 import MessageBubble from "./MessageBubble";
-import { ChatMessage } from "@/interfaces/message";
 
 /** Messages closer together than this by the same author render as one run. */
 const GROUP_WINDOW_MINUTES = 5;
@@ -18,10 +17,10 @@ const GROUP_WINDOW_MINUTES = 5;
 interface DayBucket {
   key: string;
   iso: string;
-  messages: ChatMessage[];
+  messages: IMessage[];
 }
 
-const bucketByDay = (messages: ChatMessage[]): DayBucket[] =>
+const bucketByDay = (messages: IMessage[]): DayBucket[] =>
   messages.reduce<DayBucket[]>((buckets, message) => {
     const key = dayKey(message.createdAt);
     const current = buckets[buckets.length - 1];
@@ -36,30 +35,32 @@ const bucketByDay = (messages: ChatMessage[]): DayBucket[] =>
   }, []);
 
 interface MessageThreadProps {
-  conversation: Conversation;
+  /** Messages between the current user and `participant`, oldest first. */
+  messages: IMessage[];
+  participant: IUser;
+  currentUserId: string;
   className?: string;
 }
 
-function MessageThread({ conversation, className }: MessageThreadProps) {
+function MessageThread({
+  messages,
+  participant,
+  currentUserId,
+  className,
+}: MessageThreadProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.resolvedLanguage ?? "en";
   const bottomRef = useRef<HTMLDivElement>(null);
-
-  // TODO: swap for the messages endpoint once it is wired up.
-  const messages = useMemo(
-    () => MESSAGES[conversation.id] ?? [],
-    [conversation.id],
-  );
 
   const days = useMemo(() => bucketByDay(messages), [messages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
-  }, [conversation.id]);
+  }, [participant._id]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages.length, conversation.typing]);
+  }, [messages.length]);
 
   return (
     <div
@@ -88,7 +89,7 @@ function MessageThread({ conversation, className }: MessageThreadProps) {
               {day.messages.map((message, index) => {
                 const previous = day.messages[index - 1];
                 const next = day.messages[index + 1];
-                const isOwn = message.senderId === CURRENT_USER_ID;
+                const isOwn = message.senderId === currentUserId;
 
                 const isFirstOfGroup =
                   !previous ||
@@ -106,7 +107,7 @@ function MessageThread({ conversation, className }: MessageThreadProps) {
                   <MessageBubble
                     key={message._id}
                     message={message}
-                    author={PARTICIPANTS[message.senderId]}
+                    author={isOwn ? undefined : participant}
                     isOwn={isOwn}
                     isFirstOfGroup={isFirstOfGroup}
                     isLastOfGroup={isLastOfGroup}

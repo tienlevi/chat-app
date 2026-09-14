@@ -14,7 +14,7 @@ export interface MessageFile {
   url: string;
 }
 
-export interface ChatMessage {
+export interface IMessage {
   _id: string;
   senderId: string;
   receiverId: string;

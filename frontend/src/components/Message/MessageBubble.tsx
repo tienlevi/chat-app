@@ -3,8 +3,8 @@ import { Check, CheckCheck, FileText, Film, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import { formatTime } from "@/utils/datetime";
-import type { ChatParticipant } from "@/interfaces/chat";
-import { ChatMessage, MessageFileType } from "@/interfaces/message";
+import type { IMessage, MessageFileType } from "@/interfaces/message";
+import type IUser from "@/interfaces/user";
 
 const FILE_ICON: Record<MessageFileType, typeof FileText> = {
   file: FileText,
@@ -18,8 +18,8 @@ const fileName = (url: string): string => {
 };
 
 interface MessageBubbleProps {
-  message: ChatMessage;
-  author?: ChatParticipant;
+  message: IMessage;
+  author?: IUser;
   isOwn: boolean;
   isFirstOfGroup: boolean;
   isLastOfGroup: boolean;
@@ -47,7 +47,12 @@ function MessageBubble({
     >
       <div className="w-8 shrink-0">
         {!isOwn && isLastOfGroup && author ? (
-          <UserAvatar name={author.name} seed={author.id} size="sm" />
+          <UserAvatar
+            name={author.name}
+            seed={author._id}
+            src={author.avatar}
+            size="sm"
+          />
         ) : null}
       </div>
 

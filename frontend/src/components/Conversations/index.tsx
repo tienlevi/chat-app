@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BellOff, Pin, PenSquare, Search } from "lucide-react";
+import { PenSquare, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,19 +12,26 @@ import {
 } from "@/components/ui/tooltip";
 import UserAvatar from "@/components/UserAvatar";
 import { formatListStamp } from "@/utils/datetime";
-import type { Conversation, ConversationFilter } from "@/interfaces/chat";
+import { countUnread, getThread } from "@/utils/message";
+import type { ConversationFilter } from "@/interfaces/chat";
+import type { IMessage } from "@/interfaces/message";
+import type IUser from "@/interfaces/user";
 
-const FILTERS: ConversationFilter[] = ["all", "unread", "groups"];
+const FILTERS: ConversationFilter[] = ["all", "unread"];
 
 interface ConversationListProps {
-  conversations: Conversation[];
-  activeId: string;
-  onSelect: (id: string) => void;
+  users: IUser[];
+  messages: IMessage[];
+  currentUserId: string;
+  activeId?: string;
+  onSelect: (userId: string) => void;
   className?: string;
 }
 
 function Conversations({
-  conversations,
+  users,
+  messages,
+  currentUserId,
   activeId,
   onSelect,
   className,
@@ -33,30 +40,41 @@ function Conversations({
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<ConversationFilter>("all");
 
+  const rows = useMemo(
+    () =>
+      users.map((user) => {
+        const thread = getThread(messages, currentUserId, user._id);
+
+        return {
+          user,
+          lastMessage: thread[thread.length - 1] as IMessage | undefined,
+          unreadCount: countUnread(messages, currentUserId, user._id),
+        };
+      }),
+    [users, messages, currentUserId],
+  );
+
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
 
-    return conversations
-      .filter((conversation) => {
-        if (filter === "unread" && conversation.unreadCount === 0) return false;
-        if (filter === "groups" && conversation.kind !== "group") return false;
+    return rows
+      .filter(({ user, lastMessage, unreadCount }) => {
+        if (filter === "unread" && unreadCount === 0) return false;
         if (!needle) return true;
 
         return (
-          conversation.name.toLowerCase().includes(needle) ||
-          conversation.preview.toLowerCase().includes(needle)
+          user.name.toLowerCase().includes(needle) ||
+          Boolean(lastMessage?.text.toLowerCase().includes(needle))
         );
       })
-      .sort((a, b) => {
-        if (Boolean(a.pinned) !== Boolean(b.pinned)) return a.pinned ? -1 : 1;
-        return b.updatedAt.localeCompare(a.updatedAt);
-      });
-  }, [conversations, filter, query]);
+      .sort((a, b) =>
+        (b.lastMessage?.createdAt ?? "").localeCompare(
+          a.lastMessage?.createdAt ?? "",
+        ),
+      );
+  }, [rows, filter, query]);
 
-  const unreadTotal = conversations.reduce(
-    (total, conversation) => total + conversation.unreadCount,
-    0,
-  );
+  const unreadTotal = rows.reduce((total, row) => total + row.unreadCount, 0);
 
   return (
     <section
@@ -124,15 +142,19 @@ function Conversations({
 
       <ScrollArea className="min-h-0 flex-1">
         <ul className="flex flex-col gap-0.5 px-2 pb-3">
-          {visible.map((conversation) => {
-            const isActive = conversation.id === activeId;
-            const primary = conversation.participants[0];
+          {visible.map(({ user, lastMessage, unreadCount }) => {
+            const isActive = user._id === activeId;
+            const preview = lastMessage?.isDeleted
+              ? t("chat.thread.deleted")
+              : (lastMessage?.text ?? "");
 
             return (
-              <li key={conversation.id}>
+              <li key={user._id ?? user.email}>
                 <button
                   type="button"
-                  onClick={() => onSelect(conversation.id)}
+                  onClick={() => {
+                    if (user._id) onSelect(user._id);
+                  }}
                   aria-current={isActive ? "true" : undefined}
                   className={cn(
                     "group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors",
@@ -141,52 +163,44 @@ function Conversations({
                   )}
                 >
                   <UserAvatar
-                    name={conversation.name}
-                    seed={conversation.id}
-                    status={
-                      conversation.kind === "direct"
-                        ? primary?.status
-                        : undefined
-                    }
+                    name={user.name}
+                    seed={user._id}
+                    src={user.avatar}
                     size="lg"
                   />
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
-                      {conversation.pinned ? (
-                        <Pin className="size-3 shrink-0 rotate-45 text-muted-foreground" />
-                      ) : null}
                       <span className="truncate text-sm font-semibold">
-                        {conversation.name}
+                        {user.name}
                       </span>
-                      {conversation.muted ? (
-                        <BellOff className="size-3 shrink-0 text-muted-foreground" />
+                      {lastMessage ? (
+                        <span className="ml-auto shrink-0 text-[11px] text-muted-foreground tabular-nums">
+                          {formatListStamp(
+                            lastMessage.createdAt,
+                            i18n.resolvedLanguage ?? "en",
+                          )}
+                        </span>
                       ) : null}
-                      <span className="ml-auto shrink-0 text-[11px] text-muted-foreground tabular-nums">
-                        {formatListStamp(
-                          conversation.updatedAt,
-                          i18n.resolvedLanguage ?? "en",
-                        )}
-                      </span>
                     </div>
 
                     <div className="mt-1 flex items-center gap-2">
                       <p
                         className={cn(
                           "min-w-0 flex-1 truncate text-[13px]",
-                          conversation.unreadCount > 0
+                          unreadCount > 0
                             ? "font-medium text-foreground"
                             : "text-muted-foreground",
                         )}
                       >
-                        {conversation.typing
-                          ? t("chat.thread.typingShort")
-                          : conversation.preview}
+                        {lastMessage?.senderId === currentUserId
+                          ? t("chat.list.youPrefix", { text: preview })
+                          : preview}
                       </p>
 
-                      {conversation.unreadCount > 0 ? (
+                      {unreadCount > 0 ? (
                         <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums">
-                          {conversation.unreadCount}
+                          {unreadCount}
                         </span>
                       ) : null}
                     </div>

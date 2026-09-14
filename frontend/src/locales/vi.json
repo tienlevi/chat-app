@@ -65,9 +65,9 @@
       "searchPlaceholder": "Tìm cuộc trò chuyện",
       "filters": {
         "all": "Tất cả",
-        "unread": "Chưa đọc",
-        "groups": "Nhóm"
+        "unread": "Chưa đọc"
       },
+      "youPrefix": "Bạn: {{text}}",
       "empty": "Không tìm thấy cuộc trò chuyện nào"
     },
     "header": {
