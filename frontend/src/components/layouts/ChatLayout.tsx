@@ -16,9 +16,11 @@ function ChatLayout({ children }: { children: React.ReactNode }) {
 
           <LanguageSwitcher className="absolute top-6 right-8 z-20 hidden xl:inline-flex" />
 
-          <div className="flex min-h-0 flex-1 gap-3 p-3">
-            <NavRail />
-            {children}
+          <div className="flex flex-1 gap-3 p-3">
+            <div className="w-[5%] hidden shrink-0 flex-col items-center gap-1 rounded-3xl border border-border bg-card py-5 md:flex">
+              <NavRail />
+            </div>
+            <div className="w-[95%]">{children}</div>
           </div>
         </div>
       </TooltipProvider>

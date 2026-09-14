@@ -7,8 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import NavBottom from "./NavBottom";
 
 const NAV_ITEMS: {
@@ -21,19 +20,12 @@ const NAV_ITEMS: {
   { id: "contacts", path: "/friends", icon: Users },
 ];
 
-interface NavRailProps {
-  active?: string;
-}
-
-function NavRail({ active = "chats" }: NavRailProps) {
+function NavRail() {
   const { t } = useTranslation();
+  const location = useLocation();
 
   return (
-    <nav
-      className={cn(
-        "hidden w-[76px] shrink-0 flex-col items-center gap-1 rounded-3xl border border-border bg-card py-5 md:flex",
-      )}
-    >
+    <>
       <img
         src={IMAGES.icon}
         alt={t("common.appName")}
@@ -41,7 +33,7 @@ function NavRail({ active = "chats" }: NavRailProps) {
       />
 
       {NAV_ITEMS.map(({ id, icon: Icon, badge, path }) => {
-        const isActive = id === active;
+        const isActive = location.pathname === path;
 
         return (
           <Tooltip key={id}>
@@ -69,7 +61,7 @@ function NavRail({ active = "chats" }: NavRailProps) {
       })}
 
       <NavBottom />
-    </nav>
+    </>
   );
 }
 

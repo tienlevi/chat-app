@@ -26,7 +26,7 @@ function Chat() {
   }, []);
 
   return (
-    <>
+    <div className="flex gap-3.5">
       <Conversations
         users={USERS}
         messages={messages}
@@ -43,7 +43,7 @@ function Chat() {
         mobilePane={mobilePane}
         onBack={() => setMobilePane("list")}
       />
-    </>
+    </div>
   );
 }
 

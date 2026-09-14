@@ -67,7 +67,7 @@ function Conversations({
   return (
     <section
       className={cn(
-        "flex min-h-0 w-full flex-col rounded-3xl border border-border bg-card md:w-[336px] md:shrink-0",
+        "flex h-screen w-full flex-col rounded-3xl border border-border bg-card md:w-[336px] md:shrink-0 overflow-auto",
         className,
       )}
     >

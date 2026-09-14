@@ -42,7 +42,7 @@ function Message({
   return (
     <div
       className={cn(
-        "flex min-h-0 min-w-0 flex-1 flex-col rounded-3xl border border-border bg-card",
+        "flex w-full h-screen overflow-auto flex-col rounded-3xl border border-border bg-card",
         mobilePane === "list" && "hidden md:flex",
       )}
     >
