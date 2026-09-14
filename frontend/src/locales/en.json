@@ -111,6 +111,38 @@
     }
   },
 
+  "friends": {
+    "title": "Friends",
+    "summary_one": "{{count}} friend",
+    "summary_other": "{{count}} friends",
+    "add": "Add friend",
+    "searchPlaceholder": "Search friends",
+    "tabs": {
+      "all": "All",
+      "requests": "Requests",
+      "blocked": "Blocked"
+    },
+    "muted": "Notifications muted",
+    "empty": "No friends found",
+    "requests": {
+      "heading_one": "{{count}} pending request",
+      "heading_other": "{{count}} pending requests",
+      "incoming": "Wants to be your friend",
+      "accept": "Accept",
+      "decline": "Decline",
+      "emptyTitle": "No friend requests",
+      "emptySubtitle": "New requests will show up here."
+    },
+    "blocked": {
+      "heading_one": "{{count}} blocked user",
+      "heading_other": "{{count}} blocked users",
+      "description": "Can't message or call you",
+      "unblock": "Unblock",
+      "emptyTitle": "No blocked users",
+      "emptySubtitle": "People you block will show up here."
+    }
+  },
+
   "errors": {
     "ACCOUNT_NOT_FOUND": "Account doesn't exist",
     "ACCOUNT_NOT_AUTHENTICATED": "Please verify your email before logging in",

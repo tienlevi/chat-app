@@ -110,6 +110,35 @@
     }
   },
 
+  "friends": {
+    "title": "Bạn bè",
+    "summary_other": "{{count}} bạn bè",
+    "add": "Thêm bạn",
+    "searchPlaceholder": "Tìm bạn bè",
+    "tabs": {
+      "all": "Tất cả",
+      "requests": "Lời mời",
+      "blocked": "Đã chặn"
+    },
+    "muted": "Đã tắt thông báo",
+    "empty": "Không tìm thấy bạn bè nào",
+    "requests": {
+      "heading_other": "{{count}} lời mời đang chờ",
+      "incoming": "Muốn kết bạn với bạn",
+      "accept": "Chấp nhận",
+      "decline": "Từ chối",
+      "emptyTitle": "Không có lời mời kết bạn",
+      "emptySubtitle": "Lời mời mới sẽ hiển thị tại đây."
+    },
+    "blocked": {
+      "heading_other": "{{count}} người đã chặn",
+      "description": "Không thể nhắn tin hoặc gọi cho bạn",
+      "unblock": "Bỏ chặn",
+      "emptyTitle": "Không có người bị chặn",
+      "emptySubtitle": "Những người bạn chặn sẽ hiển thị tại đây."
+    }
+  },
+
   "errors": {
     "ACCOUNT_NOT_FOUND": "Tài khoản không tồn tại",
     "ACCOUNT_NOT_AUTHENTICATED": "Vui lòng xác thực email trước khi đăng nhập",

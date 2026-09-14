@@ -1,6 +1,7 @@
 import ChatLayout from "@/components/layouts/ChatLayout";
 import { Routes } from "@/interfaces/routes";
 import Chat from "@/pages/Chat";
+import Friends from "@/pages/Friends";
 import Home from "@/pages/Home";
 import Register from "@/pages/Register";
 
@@ -24,6 +25,16 @@ export const routers: Routes[] = [
     element: (
       <ChatLayout>
         <Chat />
+      </ChatLayout>
+    ),
+  },
+  {
+    href: "/friends",
+    id: "friends",
+    name: "Friends",
+    element: (
+      <ChatLayout>
+        <Friends />
       </ChatLayout>
     ),
   },
