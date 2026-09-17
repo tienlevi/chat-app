@@ -7,11 +7,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CURRENT_USER } from "@/constants/mock-chat";
+import useLogout from "@/hooks/useLogout";
 import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 function NavBottom() {
   const { t } = useTranslation();
+  const logout = useLogout();
 
   return (
     <div className="mt-auto flex flex-col items-center gap-2">
@@ -24,6 +26,7 @@ function NavBottom() {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
+            onClick={logout}
             variant="ghost"
             size="icon-sm"
             className="rounded-full text-muted-foreground"
