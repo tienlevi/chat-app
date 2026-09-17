@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Token } from '../../schemas/token.schema';
-import { AuthenticatedRequest } from '../../interfaces/request';
 
 @Injectable()
 export class TokenService {
@@ -12,20 +11,21 @@ export class TokenService {
     @InjectModel(Token.name) private tokenModel: Model<Token>,
   ) {}
 
-  async refreshToken(req: AuthenticatedRequest) {
-    const { userId } = req.user;
-    const payload = { userId };
+  async refreshToken(token: string) {
+    const user = await this.jwtService.verifyAsync(token);
+    console.log('🚀 ~ TokenService ~ refreshToken ~ user:', user);
+    const payload = { userId: user.userId };
 
     const newAccessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '30s',
     });
     const newRefreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '3d',
+      expiresIn: '1m',
     });
 
     await this.tokenModel.findOneAndUpdate(
-      { userId },
-      { refreshToken: newRefreshToken, userId },
+      { userId: payload.userId },
+      { refreshToken: newRefreshToken, userId: payload.userId },
       { new: true, upsert: true },
     );
 
