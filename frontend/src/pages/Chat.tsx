@@ -4,9 +4,11 @@ import { useCallback, useState } from "react";
 import type { IMessage } from "@/interfaces/message";
 import { CURRENT_USER_ID, MESSAGES, USERS } from "@/constants/mock-chat";
 import { cn } from "@/lib/utils";
+import useAuth from "@/hooks/useAuth";
 
 function Chat() {
-  // TODO: swap for the friends and messages endpoints once they are wired up.
+  const { data: user } = useAuth();
+  console.log("🚀 ~ Home ~ user:", user);
   const [messages, setMessages] = useState<IMessage[]>(MESSAGES);
   const [activeId, setActiveId] = useState(USERS[0]?._id);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");

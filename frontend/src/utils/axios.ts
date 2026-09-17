@@ -47,7 +47,6 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    console.log("🚀 ~ error:", error);
     const config = error.config as RetriableConfig | undefined;
 
     if (!config || config._retry || error.response?.status !== 401) {
@@ -58,11 +57,17 @@ instance.interceptors.response.use(
 
     try {
       const refreshTokenKey = Cookies.get(REFRESH_TOKEN_KEY);
-      const newAccessToken = await refreshToken(refreshTokenKey || "");
-      config.headers.Authorization = `Bearer ${newAccessToken}`;
+      const token = await refreshToken(refreshTokenKey || "");
+
+      config.headers.Authorization = `Bearer ${token.data.accessToken}`;
+      localStorage.setItem(ACCESS_TOKEN_KEY, token.data.accessToken);
+      Cookies.set(REFRESH_TOKEN_KEY, token.data.refreshToken);
+      return instance(config);
     } catch (error) {
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      Cookies.remove(REFRESH_TOKEN_KEY);
       console.log("🚀 ~ error:", error);
-      return Promise.reject(error);
+      Promise.reject(error);
     }
   },
 );

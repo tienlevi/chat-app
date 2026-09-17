@@ -4,28 +4,39 @@ import Chat from "@/pages/Chat";
 import Friends from "@/pages/Friends";
 import Home from "@/pages/Home";
 import Register from "@/pages/Register";
+import AuthGuard from "./AuthGuard";
 
 export const routers: Routes[] = [
   {
     href: "/",
     id: "home",
     name: "Home",
-    element: <Home />,
+    element: (
+      <AuthGuard>
+        <Home />
+      </AuthGuard>
+    ),
   },
   {
     href: "/register",
     id: "register",
     name: "Register",
-    element: <Register />,
+    element: (
+      <AuthGuard>
+        <Register />
+      </AuthGuard>
+    ),
   },
   {
     href: "/chat",
     id: "chat",
     name: "Chat",
     element: (
-      <ChatLayout>
-        <Chat />
-      </ChatLayout>
+      <AuthGuard>
+        <ChatLayout>
+          <Chat />
+        </ChatLayout>
+      </AuthGuard>
     ),
   },
   {
@@ -33,9 +44,11 @@ export const routers: Routes[] = [
     id: "friends",
     name: "Friends",
     element: (
-      <ChatLayout>
-        <Friends />
-      </ChatLayout>
+      <AuthGuard>
+        <ChatLayout>
+          <Friends />
+        </ChatLayout>
+      </AuthGuard>
     ),
   },
 
