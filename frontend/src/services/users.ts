@@ -6,3 +6,8 @@ export const getUser = async (accessToken: string) => {
   });
   return response.data;
 };
+
+export const getUsers = async (name: string) => {
+  const response = await instance.get(`/users`, { params: { name } });
+  return response.data || [];
+};

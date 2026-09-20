@@ -15,11 +15,16 @@ export class UserService {
     return user;
   }
 
-  async getUsers() {
+  async getUsers(name?: string) {
     const users = await this.userModel
       .find()
       .select({ password: 0, createdAt: 0, updatedAt: 0, isAuthenticated: 0 });
 
-    return users;
+    if (!name) {
+      return users;
+    }
+
+    const keyword = name.toLowerCase();
+    return users.filter((user) => user.name.toLowerCase().includes(keyword));
   }
 }
