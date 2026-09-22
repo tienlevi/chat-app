@@ -13,7 +13,7 @@ import type { FriendTab } from "@/interfaces/friend";
 const TABS: FriendTab[] = ["all", "requests", "blocked"];
 
 interface Props {
-  counts: Record<FriendTab, number>;
+  counts: number;
   query: string;
   setQuery: (query: string) => void;
   tab: FriendTab;
@@ -32,7 +32,7 @@ function FriendHeader({ counts, query, setQuery, tab, setTab }: Props) {
               {t("friends.title")}
             </h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              {t("friends.summary", { count: counts.all })}
+              {t("friends.summary", { count: counts })}
             </p>
           </div>
 
@@ -74,10 +74,8 @@ function FriendHeader({ counts, query, setQuery, tab, setTab }: Props) {
               )}
             >
               {t(`friends.tabs.${option}`)}
-              {counts[option] > 0 ? (
-                <span className="tabular-nums opacity-70">
-                  {counts[option]}
-                </span>
+              {counts > 0 ? (
+                <span className="tabular-nums opacity-70">{counts}</span>
               ) : null}
             </button>
           ))}
