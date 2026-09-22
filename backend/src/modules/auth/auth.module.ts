@@ -13,6 +13,7 @@ import { MailModule } from '../../mail/mail.module';
 import { MailService } from '../../mail/mail.service';
 import { RegisterMiddleware } from '../../middlewares/register.middleware';
 import { Otp, OtpSchema } from '../../schemas/otp.schema';
+import { Friend, FriendSchema } from '../../schemas/friend.schema';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Otp, OtpSchema } from '../../schemas/otp.schema';
       { name: User.name, schema: UserSchema },
       { name: Token.name, schema: TokenSchema },
       { name: Otp.name, schema: OtpSchema },
+      { name: Friend.name, schema: FriendSchema },
     ]),
     MailModule,
   ],

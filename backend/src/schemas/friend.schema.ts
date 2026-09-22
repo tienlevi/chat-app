@@ -6,7 +6,7 @@ class FriendList {
   _id: Types.ObjectId;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  userId: string;
+  userId: Types.ObjectId;
 
   @Prop({ default: null })
   nickname?: string;
@@ -24,7 +24,7 @@ class FriendList {
 @Schema({ versionKey: false, timestamps: true })
 export class Friend {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  userId: string;
+  userId: Types.ObjectId;
 
   @Prop({ type: [FriendList], default: [] })
   friends: FriendList[];

@@ -9,6 +9,7 @@ import { MailService } from '../../mail/mail.service';
 import { baseApi, ResponseCode } from '../../constants';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from '../../schemas/token.schema';
+import { Friend } from '../../schemas/friend.schema';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Otp.name) private otpModel: Model<Otp>,
     @InjectModel(Token.name) private tokenModel: Model<Token>,
+    @InjectModel(Friend.name) private friendModel: Model<Friend>,
     private mailService: MailService,
     private jwtService: JwtService,
   ) {}
@@ -59,10 +61,10 @@ export class AuthService {
     const payload = { userId: user._id };
 
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '30s',
+      expiresIn: '20m',
     });
     const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '3d',
+      expiresIn: '30m',
     });
 
     await this.tokenModel.findOneAndUpdate(
@@ -93,6 +95,12 @@ export class AuthService {
     const user = await this.userModel.findOneAndUpdate(
       { email },
       { name, email, avatar, password: hashedPassword },
+      { new: true, upsert: true },
+    );
+
+    await this.friendModel.findOneAndUpdate(
+      { userId: user._id },
+      { friends: [] },
       { new: true, upsert: true },
     );
 
