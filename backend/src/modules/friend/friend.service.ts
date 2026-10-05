@@ -21,6 +21,27 @@ export class FriendService {
     return friends.filter((friend) => friend.userId !== userId);
   }
 
+  async searchFriends(name: string, userId: string) {
+    const users = await this.userModel.find().select({
+      password: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      isAuthenticated: 0,
+    });
+
+    if (!name) {
+      return users;
+    }
+
+    const keyword = name.toLowerCase();
+    const result = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(keyword) && user.name !== userId,
+    );
+
+    return result;
+  }
+
   async addFriend(userId: string, friendId: string) {
     if (userId === friendId) {
       throw new BadRequestException('You cannot add yourself');

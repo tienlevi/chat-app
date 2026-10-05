@@ -17,10 +17,10 @@ export class TokenService {
     const payload = { userId: user.userId };
 
     const newAccessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '30s',
+      expiresIn: '20m',
     });
     const newRefreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: '1m',
+      expiresIn: '30m',
     });
 
     await this.tokenModel.findOneAndUpdate(
