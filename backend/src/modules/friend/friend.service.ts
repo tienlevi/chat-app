@@ -28,15 +28,15 @@ export class FriendService {
       updatedAt: 0,
       isAuthenticated: 0,
     });
+    const list = users.filter((user) => user.id !== userId);
 
     if (!name) {
-      return users;
+      return list;
     }
 
     const keyword = name.toLowerCase();
-    const result = users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(keyword) && user.name !== userId,
+    const result = list.filter((user) =>
+      user.name.toLowerCase().includes(keyword),
     );
 
     return result;

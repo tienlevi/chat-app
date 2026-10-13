@@ -2,7 +2,7 @@ import { QUERY_KEY } from "@/constants/query-key";
 import { IFriend } from "@/interfaces/friend";
 import IUser from "@/interfaces/user";
 import { getFriendsByUserId, searchFriends } from "@/services/friends";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 function useFriends(debounce?: string) {
   const { data: friends, isLoading: isLoadingFriend } = useQuery<IFriend[]>({
@@ -14,7 +14,6 @@ function useFriends(debounce?: string) {
   const { data: users, isLoading: isLoadingUsers } = useQuery<IUser[]>({
     queryKey: [QUERY_KEY.FRIENDS, "search", debounce || ""],
     queryFn: async () => await searchFriends(debounce || ""),
-    placeholderData: keepPreviousData,
   });
 
   return {
