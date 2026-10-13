@@ -1,6 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check } from "lucide-react";
+import { Check, Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,8 @@ function RegisterForm() {
   const imageRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { mutate: handleRegister, isPending } = useRegister();
 
   const handleCropConfirm = (_: File, previewUrl: string) => {
@@ -176,11 +178,24 @@ function RegisterForm() {
               >
                 {t("auth.register.passwordLabel")}
               </Label>
-              <Input
-                type="password"
-                className="h-12 rounded-xl text-base font-medium"
-                {...field}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  className="h-12 rounded-xl pr-10 text-base font-medium"
+                  {...field}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-5" />
+                  ) : (
+                    <Eye className="size-5" />
+                  )}
+                </button>
+              </div>
               {fieldState.error && (
                 <p id="password-message" className="text-sm text-destructive">
                   {fieldState.error.message}
@@ -200,11 +215,24 @@ function RegisterForm() {
               >
                 {t("auth.register.confirmPasswordLabel")}
               </Label>
-              <Input
-                type="password"
-                className="h-12 rounded-xl text-base font-medium"
-                {...field}
-              />
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  className="h-12 rounded-xl pr-10 text-base font-medium"
+                  {...field}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="size-5" />
+                  ) : (
+                    <Eye className="size-5" />
+                  )}
+                </button>
+              </div>
               {fieldState.error && (
                 <p
                   id="confirmPassword-message"

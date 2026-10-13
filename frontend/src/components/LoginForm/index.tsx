@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ function LoginForm() {
     },
   });
   const { mutate: handleLogin, isPending } = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   function onSubmit(values: LoginFormValues) {
     handleLogin(values);
@@ -89,11 +90,24 @@ function LoginForm() {
                   {t("auth.login.forgotPassword")}
                 </a>
               </div>
-              <Input
-                type="password"
-                className="h-12 rounded-xl text-base font-medium"
-                {...field}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  className="h-12 rounded-xl pr-10 text-base font-medium"
+                  {...field}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-5" />
+                  ) : (
+                    <Eye className="size-5" />
+                  )}
+                </button>
+              </div>
               {fieldState.error && (
                 <p id="password-message" className="text-sm text-destructive">
                   {fieldState.error.message}
