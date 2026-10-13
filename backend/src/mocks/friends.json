@@ -1,0 +1,151 @@
+[
+  {
+    "_id": { "$oid": "665f1b000000000000000001" },
+    "userId": { "$oid": "665f1a000000000000000001" },
+    "friends": [
+      {
+        "_id": { "$oid": "665f1c000000000000000101" },
+        "userId": { "$oid": "665f1a000000000000000002" },
+        "nickname": "Binh",
+        "mutedNotification": false,
+        "isBlocked": false,
+        "pinMessage": []
+      },
+      {
+        "_id": { "$oid": "665f1c000000000000000102" },
+        "userId": { "$oid": "665f1a000000000000000003" },
+        "nickname": null,
+        "mutedNotification": true,
+        "isBlocked": false,
+        "pinMessage": []
+      },
+      {
+        "_id": { "$oid": "665f1c000000000000000103" },
+        "userId": { "$oid": "665f1a000000000000000004" },
+        "nickname": null,
+        "mutedNotification": false,
+        "isBlocked": true,
+        "pinMessage": []
+      }
+    ],
+    "friendsRequest": ["665f1a000000000000000005", "665f1a000000000000000006"],
+    "createdAt": { "$date": "2026-09-01T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-10T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "665f1b000000000000000002" },
+    "userId": { "$oid": "665f1a000000000000000002" },
+    "friends": [
+      {
+        "_id": { "$oid": "665f1c000000000000000201" },
+        "userId": { "$oid": "665f1a000000000000000001" },
+        "nickname": null,
+        "mutedNotification": false,
+        "isBlocked": false,
+        "pinMessage": []
+      },
+      {
+        "_id": { "$oid": "665f1c000000000000000202" },
+        "userId": { "$oid": "665f1a000000000000000003" },
+        "nickname": "Chau",
+        "mutedNotification": false,
+        "isBlocked": false,
+        "pinMessage": []
+      }
+    ],
+    "friendsRequest": ["665f1a000000000000000007"],
+    "createdAt": { "$date": "2026-09-02T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-10T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "665f1b000000000000000003" },
+    "userId": { "$oid": "665f1a000000000000000003" },
+    "friends": [
+      {
+        "_id": { "$oid": "665f1c000000000000000301" },
+        "userId": { "$oid": "665f1a000000000000000001" },
+        "nickname": null,
+        "mutedNotification": false,
+        "isBlocked": false,
+        "pinMessage": []
+      },
+      {
+        "_id": { "$oid": "665f1c000000000000000302" },
+        "userId": { "$oid": "665f1a000000000000000002" },
+        "nickname": null,
+        "mutedNotification": false,
+        "isBlocked": false,
+        "pinMessage": []
+      },
+      {
+        "_id": { "$oid": "665f1c000000000000000303" },
+        "userId": { "$oid": "665f1a000000000000000005" },
+        "nickname": "Ha",
+        "mutedNotification": true,
+        "isBlocked": false,
+        "pinMessage": []
+      }
+    ],
+    "friendsRequest": [],
+    "createdAt": { "$date": "2026-09-03T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-10T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "665f1b000000000000000004" },
+    "userId": { "$oid": "665f1a000000000000000004" },
+    "friends": [
+      {
+        "_id": { "$oid": "665f1c000000000000000401" },
+        "userId": { "$oid": "665f1a000000000000000001" },
+        "nickname": null,
+        "mutedNotification": false,
+        "isBlocked": false,
+        "pinMessage": []
+      }
+    ],
+    "friendsRequest": ["665f1a000000000000000008"],
+    "createdAt": { "$date": "2026-09-04T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-10T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "665f1b000000000000000005" },
+    "userId": { "$oid": "665f1a000000000000000005" },
+    "friends": [
+      {
+        "_id": { "$oid": "665f1c000000000000000501" },
+        "userId": { "$oid": "665f1a000000000000000003" },
+        "nickname": null,
+        "mutedNotification": false,
+        "isBlocked": false,
+        "pinMessage": []
+      }
+    ],
+    "friendsRequest": [],
+    "createdAt": { "$date": "2026-09-05T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-10T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "665f1b000000000000000006" },
+    "userId": { "$oid": "665f1a000000000000000006" },
+    "friends": [],
+    "friendsRequest": ["665f1a000000000000000002"],
+    "createdAt": { "$date": "2026-09-06T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-10T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "665f1b000000000000000007" },
+    "userId": { "$oid": "665f1a000000000000000007" },
+    "friends": [],
+    "friendsRequest": ["665f1a000000000000000001"],
+    "createdAt": { "$date": "2026-09-07T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-10T08:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "665f1b000000000000000008" },
+    "userId": { "$oid": "665f1a000000000000000008" },
+    "friends": [],
+    "friendsRequest": [],
+    "createdAt": { "$date": "2026-09-08T08:00:00.000Z" },
+    "updatedAt": { "$date": "2026-09-08T08:00:00.000Z" }
+  }
+]
