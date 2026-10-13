@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import type { FriendTab } from "@/interfaces/friend";
 
-const TABS: FriendTab[] = ["all", "requests", "blocked"];
+const TABS: FriendTab[] = ["all", "requests", "blocked", "common-friends"];
 
 interface Props {
   counts: number;
@@ -74,9 +74,6 @@ function FriendHeader({ counts, query, setQuery, tab, setTab }: Props) {
               )}
             >
               {t(`friends.tabs.${option}`)}
-              {counts > 0 ? (
-                <span className="tabular-nums opacity-70">{counts}</span>
-              ) : null}
             </button>
           ))}
         </div>

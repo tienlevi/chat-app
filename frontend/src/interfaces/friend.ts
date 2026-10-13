@@ -1,4 +1,4 @@
-export type FriendTab = "all" | "requests" | "blocked";
+export type FriendTab = "all" | "common-friends" | "requests" | "blocked";
 
 export interface FriendListItem {
   _id: string;

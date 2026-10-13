@@ -16,7 +16,7 @@ export class UserController {
   }
 
   @Get('users')
-  async getUsers(@Query('name') name: string) {
-    return await this.userService.getUsers(name);
+  async getUsers() {
+    return await this.userService.getUsers();
   }
 }
