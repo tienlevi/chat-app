@@ -14,6 +14,7 @@ export interface IFriend {
   userId: string;
   friends: FriendListItem[];
   friendRequests: string[];
+  friendRequestsSend: string[];
   createdAt: string;
   updatedAt: string;
 }

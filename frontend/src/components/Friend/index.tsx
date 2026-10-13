@@ -18,6 +18,7 @@ function Friend() {
   const commonFriends = users.filter((user) =>
     friend?.friends?.some((f) => f.userId === user._id),
   );
+
   const friendRequests = users.filter((user) =>
     friend?.friendRequests?.some((f) => f === user._id),
   );

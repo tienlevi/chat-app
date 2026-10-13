@@ -40,11 +40,13 @@ function SearchFriends({ friend, users, isLoading }: Props) {
               </div>
               <div className="flex items-center gap-3">
                 <Button
-                  disabled={friend?.friendRequests?.some((f) => f === user._id)}
+                  disabled={friend?.friendRequestsSend?.some(
+                    (f) => f === user._id,
+                  )}
                   onClick={() => handleAddFriend({ friendId: user._id || "" })}
                   className="cursor-pointer"
                 >
-                  {friend?.friendRequests?.some((f) => f === user._id)
+                  {friend?.friendRequestsSend?.some((f) => f === user._id)
                     ? "Request was send"
                     : "Send request"}
                 </Button>
