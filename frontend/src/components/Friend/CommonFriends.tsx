@@ -35,7 +35,7 @@ function CommonFriends({ friends, isLoading }: Props) {
               </div>
               <div className="flex items-center gap-3">
                 <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-                  Common friend
+                  {t("friends.tabs.common-friends")}
                 </span>
               </div>
             </li>

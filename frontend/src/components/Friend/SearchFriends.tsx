@@ -2,18 +2,18 @@ import IUser from "@/interfaces/user";
 import UserAvatar from "../UserAvatar";
 import { Button } from "@/components/ui/button";
 import useAddFriend from "@/hooks/useAddFriend";
-import useFriends from "@/hooks/useFriends";
 import { useTranslation } from "react-i18next";
+import { IFriend } from "@/interfaces/friend";
 
 interface Props {
-  friends: IUser[];
+  friend?: IFriend;
+  users: IUser[];
   isLoading: boolean;
 }
 
-function SearchFriends({ friends, isLoading }: Props) {
+function SearchFriends({ friend, users, isLoading }: Props) {
   const { t } = useTranslation();
   const { mutate: handleAddFriend } = useAddFriend();
-  const { friend } = useFriends();
 
   return (
     <div>
@@ -21,7 +21,7 @@ function SearchFriends({ friends, isLoading }: Props) {
         {isLoading ? (
           <div>Loading....</div>
         ) : (
-          friends.map((user) => (
+          users.map((user) => (
             <li
               key={user._id}
               className="flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-secondary/60"
@@ -53,7 +53,7 @@ function SearchFriends({ friends, isLoading }: Props) {
           ))
         )}
 
-        {friends.length === 0 ? (
+        {!isLoading && users.length === 0 ? (
           <li className="px-4 py-12 text-center text-sm text-muted-foreground">
             {t("friends.empty")}
           </li>

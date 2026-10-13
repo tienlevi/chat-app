@@ -2,29 +2,21 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { FriendTab } from "@/interfaces/friend";
-// import FriendsRequest from "./FriendsRequest";
 import FriendsBlocked from "./FriendsBlocked";
 import FriendHeader from "./FriendHeader";
 import useDebounce from "@/hooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "@/constants/query-key";
-import IUser from "@/interfaces/user";
-import { searchFriends } from "@/services/friends";
 import SearchFriends from "./SearchFriends";
 import CommonFriends from "./CommonFriends";
+import useFriends from "@/hooks/useFriends";
 
 function Friend() {
   const [query, setQuery] = useState("");
   const debounce = useDebounce(query);
   const [tab, setTab] = useState<FriendTab>("all");
-
-  const { data: friends, isLoading } = useQuery<IUser[]>({
-    queryKey: [QUERY_KEY.FRIENDS, debounce],
-    queryFn: async () => {
-      return await searchFriends(debounce);
-    },
-    initialData: [],
-  });
+  const { friend, users, isLoadingUsers } = useFriends(debounce);
+  const commonFriends = users.filter((user) =>
+    friend?.friends?.some((f) => f.userId === user._id),
+  );
 
   return (
     <section
@@ -33,7 +25,6 @@ function Friend() {
       )}
     >
       <FriendHeader
-        counts={friends.length || 0}
         query={query}
         setQuery={setQuery}
         tab={tab}
@@ -42,9 +33,12 @@ function Friend() {
 
       <ScrollArea className="min-h-0 flex-1">
         {tab === "all" ? (
-          <SearchFriends friends={friends} isLoading={isLoading} />
+          <SearchFriends
+            friend={friend}
+            users={users}
+            isLoading={isLoadingUsers}
+          />
         ) : null}
-        {tab === "common-friends" && <></>}
         {/* {tab === "requests" ? (
           <FriendsRequest
             requests={friend?.friendsRequest ?? []}
@@ -52,7 +46,7 @@ function Friend() {
           />
         ) : null} */}
         {tab === "common-friends" && (
-          <CommonFriends friends={friends} isLoading={isLoading} />
+          <CommonFriends friends={commonFriends} isLoading={isLoadingUsers} />
         )}
         {tab === "blocked" && <FriendsBlocked blocked={[]} query={query} />}
       </ScrollArea>

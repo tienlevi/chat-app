@@ -118,7 +118,8 @@
     "tabs": {
       "all": "Tất cả",
       "requests": "Lời mời",
-      "blocked": "Đã chặn"
+      "blocked": "Đã chặn",
+      "common-friends": "Bạn chung"
     },
     "muted": "Đã tắt thông báo",
     "empty": "Không tìm thấy bạn bè nào",

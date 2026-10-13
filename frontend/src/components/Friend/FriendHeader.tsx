@@ -13,14 +13,13 @@ import type { FriendTab } from "@/interfaces/friend";
 const TABS: FriendTab[] = ["all", "requests", "blocked", "common-friends"];
 
 interface Props {
-  counts: number;
   query: string;
   setQuery: (query: string) => void;
   tab: FriendTab;
   setTab: (tab: FriendTab) => void;
 }
 
-function FriendHeader({ counts, query, setQuery, tab, setTab }: Props) {
+function FriendHeader({ query, setQuery, tab, setTab }: Props) {
   const { t } = useTranslation();
 
   return (
@@ -31,9 +30,6 @@ function FriendHeader({ counts, query, setQuery, tab, setTab }: Props) {
             <h1 className="font-display text-3xl leading-none font-semibold tracking-tight">
               {t("friends.title")}
             </h1>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              {t("friends.summary", { count: counts })}
-            </p>
           </div>
 
           <Tooltip>

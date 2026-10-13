@@ -120,7 +120,8 @@
     "tabs": {
       "all": "All",
       "requests": "Requests",
-      "blocked": "Blocked"
+      "blocked": "Blocked",
+      "common-friends": "Common friends"
     },
     "muted": "Notifications muted",
     "empty": "No friends found",
