@@ -13,7 +13,7 @@ export interface IFriend {
   _id: string;
   userId: string;
   friends: FriendListItem[];
-  friendsRequest: string[];
+  friendRequests: string[];
   createdAt: string;
   updatedAt: string;
 }

@@ -48,17 +48,23 @@ export class FriendService {
     }
 
     const user = await this.friendModel.findOne({ userId });
-    const friend = await this.userModel.findById(friendId);
+    const friend = await this.friendModel.findById(friendId);
     if (!friend) {
       throw new NotFoundException('Friend not found');
     }
 
-    let updateFriendRequest: string[] | undefined = user?.friendsRequest;
-    updateFriendRequest?.push(friendId);
+    let updateFriendRequestsSend: string[] | undefined =
+      user?.friendRequestsSend;
+    let updateFriendRequests: string[] | undefined = friend?.friendRequests;
+    updateFriendRequestsSend?.push(friendId);
+    updateFriendRequests?.push(userId);
 
     await this.friendModel.findOneAndUpdate(
       { userId },
-      { friendsRequest: updateFriendRequest },
+      {
+        friendRequests: updateFriendRequestsSend,
+        friendRequestsSend: updateFriendRequests,
+      },
     );
 
     return { message: 'Send request successfully' };
@@ -83,7 +89,7 @@ export class FriendService {
       { userId },
       {
         $push: { friends: { userId: friendId } },
-        $pull: { friendsRequest: friendId },
+        $pull: { friendRequests: friendId },
       },
       { returnDocument: 'after', upsert: true },
     );

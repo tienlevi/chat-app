@@ -8,6 +8,7 @@ import useDebounce from "@/hooks/useDebounce";
 import SearchFriends from "./SearchFriends";
 import CommonFriends from "./CommonFriends";
 import useFriends from "@/hooks/useFriends";
+import FriendRequests from "./FriendRequests";
 
 function Friend() {
   const [query, setQuery] = useState("");
@@ -16,6 +17,9 @@ function Friend() {
   const { friend, users, isLoadingUsers } = useFriends(debounce);
   const commonFriends = users.filter((user) =>
     friend?.friends?.some((f) => f.userId === user._id),
+  );
+  const friendRequests = users.filter((user) =>
+    friend?.friendRequests?.some((f) => f === user._id),
   );
 
   return (
@@ -32,19 +36,19 @@ function Friend() {
       />
 
       <ScrollArea className="min-h-0 flex-1">
-        {tab === "all" ? (
+        {tab === "all" && (
           <SearchFriends
             friend={friend}
             users={users}
             isLoading={isLoadingUsers}
           />
-        ) : null}
-        {/* {tab === "requests" ? (
-          <FriendsRequest
-            requests={friend?.friendsRequest ?? []}
-            query={query}
+        )}
+        {tab === "requests" && (
+          <FriendRequests
+            requests={friendRequests}
+            isLoading={isLoadingUsers}
           />
-        ) : null} */}
+        )}
         {tab === "common-friends" && (
           <CommonFriends friends={commonFriends} isLoading={isLoadingUsers} />
         )}

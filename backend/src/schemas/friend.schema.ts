@@ -30,7 +30,10 @@ export class Friend {
   friends: FriendList[];
 
   @Prop({ default: [] })
-  friendsRequest: string[];
+  friendRequests: string[];
+
+  @Prop({ default: [] })
+  friendRequestsSend: string[];
 }
 
 export type FriendDocument = HydratedDocument<Friend>;
