@@ -96,8 +96,17 @@ export class FriendService {
       throw new BadRequestException('You are already friends');
     }
 
-    const updateFriends = [...(user?.friends ?? []), { userId: friendId }];
+    const updateFriendFromUser = [
+      ...(user?.friends ?? []),
+      { userId: friendId },
+    ];
+    const updateUserFromFriend = [...(user?.friends ?? []), { userId }];
+
     const updateFriendRequests = user?.friendRequests.filter(
+      (id) => id !== friendId,
+    );
+
+    const updateFriendRequestsSend = user?.friendRequestsSend.filter(
       (id) => id !== friendId,
     );
 
@@ -105,10 +114,17 @@ export class FriendService {
       await this.friendModel.findOneAndUpdate(
         { userId },
         {
-          friends: updateFriends,
+          friends: updateFriendFromUser,
           friendRequests: updateFriendRequests,
         },
-        { returnDocument: 'after', upsert: true },
+      );
+
+      await this.friendModel.findOneAndUpdate(
+        { userId: friendId },
+        {
+          friends: updateUserFromFriend,
+          friendRequestsSend: updateFriendRequestsSend,
+        },
       );
     } else {
       await this.friendModel.findOneAndUpdate(
@@ -116,7 +132,13 @@ export class FriendService {
         {
           friendRequests: updateFriendRequests,
         },
-        { returnDocument: 'after', upsert: true },
+      );
+
+      await this.friendModel.findOneAndUpdate(
+        { userId: friendId },
+        {
+          friendRequestsSend: updateFriendRequestsSend,
+        },
       );
     }
 
