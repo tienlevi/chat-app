@@ -47,9 +47,23 @@ export class FriendController {
   @UseGuards(AuthGuard)
   async handleAcceptFriend(
     @Req() req: AuthenticatedRequest,
-    @Body() data: { friendId: string },
+    @Param('friendId') friendId: string,
+  ) {
+    console.log(
+      '🚀 ~ FriendController ~ handleAcceptFriend ~ friendId:',
+      friendId,
+    );
+    const userId = req.user.userId;
+    return await this.friendService.acceptDelineFriend(userId, friendId, true);
+  }
+
+  @Post('deline/:friendId')
+  @UseGuards(AuthGuard)
+  async handleDelineFriend(
+    @Req() req: AuthenticatedRequest,
+    @Param('friendId') friendId: string,
   ) {
     const userId = req.user.userId;
-    return await this.friendService.acceptFriend(userId, data.friendId);
+    return await this.friendService.acceptDelineFriend(userId, friendId, false);
   }
 }

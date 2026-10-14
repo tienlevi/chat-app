@@ -76,8 +76,13 @@ export class FriendService {
     return { message: 'Send request successfully' };
   }
 
-  async acceptFriend(userId: string, friendId: string) {
-    const friend = await this.userModel.findById(friendId);
+  async acceptDelineFriend(
+    userId: string,
+    friendId: string,
+    isAccept: boolean,
+  ) {
+    const user = await this.friendModel.findOne({ userId });
+    const friend = user?.friendRequests.some((f) => f === friendId);
     if (!friend) {
       throw new NotFoundException('Friend not found');
     }
@@ -91,15 +96,34 @@ export class FriendService {
       throw new BadRequestException('You are already friends');
     }
 
-    const newFriend = await this.friendModel.findOneAndUpdate(
-      { userId },
-      {
-        $push: { friends: { userId: friendId } },
-        $pull: { friendRequests: friendId },
-      },
-      { returnDocument: 'after', upsert: true },
+    const updateFriends = [...(user?.friends ?? []), { userId: friendId }];
+    const updateFriendRequests = user?.friendRequests.filter(
+      (id) => id !== friendId,
     );
 
-    return { message: 'Accept friend successfully', data: newFriend };
+    if (isAccept) {
+      await this.friendModel.findOneAndUpdate(
+        { userId },
+        {
+          friends: updateFriends,
+          friendRequests: updateFriendRequests,
+        },
+        { returnDocument: 'after', upsert: true },
+      );
+    } else {
+      await this.friendModel.findOneAndUpdate(
+        { userId },
+        {
+          friendRequests: updateFriendRequests,
+        },
+        { returnDocument: 'after', upsert: true },
+      );
+    }
+
+    return {
+      message: isAccept
+        ? 'Accept friend successfully'
+        : 'Deline friend successfully',
+    };
   }
 }
