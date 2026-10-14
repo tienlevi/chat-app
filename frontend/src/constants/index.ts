@@ -1,4 +1,6 @@
-export const baseApi = "http://localhost:3000/api";
+export const baseApi = import.meta.env.PROD
+  ? import.meta.env.VITE_API_URL
+  : "http://localhost:3000/api";
 export const defaultAvatar =
   "https://res.cloudinary.com/dbjkk9wg0/image/upload/v1785941690/chat-app/default-avatar_sij2wm.png";
 export const cloudinaryCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
