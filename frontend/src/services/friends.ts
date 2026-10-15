@@ -30,3 +30,21 @@ export const addFriend = async (friendId: string) => {
   );
   return response.data;
 };
+
+export const acceptFriend = async (friendId: string) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.post(`/friends/accept/${friendId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};
+
+export const delineFriend = async (friendId: string) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.post(`/friends/deline/${friendId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};

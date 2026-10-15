@@ -2,16 +2,19 @@ import IUser from "@/interfaces/user";
 import UserAvatar from "../UserAvatar";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import useAcceptDelineFriend from "@/hooks/useAcceptDelineFriend";
 
 interface Props {
   requests: IUser[];
   isLoading: boolean;
-  onAccept?: (userId: string) => void;
-  onDecline?: (userId: string) => void;
 }
 
-function FriendRequests({ requests, isLoading, onAccept, onDecline }: Props) {
+function FriendRequests({ requests, isLoading }: Props) {
   const { t } = useTranslation();
+  const { mutate: handleAcceptFriend, isPending: isLoadingAccept } =
+    useAcceptDelineFriend("accept");
+  const { mutate: handleDelineFriend, isPending: isLoadingDeline } =
+    useAcceptDelineFriend("deline");
 
   return (
     <div>
@@ -39,13 +42,15 @@ function FriendRequests({ requests, isLoading, onAccept, onDecline }: Props) {
               <div className="flex items-center gap-3">
                 <Button
                   variant="secondary"
-                  onClick={() => onDecline?.(user._id || "")}
+                  disabled={isLoadingAccept || isLoadingDeline}
+                  onClick={() => handleDelineFriend(user._id || "")}
                   className="cursor-pointer"
                 >
                   {t("friends.requests.decline")}
                 </Button>
                 <Button
-                  onClick={() => onAccept?.(user._id || "")}
+                  disabled={isLoadingAccept || isLoadingDeline}
+                  onClick={() => handleAcceptFriend(user._id || "")}
                   className="cursor-pointer"
                 >
                   {t("friends.requests.accept")}
