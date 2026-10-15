@@ -49,10 +49,6 @@ export class FriendController {
     @Req() req: AuthenticatedRequest,
     @Param('friendId') friendId: string,
   ) {
-    console.log(
-      '🚀 ~ FriendController ~ handleAcceptFriend ~ friendId:',
-      friendId,
-    );
     const userId = req.user.userId;
     return await this.friendService.acceptDelineFriend(userId, friendId, true);
   }

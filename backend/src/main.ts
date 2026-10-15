@@ -7,6 +7,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:5173',
       'https://chat-app-blush-two-12.vercel.app',
+      'https://chat-app-tienlevis-projects.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
