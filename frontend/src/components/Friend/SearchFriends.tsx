@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import useAddFriend from "@/hooks/useAddFriend";
 import { useTranslation } from "react-i18next";
 import { IFriend } from "@/interfaces/friend";
+import { User } from "lucide-react";
 
 interface Props {
   friend?: IFriend;
@@ -14,6 +15,21 @@ interface Props {
 function SearchFriends({ friend, users, isLoading }: Props) {
   const { t } = useTranslation();
   const { mutate: handleAddFriend } = useAddFriend();
+  const renderFriendStatus = (user: IUser) => {
+    if (friend?.friendRequestsSend?.some((f) => f === user._id)) {
+      return "Request was send";
+    }
+
+    if (friend?.friends?.some((f) => f.userId === user._id)) {
+      return (
+        <div className="flex items-center gap-2">
+          <User size={20} />
+          <span>Friend</span>
+        </div>
+      );
+    }
+    return "Send request";
+  };
 
   return (
     <div>
@@ -40,15 +56,14 @@ function SearchFriends({ friend, users, isLoading }: Props) {
               </div>
               <div className="flex items-center gap-3">
                 <Button
-                  disabled={friend?.friendRequestsSend?.some(
-                    (f) => f === user._id,
-                  )}
+                  disabled={
+                    friend?.friendRequestsSend?.some((f) => f === user._id) ||
+                    friend?.friends?.some((f) => f.userId === user._id)
+                  }
                   onClick={() => handleAddFriend({ friendId: user._id || "" })}
                   className="cursor-pointer"
                 >
-                  {friend?.friendRequestsSend?.some((f) => f === user._id)
-                    ? "Request was send"
-                    : "Send request"}
+                  {renderFriendStatus(user)}
                 </Button>
               </div>
             </li>
