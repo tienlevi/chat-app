@@ -23,6 +23,10 @@ function Friend() {
     friend?.friendRequests?.some((f) => f === user._id),
   );
 
+  const blockedFriends = users.filter((user) =>
+    friend?.blockFriends?.some((f) => f === user._id),
+  );
+
   return (
     <section
       className={cn(
@@ -53,7 +57,9 @@ function Friend() {
         {tab === "common-friends" && (
           <CommonFriends friends={commonFriends} isLoading={isLoadingUsers} />
         )}
-        {tab === "blocked" && <FriendsBlocked blocked={[]} query={query} />}
+        {tab === "blocked" && (
+          <FriendsBlocked blocked={blockedFriends} isLoading={isLoadingUsers} />
+        )}
       </ScrollArea>
     </section>
   );
