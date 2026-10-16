@@ -5,6 +5,7 @@ import useAddFriend from "@/hooks/useAddFriend";
 import { useTranslation } from "react-i18next";
 import { IFriend } from "@/interfaces/friend";
 import { User } from "lucide-react";
+import useAcceptDelineFriend from "@/hooks/useAcceptDelineFriend";
 
 interface Props {
   friend?: IFriend;
@@ -15,12 +16,25 @@ interface Props {
 function SearchFriends({ friend, users, isLoading }: Props) {
   const { t } = useTranslation();
   const { mutate: handleAddFriend } = useAddFriend();
+  const { mutate: handleAcceptFriend, isPending: isLoadingAccept } =
+    useAcceptDelineFriend("accept");
+  const { mutate: handleDelineFriend, isPending: isLoadingDeline } =
+    useAcceptDelineFriend("deline");
+
   const renderFriendStatus = (user: IUser) => {
-    if (friend?.friendRequestsSend?.some((f) => f === user._id)) {
+    const isRequestSent = friend?.friendRequestsSend?.some(
+      (f) => f === user._id,
+    );
+    const isFriend = friend?.friends?.some((f) => f.userId === user._id);
+    const isBlocked = friend?.blockFriends.some((f) => f === user._id);
+
+    if (isBlocked) {
+      return "Blocked";
+    }
+    if (isRequestSent) {
       return "Request was send";
     }
-
-    if (friend?.friends?.some((f) => f.userId === user._id)) {
+    if (isFriend) {
       return (
         <div className="flex items-center gap-2">
           <User size={20} />
@@ -34,10 +48,18 @@ function SearchFriends({ friend, users, isLoading }: Props) {
   return (
     <div>
       <ul className="flex flex-col gap-0.5 px-2 pb-3">
-        {isLoading ? (
-          <div>Loading....</div>
-        ) : (
-          users.map((user) => (
+        {isLoading && <div>Loading....</div>}
+        {users.map((user) => {
+          const isFriendRequestSent = friend?.friendRequestsSend?.some(
+            (f) => f === user._id,
+          );
+          const isRequestSent = friend?.friendRequests.some(
+            (f) => f === user._id,
+          );
+          const isFriend = friend?.friends?.some((f) => f.userId === user._id);
+          const isBlocked = friend?.blockFriends.some((f) => f === user._id);
+
+          return (
             <li
               key={user._id}
               className="flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-secondary/60"
@@ -55,20 +77,39 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Button
-                  disabled={
-                    friend?.friendRequestsSend?.some((f) => f === user._id) ||
-                    friend?.friends?.some((f) => f.userId === user._id)
-                  }
-                  onClick={() => handleAddFriend({ friendId: user._id || "" })}
-                  className="cursor-pointer"
-                >
-                  {renderFriendStatus(user)}
-                </Button>
+                {isRequestSent ? (
+                  <>
+                    <Button
+                      variant="secondary"
+                      disabled={isLoadingAccept || isLoadingDeline}
+                      onClick={() => handleDelineFriend(user._id || "")}
+                      className="cursor-pointer"
+                    >
+                      {t("friends.requests.decline")}
+                    </Button>
+                    <Button
+                      disabled={isLoadingAccept || isLoadingDeline}
+                      onClick={() => handleAcceptFriend(user._id || "")}
+                      className="cursor-pointer"
+                    >
+                      {t("friends.requests.accept")}
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    disabled={isFriendRequestSent || isFriend || isBlocked}
+                    onClick={() =>
+                      handleAddFriend({ friendId: user._id || "" })
+                    }
+                    className="cursor-pointer"
+                  >
+                    {renderFriendStatus(user)}
+                  </Button>
+                )}
               </div>
             </li>
-          ))
-        )}
+          );
+        })}
 
         {!isLoading && users.length === 0 ? (
           <li className="px-4 py-12 text-center text-sm text-muted-foreground">

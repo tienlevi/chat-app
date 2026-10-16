@@ -5,7 +5,6 @@ export interface FriendListItem {
   userId: string;
   nickname: string | null;
   mutedNotification: boolean;
-  isBlocked: boolean;
   pinMessage: string[];
 }
 
@@ -15,6 +14,7 @@ export interface IFriend {
   friends: FriendListItem[];
   friendRequests: string[];
   friendRequestsSend: string[];
+  blockFriends: string[];
   createdAt: string;
   updatedAt: string;
 }
