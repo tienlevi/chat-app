@@ -14,9 +14,6 @@ class FriendList {
   @Prop({ default: false })
   mutedNotification: boolean;
 
-  @Prop({ default: false })
-  isBlocked: boolean;
-
   @Prop({ default: [] })
   pinMessage: [];
 }
@@ -34,6 +31,9 @@ export class Friend {
 
   @Prop({ default: [] })
   friendRequestsSend: string[];
+
+  @Prop({ default: [] })
+  blockFriends: string[];
 }
 
 export type FriendDocument = HydratedDocument<Friend>;
