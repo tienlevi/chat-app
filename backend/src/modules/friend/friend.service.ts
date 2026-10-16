@@ -148,4 +148,46 @@ export class FriendService {
         : 'Deline friend successfully',
     };
   }
+
+  async blockFriend(userId: string, friendId: string) {
+    const user = await this.friendModel.findOne({ userId });
+    const friend = await this.friendModel.findOne({ userId: friendId });
+    if (userId === friendId) {
+      throw new BadRequestException('You cannot block yourself');
+    }
+
+    const update = [...(user?.blockFriends ?? []), friendId];
+    const removeFriendFromUser = user?.friends.filter(
+      (f) => !f.userId.equals(friendId),
+    );
+    const removeFriend = friend?.friends.filter(
+      (f) => !f.userId.equals(userId),
+    );
+    const existFriend = user?.friends.some((f) => f.userId.equals(friendId));
+
+    if (existFriend) {
+      await this.friendModel.findOneAndUpdate(
+        { userId },
+        {
+          friends: removeFriendFromUser,
+        },
+      );
+
+      await this.friendModel.findOneAndUpdate(
+        { userId: friendId },
+        {
+          friends: removeFriend,
+        },
+      );
+    }
+
+    await this.friendModel.findOneAndUpdate(
+      { userId },
+      {
+        blockFriends: update,
+      },
+    );
+
+    return { message: 'Block friend successfully' };
+  }
 }
