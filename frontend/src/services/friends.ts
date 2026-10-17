@@ -48,3 +48,12 @@ export const delineFriend = async (friendId: string) => {
   });
   return response.data;
 };
+
+export const blockFriend = async (friendId: string) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.post(`/friends/block/${friendId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};

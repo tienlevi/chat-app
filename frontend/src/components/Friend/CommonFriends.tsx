@@ -1,6 +1,9 @@
 import IUser from "@/interfaces/user";
 import UserAvatar from "../UserAvatar";
 import { useTranslation } from "react-i18next";
+import { Button } from "../ui/button";
+import useBlockFriend from "@/hooks/useBlockFriend";
+import { Ban } from "lucide-react";
 
 interface Props {
   friends: IUser[];
@@ -9,6 +12,7 @@ interface Props {
 
 function CommonFriends({ friends, isLoading }: Props) {
   const { t } = useTranslation();
+  const { mutate: handleBlockFriend } = useBlockFriend();
 
   return (
     <div>
@@ -37,6 +41,10 @@ function CommonFriends({ friends, isLoading }: Props) {
                 <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
                   {t("friends.tabs.common-friends")}
                 </span>
+                <Button onClick={() => handleBlockFriend(user._id || "")}>
+                  <Ban />
+                  <span>Block</span>
+                </Button>
               </div>
             </li>
           ))

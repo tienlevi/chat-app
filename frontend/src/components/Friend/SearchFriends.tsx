@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import useAddFriend from "@/hooks/useAddFriend";
 import { useTranslation } from "react-i18next";
 import { IFriend } from "@/interfaces/friend";
-import { User } from "lucide-react";
+import { Ban, User } from "lucide-react";
 import useAcceptDelineFriend from "@/hooks/useAcceptDelineFriend";
+import useBlockFriend from "@/hooks/useBlockFriend";
 
 interface Props {
   friend?: IFriend;
@@ -16,10 +17,9 @@ interface Props {
 function SearchFriends({ friend, users, isLoading }: Props) {
   const { t } = useTranslation();
   const { mutate: handleAddFriend } = useAddFriend();
-  const { mutate: handleAcceptFriend, isPending: isLoadingAccept } =
-    useAcceptDelineFriend("accept");
-  const { mutate: handleDelineFriend, isPending: isLoadingDeline } =
-    useAcceptDelineFriend("deline");
+  const { mutate: handleAcceptFriend } = useAcceptDelineFriend("accept");
+  const { mutate: handleDelineFriend } = useAcceptDelineFriend("deline");
+  const { mutate: handleBlockFriend } = useBlockFriend();
 
   const renderFriendStatus = (user: IUser) => {
     const isRequestSent = friend?.friendRequestsSend?.some(
@@ -27,6 +27,7 @@ function SearchFriends({ friend, users, isLoading }: Props) {
     );
     const isFriend = friend?.friends?.some((f) => f.userId === user._id);
     const isBlocked = friend?.blockFriends.some((f) => f === user._id);
+    // const unBlock =
 
     if (isBlocked) {
       return "Blocked";
@@ -81,14 +82,12 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                   <>
                     <Button
                       variant="secondary"
-                      disabled={isLoadingAccept || isLoadingDeline}
                       onClick={() => handleDelineFriend(user._id || "")}
                       className="cursor-pointer"
                     >
                       {t("friends.requests.decline")}
                     </Button>
                     <Button
-                      disabled={isLoadingAccept || isLoadingDeline}
                       onClick={() => handleAcceptFriend(user._id || "")}
                       className="cursor-pointer"
                     >
@@ -96,15 +95,26 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                     </Button>
                   </>
                 ) : (
-                  <Button
-                    disabled={isFriendRequestSent || isFriend || isBlocked}
-                    onClick={() =>
-                      handleAddFriend({ friendId: user._id || "" })
-                    }
-                    className="cursor-pointer"
-                  >
-                    {renderFriendStatus(user)}
-                  </Button>
+                  <>
+                    <Button
+                      variant={"ghost"}
+                      disabled={isFriendRequestSent || isFriend || isBlocked}
+                      onClick={() => handleBlockFriend(user._id || "")}
+                      className="cursor-pointer"
+                    >
+                      <Ban />
+                      <span>Block</span>
+                    </Button>
+                    <Button
+                      disabled={isFriendRequestSent || isFriend || isBlocked}
+                      onClick={() =>
+                        handleAddFriend({ friendId: user._id || "" })
+                      }
+                      className="cursor-pointer"
+                    >
+                      {renderFriendStatus(user)}
+                    </Button>
+                  </>
                 )}
               </div>
             </li>
