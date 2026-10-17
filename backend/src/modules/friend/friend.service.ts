@@ -157,7 +157,7 @@ export class FriendService {
     }
 
     const update = [...(user?.blockFriends ?? []), friendId];
-    const updateBlockedBy = [...(friend?.blockedBy ?? []), userId]
+    const updateBlockedBy = [...(friend?.blockedBy ?? []), userId];
     const removeFriendFromUser = user?.friends.filter(
       (f) => !f.userId.equals(friendId),
     );
@@ -197,5 +197,32 @@ export class FriendService {
     );
 
     return { message: 'Block friend successfully' };
+  }
+
+  async unblockFriend(userId: string, friendId: string) {
+    const user = await this.friendModel.findOne({ userId });
+    const friend = await this.friendModel.findOne({ userId: friendId });
+    if (userId === friendId) {
+      throw new BadRequestException('You cannot block yourself');
+    }
+
+    const updateFriend = user?.blockFriends.filter((f) => f !== friendId);
+    const updateBlockedBy = friend?.blockedBy.filter((f) => f !== userId);
+
+    await this.friendModel.findOneAndUpdate(
+      { userId },
+      {
+        blockFriends: updateFriend,
+      },
+    );
+
+    await this.friendModel.findOneAndUpdate(
+      { userId: friendId },
+      {
+        blockedBy: updateBlockedBy,
+      },
+    );
+
+    return { message: 'Unlock friend successfully' };
   }
 }

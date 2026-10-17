@@ -19,7 +19,8 @@ function SearchFriends({ friend, users, isLoading }: Props) {
   const { mutate: handleAddFriend } = useAddFriend();
   const { mutate: handleAcceptFriend } = useAcceptDelineFriend("accept");
   const { mutate: handleDelineFriend } = useAcceptDelineFriend("deline");
-  const { mutate: handleBlockFriend } = useBlockFriend();
+  const { mutate: handleBlockFriend } = useBlockFriend("block");
+  const { mutate: handleUnblockFriend } = useBlockFriend("unblock");
 
   const renderFriendStatus = (user: IUser) => {
     const isRequestSent = friend?.friendRequestsSend?.some(
@@ -117,7 +118,11 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                     {!isBlockedBy && (
                       <Button
                         variant={"ghost"}
-                        onClick={() => handleBlockFriend(user._id || "")}
+                        onClick={() =>
+                          isBlocked
+                            ? handleUnblockFriend(user._id || "")
+                            : handleBlockFriend(user._id || "")
+                        }
                         className="cursor-pointer"
                       >
                         <Ban />

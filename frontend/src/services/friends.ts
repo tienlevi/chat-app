@@ -57,3 +57,12 @@ export const blockFriend = async (friendId: string) => {
   });
   return response.data;
 };
+
+export const unblockFriend = async (friendId: string) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.post(`/friends/unblock/${friendId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};
