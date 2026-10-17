@@ -125,6 +125,15 @@
     },
     "muted": "Notifications muted",
     "empty": "No friends found",
+    "loading": "Loading...",
+    "status": {
+      "blocked": "Blocked",
+      "blockedBy": "This user has blocked you",
+      "requestSent": "Request sent",
+      "friend": "Friend",
+      "sendRequest": "Send request"
+    },
+    "block": "Block",
     "requests": {
       "heading_one": "{{count}} pending request",
       "heading_other": "{{count}} pending requests",

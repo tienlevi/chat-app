@@ -123,6 +123,15 @@
     },
     "muted": "Đã tắt thông báo",
     "empty": "Không tìm thấy bạn bè nào",
+    "loading": "Đang tải...",
+    "status": {
+      "blocked": "Đã chặn",
+      "blockedBy": "Người này đã chặn bạn",
+      "requestSent": "Đã gửi lời mời",
+      "friend": "Bạn bè",
+      "sendRequest": "Gửi lời mời"
+    },
+    "block": "Chặn",
     "requests": {
       "heading_other": "{{count}} lời mời đang chờ",
       "incoming": "Muốn kết bạn với bạn",

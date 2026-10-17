@@ -30,29 +30,29 @@ function SearchFriends({ friend, users, isLoading }: Props) {
     const isBlockedBy = friend?.blockedBy?.some((f) => f === user._id);
 
     if (isBlocked) {
-      return "Blocked";
+      return t("friends.status.blocked");
     }
     if (isBlockedBy) {
-      return "Blocked by user";
+      return t("friends.status.blockedBy");
     }
     if (isRequestSent) {
-      return "Request was send";
+      return t("friends.status.requestSent");
     }
     if (isFriend) {
       return (
         <div className="flex items-center gap-2">
           <User size={20} />
-          <span>Friend</span>
+          <span>{t("friends.status.friend")}</span>
         </div>
       );
     }
-    return "Send request";
+    return t("friends.status.sendRequest");
   };
 
   return (
     <div>
       <ul className="flex flex-col gap-0.5 px-2 pb-3">
-        {isLoading && <div>Loading....</div>}
+        {isLoading && <div>{t("friends.loading")}</div>}
         {users.map((user) => {
           const isFriendRequestSent = friend?.friendRequestsSend?.some(
             (f) => f === user._id,
@@ -101,20 +101,6 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                 ) : (
                   <>
                     <Button
-                      variant={"ghost"}
-                      disabled={
-                        isFriendRequestSent ||
-                        isFriend ||
-                        isBlocked ||
-                        isBlockedBy
-                      }
-                      onClick={() => handleBlockFriend(user._id || "")}
-                      className="cursor-pointer"
-                    >
-                      <Ban />
-                      <span>Block</span>
-                    </Button>
-                    <Button
                       disabled={
                         isFriendRequestSent ||
                         isFriend ||
@@ -128,6 +114,20 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                     >
                       {renderFriendStatus(user)}
                     </Button>
+                    {!isBlockedBy && (
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => handleBlockFriend(user._id || "")}
+                        className="cursor-pointer"
+                      >
+                        <Ban />
+                        <span>
+                          {isBlocked
+                            ? t("friends.blocked.unblock")
+                            : t("friends.block")}
+                        </span>
+                      </Button>
+                    )}
                   </>
                 )}
               </div>
