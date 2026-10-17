@@ -157,6 +157,7 @@ export class FriendService {
     }
 
     const update = [...(user?.blockFriends ?? []), friendId];
+    const updateBlockedBy = [...(friend?.blockedBy ?? []), userId]
     const removeFriendFromUser = user?.friends.filter(
       (f) => !f.userId.equals(friendId),
     );
@@ -185,6 +186,13 @@ export class FriendService {
       { userId },
       {
         blockFriends: update,
+      },
+    );
+
+    await this.friendModel.findOneAndUpdate(
+      { userId: friendId },
+      {
+        blockedBy: updateBlockedBy,
       },
     );
 

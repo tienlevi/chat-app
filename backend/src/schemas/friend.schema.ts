@@ -34,6 +34,9 @@ export class Friend {
 
   @Prop({ default: [] })
   blockFriends: string[];
+
+  @Prop({ default: [] })
+  blockedBy: string[];
 }
 
 export type FriendDocument = HydratedDocument<Friend>;

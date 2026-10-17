@@ -15,6 +15,7 @@ export interface IFriend {
   friendRequests: string[];
   friendRequestsSend: string[];
   blockFriends: string[];
+  blockedBy: string[];
   createdAt: string;
   updatedAt: string;
 }

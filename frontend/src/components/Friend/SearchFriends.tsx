@@ -27,10 +27,13 @@ function SearchFriends({ friend, users, isLoading }: Props) {
     );
     const isFriend = friend?.friends?.some((f) => f.userId === user._id);
     const isBlocked = friend?.blockFriends.some((f) => f === user._id);
-    // const unBlock =
+    const isBlockedBy = friend?.blockedBy?.some((f) => f === user._id);
 
     if (isBlocked) {
       return "Blocked";
+    }
+    if (isBlockedBy) {
+      return "Blocked by user";
     }
     if (isRequestSent) {
       return "Request was send";
@@ -59,6 +62,7 @@ function SearchFriends({ friend, users, isLoading }: Props) {
           );
           const isFriend = friend?.friends?.some((f) => f.userId === user._id);
           const isBlocked = friend?.blockFriends.some((f) => f === user._id);
+          const isBlockedBy = friend?.blockedBy?.some((f) => f === user._id);
 
           return (
             <li
@@ -98,7 +102,12 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                   <>
                     <Button
                       variant={"ghost"}
-                      disabled={isFriendRequestSent || isFriend || isBlocked}
+                      disabled={
+                        isFriendRequestSent ||
+                        isFriend ||
+                        isBlocked ||
+                        isBlockedBy
+                      }
                       onClick={() => handleBlockFriend(user._id || "")}
                       className="cursor-pointer"
                     >
@@ -106,7 +115,12 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                       <span>Block</span>
                     </Button>
                     <Button
-                      disabled={isFriendRequestSent || isFriend || isBlocked}
+                      disabled={
+                        isFriendRequestSent ||
+                        isFriend ||
+                        isBlocked ||
+                        isBlockedBy
+                      }
                       onClick={() =>
                         handleAddFriend({ friendId: user._id || "" })
                       }
