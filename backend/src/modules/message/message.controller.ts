@@ -37,7 +37,7 @@ export class MessageController {
 
   @Get('receiver/:receiverId')
   @UseGuards(AuthGuard)
-  async getMessagesBySenderId(
+  async getMessagesByReceiverId(
     @Param('receiverId') receiverId: string,
     @Req() req: AuthenticatedRequest,
   ) {
