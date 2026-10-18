@@ -6,13 +6,13 @@ import useBlockFriend from "@/hooks/useBlockFriend";
 import { Ban } from "lucide-react";
 
 interface Props {
-  friends: IUser[];
+  users: IUser[];
   isLoading: boolean;
 }
 
-function CommonFriends({ friends, isLoading }: Props) {
+function CommonFriends({ users, isLoading }: Props) {
   const { t } = useTranslation();
-  const { mutate: handleBlockFriend } = useBlockFriend();
+  const { mutate: handleBlockFriend } = useBlockFriend("block");
 
   return (
     <div>
@@ -20,7 +20,7 @@ function CommonFriends({ friends, isLoading }: Props) {
         {isLoading ? (
           <div>Loading....</div>
         ) : (
-          friends.map((user) => (
+          users.map((user) => (
             <li
               key={user._id}
               className="flex items-center justify-between rounded-2xl px-3 py-2.5 transition-colors hover:bg-secondary/60"
@@ -50,7 +50,7 @@ function CommonFriends({ friends, isLoading }: Props) {
           ))
         )}
 
-        {!isLoading && friends.length === 0 ? (
+        {!isLoading && users.length === 0 ? (
           <li className="px-4 py-12 text-center text-sm text-muted-foreground">
             {t("friends.empty")}
           </li>

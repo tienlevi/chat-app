@@ -55,7 +55,7 @@ function Friend() {
           />
         )}
         {tab === "common-friends" && (
-          <CommonFriends friends={commonFriends} isLoading={isLoadingUsers} />
+          <CommonFriends users={commonFriends} isLoading={isLoadingUsers} />
         )}
         {tab === "blocked" && (
           <FriendsBlocked blocked={blockedFriends} isLoading={isLoadingUsers} />
