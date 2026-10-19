@@ -12,7 +12,7 @@ function Chat() {
   const receiverId = searchParams.get("receiverId") || "";
   const { data: user } = useAuth();
   const { users } = useFriends();
-  const { messages } = useMessages(receiverId);
+  const { receiverMessages, senderMessages } = useMessages(receiverId);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const currentUserId = user?._id || "";
 
@@ -20,14 +20,15 @@ function Chat() {
     <div className="flex gap-3.5">
       <Conversations
         users={users}
-        messages={messages}
+        receiverMessages={receiverMessages}
+        senderMessages={senderMessages}
         currentUserId={currentUserId}
         activeId={receiverId}
         className={cn(mobilePane === "thread" && "hidden md:flex")}
       />
       <Message
         users={users}
-        messages={messages}
+        messages={receiverMessages}
         currentUserId={currentUserId}
         activeId={receiverId}
         mobilePane={mobilePane}

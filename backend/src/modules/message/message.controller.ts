@@ -48,4 +48,12 @@ export class MessageController {
       senderId,
     );
   }
+
+  @Get('sender')
+  @UseGuards(AuthGuard)
+  async getMessagesBySender(@Req() req: AuthenticatedRequest) {
+    const senderId = req.user.userId;
+
+    return await this.messageService.getMessagesBySenderId(senderId);
+  }
 }

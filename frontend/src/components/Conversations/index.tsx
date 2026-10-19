@@ -10,7 +10,8 @@ import UserMessage from "./UserMessage";
 
 interface ConversationListProps {
   users: IUser[];
-  messages: IMessage[];
+  receiverMessages: IMessage[];
+  senderMessages: IMessage[];
   currentUserId: string;
   activeId?: string;
   className?: string;
@@ -18,15 +19,17 @@ interface ConversationListProps {
 
 function Conversations({
   users,
-  messages,
+  receiverMessages,
+  senderMessages,
   currentUserId,
   activeId,
   className,
 }: ConversationListProps) {
+  console.log("🚀 ~ Conversations ~ senderMessages:", senderMessages);
   const { t } = useTranslation();
   const [filter, setFilter] = useState<ConversationFilter>("all");
   const existMessageFromUsers = users.filter((user) =>
-    messages.some((message) => message.receiverId === user._id),
+    senderMessages.some((message) => message.receiverId === user._id),
   );
 
   return (
@@ -37,7 +40,7 @@ function Conversations({
       )}
     >
       <ConversationHeader
-        rows={messages}
+        rows={receiverMessages}
         filter={filter}
         setFilter={setFilter}
       />
@@ -48,7 +51,7 @@ function Conversations({
             <UserMessage
               key={user._id ?? user.email}
               user={user}
-              messages={messages}
+              messages={receiverMessages}
               isActive={user._id === activeId}
               currentUserId={currentUserId}
             />

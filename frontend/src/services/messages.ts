@@ -9,3 +9,12 @@ export const getMessageByReceiverId = async (receiverId: string) => {
   });
   return response.data;
 };
+
+export const getMessageBySender = async () => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.get(`/message/sender`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};

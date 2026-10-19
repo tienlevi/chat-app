@@ -44,4 +44,14 @@ export class MessageService {
       receiverId,
     });
   }
+
+  async getMessagesBySenderId(senderId: string) {
+    if (!senderId) {
+      throw new HttpException('Sender not found', HttpStatus.NOT_FOUND);
+    }
+
+    return await this.messageModel.find({
+      senderId,
+    });
+  }
 }
