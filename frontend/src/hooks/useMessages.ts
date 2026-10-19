@@ -9,6 +9,7 @@ function useMessages(receiverId: string) {
     queryKey: [QUERY_KEY.MESSAGE, receiverId],
     queryFn: async () => getMessageByReceiverId(receiverId),
     initialData: [],
+    enabled: !!receiverId,
   });
 
   const messages = data.sort(

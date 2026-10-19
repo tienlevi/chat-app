@@ -6,7 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CURRENT_USER } from "@/constants/mock-chat";
+import useAuth from "@/hooks/useAuth";
 import useLogout from "@/hooks/useLogout";
 import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 function NavBottom() {
   const { t } = useTranslation();
   const logout = useLogout();
+  const { data: user } = useAuth();
 
   return (
     <div className="mt-auto flex flex-col items-center gap-2">
@@ -39,9 +40,9 @@ function NavBottom() {
       </Tooltip>
 
       <UserAvatar
-        name={CURRENT_USER.name}
-        seed={CURRENT_USER._id}
-        src={CURRENT_USER.avatar}
+        name={user?.name ?? ""}
+        seed={user?._id}
+        src={user?.avatar}
         size="md"
         className="mt-1"
       />

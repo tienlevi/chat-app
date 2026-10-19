@@ -1,37 +1,35 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import UserAvatar from "../UserAvatar";
 import { formatListStamp } from "@/utils/datetime";
+import { countUnread, getThread } from "@/utils/message";
 import { cn } from "@/lib/utils";
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 
 interface Props {
   user: IUser;
-  lastMessage?: IMessage;
-  unreadCount: number;
+  messages: IMessage[];
   isActive: boolean;
-  preview: string;
   currentUserId: string;
-  onSelect: (userId: string) => void;
 }
 
-function UserMessage({
-  user,
-  lastMessage,
-  unreadCount,
-  isActive,
-  preview,
-  currentUserId,
-  onSelect,
-}: Props) {
+function UserMessage({ user, messages, isActive, currentUserId }: Props) {
   const { t, i18n } = useTranslation();
+
+  const thread = getThread(messages, currentUserId, user._id);
+  const lastMessage = thread[thread.length - 1] as IMessage | undefined;
+  const unreadCount = countUnread(messages, currentUserId, user._id);
+  const preview = lastMessage?.isDeleted
+    ? t("chat.thread.deleted")
+    : (lastMessage?.text ?? "");
 
   return (
     <li>
-      <button
-        type="button"
-        onClick={() => {
-          if (user._id) onSelect(user._id);
+      <Link
+        to={{
+          pathname: "/chat",
+          search: `?receiverId=${encodeURIComponent(user._id ?? "")}`,
         }}
         aria-current={isActive ? "true" : undefined}
         className={cn(
@@ -81,7 +79,7 @@ function UserMessage({
             ) : null}
           </div>
         </div>
-      </button>
+      </Link>
     </li>
   );
 }

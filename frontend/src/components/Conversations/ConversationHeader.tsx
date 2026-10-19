@@ -9,26 +9,21 @@ import { Button } from "@/components/ui/button";
 import { PenSquare, Search } from "lucide-react";
 import { ConversationFilter } from "@/interfaces/chat";
 import { cn } from "@/lib/utils";
+import { IMessage } from "@/interfaces/message";
+import { useState } from "react";
 
 interface Props {
-  rows: any[];
-  query: string;
-  setQuery: (query: string) => void;
+  rows: IMessage[];
   filter: ConversationFilter;
   setFilter: (filter: ConversationFilter) => void;
 }
 
-function ConversationHeader({
-  rows,
-  query,
-  setQuery,
-  filter,
-  setFilter,
-}: Props) {
+function ConversationHeader({ rows, filter, setFilter }: Props) {
+  const [query, setQuery] = useState("");
   const { t } = useTranslation();
   const FILTERS: ConversationFilter[] = ["all", "unread"];
 
-  const unreadTotal = rows.reduce((total, row) => total + row.unreadCount, 0);
+  const unreadTotal = rows.filter((row) => !row.isRead);
 
   return (
     <header className="px-5 pt-5 pb-3">
@@ -38,7 +33,7 @@ function ConversationHeader({
             {t("chat.list.title")}
           </h1>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            {unreadTotal > 0
+            {unreadTotal.length > 0
               ? t("chat.list.unreadSummary", { count: unreadTotal })
               : t("chat.list.allCaughtUp")}
           </p>
