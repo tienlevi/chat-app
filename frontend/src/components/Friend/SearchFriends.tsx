@@ -7,6 +7,7 @@ import { IFriend } from "@/interfaces/friend";
 import { Ban, User } from "lucide-react";
 import useAcceptDelineFriend from "@/hooks/useAcceptDelineFriend";
 import useBlockFriend from "@/hooks/useBlockFriend";
+import { Link } from "react-router-dom";
 
 interface Props {
   friend?: IFriend;
@@ -116,22 +117,32 @@ function SearchFriends({ friend, users, isLoading }: Props) {
                       {renderFriendStatus(user)}
                     </Button>
                     {!isBlockedBy && (
-                      <Button
-                        variant={"ghost"}
-                        onClick={() =>
-                          isBlocked
-                            ? handleUnblockFriend(user._id || "")
-                            : handleBlockFriend(user._id || "")
-                        }
-                        className="cursor-pointer"
-                      >
-                        <Ban />
-                        <span>
-                          {isBlocked
-                            ? t("friends.blocked.unblock")
-                            : t("friends.block")}
-                        </span>
-                      </Button>
+                      <>
+                        <Link to={`/chat?receiverId=${user._id}`}>
+                          <Button
+                            variant={"secondary"}
+                            className="cursor-pointer"
+                          >
+                            Message
+                          </Button>
+                        </Link>
+                        <Button
+                          variant={"ghost"}
+                          onClick={() =>
+                            isBlocked
+                              ? handleUnblockFriend(user._id || "")
+                              : handleBlockFriend(user._id || "")
+                          }
+                          className="cursor-pointer"
+                        >
+                          <Ban />
+                          <span>
+                            {isBlocked
+                              ? t("friends.blocked.unblock")
+                              : t("friends.block")}
+                          </span>
+                        </Button>
+                      </>
                     )}
                   </>
                 )}

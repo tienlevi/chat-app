@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import useBlockFriend from "@/hooks/useBlockFriend";
 import { Ban } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Props {
   users: IUser[];
@@ -38,9 +39,11 @@ function CommonFriends({ users, isLoading }: Props) {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-                  {t("friends.tabs.common-friends")}
-                </span>
+                <Link to={`/chat?receiverId=${user._id}`}>
+                  <Button variant={"secondary"} className="cursor-pointer">
+                    Message
+                  </Button>
+                </Link>
                 <Button onClick={() => handleBlockFriend(user._id || "")}>
                   <Ban />
                   <span>Block</span>
