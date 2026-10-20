@@ -21,9 +21,15 @@ interface MessageBubbleProps {
   message: IMessage;
   author?: IUser;
   isOwn: boolean;
+  showAvatar?: boolean;
 }
 
-function MessageBubble({ message, author, isOwn }: MessageBubbleProps) {
+function MessageBubble({
+  message,
+  author,
+  isOwn,
+  showAvatar = true,
+}: MessageBubbleProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.resolvedLanguage ?? "en";
   const StatusIcon = message.isRead ? CheckCheck : Check;
@@ -37,7 +43,7 @@ function MessageBubble({ message, author, isOwn }: MessageBubbleProps) {
       )}
     >
       <div className="w-8 shrink-0">
-        {!isOwn && author ? (
+        {!isOwn && author && showAvatar ? (
           <UserAvatar
             name={author.name}
             seed={author._id}
@@ -110,7 +116,12 @@ function MessageBubble({ message, author, isOwn }: MessageBubbleProps) {
                     })}
                   </ul>
                 ) : null}
-                <p className="text-[10px] text-accent">
+                <p
+                  className={cn(
+                    `text-[10px]`,
+                    isOwn ? "text-accent" : "text-accent-foreground",
+                  )}
+                >
                   {formatTime(message.createdAt, locale)}
                 </p>
               </>

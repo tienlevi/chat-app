@@ -1,9 +1,6 @@
 import { QUERY_KEY } from "@/constants/query-key";
 import { IMessage } from "@/interfaces/message";
-import {
-  getMessageByReceiverId,
-  getMessageBySender,
-} from "@/services/messages";
+import { getMessageByReceiverId, getMessageByUser } from "@/services/messages";
 import { formatISODateToTimestamp } from "@/utils/format";
 import { useQuery } from "@tanstack/react-query";
 
@@ -19,7 +16,7 @@ function useMessages(receiverId: string) {
     IMessage[]
   >({
     queryKey: [QUERY_KEY.MESSAGE],
-    queryFn: async () => getMessageBySender(),
+    queryFn: async () => getMessageByUser(),
     initialData: [],
   });
 

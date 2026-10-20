@@ -1,10 +1,30 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { dayKey, daysAgo, formatDayDivider } from "@/utils/datetime";
+import {
+  formatTimestampToString,
+  daysAgo,
+  formatDayDivider,
+} from "@/utils/datetime";
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 import MessageBubble from "./MessageBubble";
+
+const GROUP_MESSAGE_MS = 5 * 60 * 1000;
+
+const isSameGroup = (a?: IMessage, b?: IMessage): boolean => {
+  if (!a || !b) return false;
+  if (a.senderId !== b.senderId) return false;
+  if (
+    formatTimestampToString(a.createdAt) !==
+    formatTimestampToString(b.createdAt)
+  )
+    return false;
+  const gap = Math.abs(
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  return gap <= GROUP_MESSAGE_MS;
+};
 
 interface MessageThreadProps {
   messages: IMessage[];
@@ -47,14 +67,21 @@ function MessageThread({
       <div className="mx-auto flex w-full max-w-3xl flex-col">
         {messages.map((message, index) => {
           const previous = messages[index - 1];
+          const next = messages[index + 1];
           const isOwn = message.senderId === currentUserId;
 
           const isNewDay =
             !previous ||
-            dayKey(previous.createdAt) !== dayKey(message.createdAt);
+            formatTimestampToString(previous.createdAt) !==
+              formatTimestampToString(message.createdAt);
+          const isGroupStart = !isSameGroup(previous, message);
+          const isGroupEnd = !isSameGroup(message, next);
 
           return (
-            <div key={message._id}>
+            <div
+              key={message._id}
+              className={cn(isGroupStart ? "mt-3" : "mt-0.5")}
+            >
               {isNewDay && (
                 <div className="sticky top-0 z-10 flex justify-center py-3">
                   <span className="rounded-full border border-border bg-card/85 px-3 py-1 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase backdrop-blur">
@@ -67,6 +94,7 @@ function MessageThread({
                 message={message}
                 author={isOwn ? undefined : participant}
                 isOwn={isOwn}
+                showAvatar={isGroupEnd}
               />
             </div>
           );

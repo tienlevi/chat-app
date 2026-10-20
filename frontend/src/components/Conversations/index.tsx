@@ -25,11 +25,13 @@ function Conversations({
   activeId,
   className,
 }: ConversationListProps) {
-  console.log("🚀 ~ Conversations ~ senderMessages:", senderMessages);
   const { t } = useTranslation();
   const [filter, setFilter] = useState<ConversationFilter>("all");
   const existMessageFromUsers = users.filter((user) =>
-    senderMessages.some((message) => message.receiverId === user._id),
+    senderMessages.some(
+      (message) =>
+        message.receiverId === user._id || message.senderId === user._id,
+    ),
   );
 
   return (

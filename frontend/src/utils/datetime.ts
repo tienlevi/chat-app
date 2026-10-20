@@ -2,7 +2,7 @@ const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-const startOfDay = (date: Date): number =>
+const formatDateToTimestamp = (date: Date): number =>
   new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
 
 export const formatTime = (iso: string, locale: string): string =>
@@ -17,7 +17,9 @@ export const formatTime = (iso: string, locale: string): string =>
  */
 export const formatListStamp = (iso: string, locale: string): string => {
   const date = new Date(iso);
-  const days = Math.round((startOfDay(new Date()) - startOfDay(date)) / DAY);
+  const days = Math.round(
+    (formatDateToTimestamp(new Date()) - formatDateToTimestamp(date)) / DAY,
+  );
 
   if (days <= 0) return formatTime(iso, locale);
   if (days < 7)
@@ -30,7 +32,8 @@ export const formatListStamp = (iso: string, locale: string): string => {
 };
 
 /** Key used to bucket messages by calendar day. */
-export const dayKey = (iso: string): string => String(startOfDay(new Date(iso)));
+export const formatTimestampToString = (iso: string): string =>
+  String(formatDateToTimestamp(new Date(iso)));
 
 /**
  * Divider label for a day bucket as `dd/MM/yyyy`. Returns `null` for today and
@@ -38,7 +41,9 @@ export const dayKey = (iso: string): string => String(startOfDay(new Date(iso)))
  */
 export const formatDayDivider = (iso: string): string | null => {
   const date = new Date(iso);
-  const days = Math.round((startOfDay(new Date()) - startOfDay(date)) / DAY);
+  const days = Math.round(
+    (formatDateToTimestamp(new Date()) - formatDateToTimestamp(date)) / DAY,
+  );
 
   if (days <= 0 || days === 1) return null;
 
@@ -49,4 +54,7 @@ export const formatDayDivider = (iso: string): string | null => {
 
 /** Days since `iso`: 0 today, 1 yesterday, and so on. */
 export const daysAgo = (iso: string): number =>
-  Math.round((startOfDay(new Date()) - startOfDay(new Date(iso))) / DAY);
+  Math.round(
+    (formatDateToTimestamp(new Date()) - formatDateToTimestamp(new Date(iso))) /
+      DAY,
+  );

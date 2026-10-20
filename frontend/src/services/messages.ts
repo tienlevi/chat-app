@@ -10,10 +10,10 @@ export const getMessageByReceiverId = async (receiverId: string) => {
   return response.data;
 };
 
-export const getMessageBySender = async () => {
+export const getMessageByUser = async () => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
-  const response = await instance.get(`/message/sender`, {
+  const response = await instance.get(`/message/user`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   return response.data;

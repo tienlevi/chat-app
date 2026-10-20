@@ -28,7 +28,7 @@ function Chat() {
       />
       <Message
         users={users}
-        messages={receiverMessages}
+        messages={senderMessages}
         currentUserId={currentUserId}
         activeId={receiverId}
         mobilePane={mobilePane}

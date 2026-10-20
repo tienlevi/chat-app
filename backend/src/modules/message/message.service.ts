@@ -45,13 +45,13 @@ export class MessageService {
     });
   }
 
-  async getMessagesBySenderId(senderId: string) {
-    if (!senderId) {
-      throw new HttpException('Sender not found', HttpStatus.NOT_FOUND);
+  async getMessagesByUserId(userId: string) {
+    if (!userId || !isValidObjectId(userId)) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     return await this.messageModel.find({
-      senderId,
+      $or: [{ senderId: userId }, { receiverId: userId }],
     });
   }
 }

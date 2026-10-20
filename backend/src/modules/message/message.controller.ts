@@ -49,11 +49,11 @@ export class MessageController {
     );
   }
 
-  @Get('sender')
+  @Get('user')
   @UseGuards(AuthGuard)
-  async getMessagesBySender(@Req() req: AuthenticatedRequest) {
-    const senderId = req.user.userId;
+  async getMessagesByUser(@Req() req: AuthenticatedRequest) {
+    const userId = req.user.userId;
 
-    return await this.messageService.getMessagesBySenderId(senderId);
+    return await this.messageService.getMessagesByUserId(userId);
   }
 }
