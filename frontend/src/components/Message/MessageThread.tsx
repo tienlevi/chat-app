@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import {
@@ -9,21 +9,30 @@ import {
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 import MessageBubble from "./MessageBubble";
+import { formatISODateToTimestamp } from "@/utils/format";
 
 const GROUP_MESSAGE_MS = 5 * 60 * 1000;
 
-const isSameGroup = (a?: IMessage, b?: IMessage): boolean => {
-  if (!a || !b) return false;
-  if (a.senderId !== b.senderId) return false;
-  if (
-    formatTimestampToString(a.createdAt) !==
-    formatTimestampToString(b.createdAt)
-  )
-    return false;
-  const gap = Math.abs(
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+const getBreak = (prev: IMessage, curr: IMessage) => {
+  if (!prev) return { newDay: true, newGroup: true };
+
+  const newDay =
+    formatTimestampToString(prev.createdAt) !==
+    formatTimestampToString(curr.createdAt);
+  const tooFar =
+    Math.abs(
+      formatISODateToTimestamp(curr.createdAt) -
+        formatISODateToTimestamp(prev.createdAt),
+    ) > GROUP_MESSAGE_MS;
+  console.log(
+    "🚀 ~ getBreak ~ newGroup || :",
+    newDay || tooFar || prev.senderId !== curr.senderId,
   );
-  return gap <= GROUP_MESSAGE_MS;
+
+  return {
+    newDay,
+    newGroup: newDay || tooFar || prev.senderId !== curr.senderId,
+  };
 };
 
 interface MessageThreadProps {
@@ -49,6 +58,11 @@ function MessageThread({
     return formatDayDivider(iso) ?? "";
   };
 
+  const breaks = useMemo(
+    () => messages.map((message, i) => getBreak(messages[i - 1], message)),
+    [messages],
+  );
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
   }, [participant._id]);
@@ -66,16 +80,9 @@ function MessageThread({
     >
       <div className="mx-auto flex w-full max-w-3xl flex-col">
         {messages.map((message, index) => {
-          const previous = messages[index - 1];
-          const next = messages[index + 1];
           const isOwn = message.senderId === currentUserId;
-
-          const isNewDay =
-            !previous ||
-            formatTimestampToString(previous.createdAt) !==
-              formatTimestampToString(message.createdAt);
-          const isGroupStart = !isSameGroup(previous, message);
-          const isGroupEnd = !isSameGroup(message, next);
+          const { newDay: isNewDay, newGroup: isGroupStart } = breaks[index];
+          const isGroupEnd = breaks[index + 1]?.newGroup ?? true;
 
           return (
             <div
