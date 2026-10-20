@@ -1,15 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { minutesBetween } from "@/utils/datetime";
+import { dayKey, daysAgo, formatDayDivider } from "@/utils/datetime";
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 import MessageBubble from "./MessageBubble";
 
-const GROUP_WINDOW_MINUTES = 10;
-
 interface MessageThreadProps {
-  /** Messages between the current user and `participant`, oldest first. */
   messages: IMessage[];
   participant: IUser;
   currentUserId: string;
@@ -22,9 +19,15 @@ function MessageThread({
   currentUserId,
   className,
 }: MessageThreadProps) {
-  const { t, i18n } = useTranslation();
-  const locale = i18n.resolvedLanguage ?? "en";
+  const { t } = useTranslation();
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const dayLabel = (iso: string): string => {
+    const days = daysAgo(iso);
+    if (days <= 0) return t("chat.thread.today");
+    if (days === 1) return t("chat.thread.yesterday");
+    return formatDayDivider(iso) ?? "";
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
@@ -44,35 +47,26 @@ function MessageThread({
       <div className="mx-auto flex w-full max-w-3xl flex-col">
         {messages.map((message, index) => {
           const previous = messages[index - 1];
-          const next = messages[index + 1];
           const isOwn = message.senderId === currentUserId;
 
-          const isFirstOfGroup =
+          const isNewDay =
             !previous ||
-            previous.senderId !== message.senderId ||
-            minutesBetween(previous.createdAt, message.createdAt) >
-              GROUP_WINDOW_MINUTES;
+            dayKey(previous.createdAt) !== dayKey(message.createdAt);
 
-          const isLastOfGroup =
-            !next ||
-            next.senderId !== message.senderId ||
-            minutesBetween(message.createdAt, next.createdAt) >
-              GROUP_WINDOW_MINUTES;
           return (
             <div key={message._id}>
-              {/* <div className="sticky top-0 z-10 flex justify-center py-3">
-                <span className="rounded-full border border-border bg-card/85 px-3 py-1 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase backdrop-blur">
-                  {label}
-                </span>
-              </div> */}
+              {isNewDay && (
+                <div className="sticky top-0 z-10 flex justify-center py-3">
+                  <span className="rounded-full border border-border bg-card/85 px-3 py-1 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase backdrop-blur">
+                    {dayLabel(message.createdAt)}
+                  </span>
+                </div>
+              )}
 
               <MessageBubble
-                key={message._id}
                 message={message}
                 author={isOwn ? undefined : participant}
                 isOwn={isOwn}
-                isFirstOfGroup={isFirstOfGroup}
-                isLastOfGroup={isLastOfGroup}
               />
             </div>
           );

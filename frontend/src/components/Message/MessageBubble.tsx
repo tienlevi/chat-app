@@ -21,17 +21,9 @@ interface MessageBubbleProps {
   message: IMessage;
   author?: IUser;
   isOwn: boolean;
-  isFirstOfGroup: boolean;
-  isLastOfGroup: boolean;
 }
 
-function MessageBubble({
-  message,
-  author,
-  isOwn,
-  isFirstOfGroup,
-  isLastOfGroup,
-}: MessageBubbleProps) {
+function MessageBubble({ message, author, isOwn }: MessageBubbleProps) {
   const { t, i18n } = useTranslation();
   const locale = i18n.resolvedLanguage ?? "en";
   const StatusIcon = message.isRead ? CheckCheck : Check;
@@ -42,11 +34,10 @@ function MessageBubble({
       className={cn(
         "flex items-end gap-2.5",
         isOwn ? "flex-row-reverse" : "flex-row",
-        isFirstOfGroup ? "mt-4" : "mt-0.5",
       )}
     >
       <div className="w-8 shrink-0">
-        {!isOwn && isLastOfGroup && author ? (
+        {!isOwn && author ? (
           <UserAvatar
             name={author.name}
             seed={author._id}
@@ -65,19 +56,10 @@ function MessageBubble({
         <div className="group/bubble relative">
           <div
             className={cn(
-              "rounded-2xl px-3.5 py-2.5 text-[14px] leading-relaxed",
+              "rounded-2xl px-3.5 py-2.5 text-[15px] leading-relaxed",
               isOwn
                 ? "bg-primary text-primary-foreground"
                 : "bg-secondary text-secondary-foreground",
-              isOwn
-                ? cn(
-                    !isFirstOfGroup && "rounded-tr-md",
-                    !isLastOfGroup && "rounded-br-md",
-                  )
-                : cn(
-                    !isFirstOfGroup && "rounded-tl-md",
-                    !isLastOfGroup && "rounded-bl-md",
-                  ),
             )}
           >
             {message.isDeleted ? (
@@ -128,6 +110,9 @@ function MessageBubble({
                     })}
                   </ul>
                 ) : null}
+                <p className="text-[10px] text-accent">
+                  {formatTime(message.createdAt, locale)}
+                </p>
               </>
             )}
           </div>
@@ -145,10 +130,10 @@ function MessageBubble({
           </div>
         ) : null}
 
-        {isLastOfGroup ? (
+        {message.isRead ? (
           <div className="flex items-center gap-1.5 px-1 text-[11px] text-muted-foreground">
             <span className="tabular-nums">
-              {formatTime(message.createdAt, locale)}
+              {formatTime(message.updatedAt, locale)}
             </span>
             {isOwn ? (
               <StatusIcon

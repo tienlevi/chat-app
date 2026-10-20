@@ -64,6 +64,7 @@ function MessageHeader({
         src={user.avatar}
         size="md"
       />
+      <div className="text-[14px]">{user.name}</div>
 
       <div className="flex items-center gap-0.5">
         <Tooltip>
