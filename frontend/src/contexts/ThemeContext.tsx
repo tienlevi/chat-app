@@ -17,7 +17,7 @@ function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle("dark", theme === "dark");
 }
 
-function ThemeContext({ children }: { children: React.ReactNode }) {
+function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(STORAGE_KEY) as Theme | null) ?? "light",
   );
@@ -46,4 +46,4 @@ export function useTheme() {
   return context;
 }
 
-export default ThemeContext;
+export default ThemeProvider;
