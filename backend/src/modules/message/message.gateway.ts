@@ -16,7 +16,12 @@ import { MessageService } from './message.service';
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: [
+      'http://localhost:5173',
+      'https://chat-app-blush-two-12.vercel.app',
+      'https://chat-app-tienlevis-projects.vercel.app',
+    ],
+    credentials: true,
   },
 })
 export class MessageGateway implements OnModuleInit {
