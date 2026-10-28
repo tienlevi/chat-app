@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   HttpException,
@@ -52,13 +53,24 @@ export class AuthGuard implements CanActivate {
       (authHeaders?.startsWith('Bearer ') ? authHeaders.split(' ')[1] : null);
 
     if (!token) {
-      throw new WsException('Token: Invalid access');
+      console.log('Token: Invalid access');
+      throw new BadRequestException('Token: Invalid access');
+    }
+
+    const decode = await this.jwtService.decode(token);
+    const now = new Date().getTime();
+    const isExpired = now > decode.exp * 1000;
+
+    if (isExpired) {
+      console.log('Token is expired');
+      throw new BadRequestException('Token is expired');
     }
 
     try {
       const payload = await this.jwtService.verifyAsync(token);
       client.data.user = payload;
     } catch {
+      console.log('UNAUTHORIZED or token not found');
       throw new WsException('UNAUTHORIZED or token not found');
     }
     return true;
