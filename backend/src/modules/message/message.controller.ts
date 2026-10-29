@@ -1,11 +1,42 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Req,
+  UseGuards,
+  Post,
+} from '@nestjs/common';
 import { MessageService } from './message.service';
 import { AuthGuard } from '../../guards/auth.guard';
 import { AuthenticatedRequest } from '../../interfaces/request';
+import SendMessageDto from './dto/send-message.dto';
 
 @Controller('message')
 export class MessageController {
   constructor(private messageService: MessageService) {}
+
+  @Post('send')
+  @UseGuards(AuthGuard)
+  async handleSendMessage(
+    @Body() data: SendMessageDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const senderId = req.user.userId;
+    if (data.receiverId === senderId) {
+      throw new HttpException(
+        "Don't send for yourself",
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
+    return await this.messageService.sendMessage(
+      senderId,
+      data.receiverId,
+      data,
+    );
+  }
 
   @Get('receiver/:receiverId')
   @UseGuards(AuthGuard)
