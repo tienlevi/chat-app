@@ -32,11 +32,6 @@ function ConversationHeader({ rows, filter, setFilter }: Props) {
           <h1 className="font-display text-3xl leading-none font-semibold tracking-tight">
             {t("chat.list.title")}
           </h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            {unreadTotal.length > 0
-              ? t("chat.list.unreadSummary", { count: unreadTotal })
-              : t("chat.list.allCaughtUp")}
-          </p>
         </div>
 
         <Tooltip>

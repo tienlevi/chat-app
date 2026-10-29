@@ -41,11 +41,7 @@ function Conversations({
         className,
       )}
     >
-      <ConversationHeader
-        rows={receiverMessages}
-        filter={filter}
-        setFilter={setFilter}
-      />
+      <ConversationHeader filter={filter} setFilter={setFilter} />
 
       <ScrollArea className="min-h-0 flex-1">
         <ul className="flex flex-col gap-0.5 px-2 pb-3">
