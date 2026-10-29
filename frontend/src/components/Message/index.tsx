@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { getThread } from "@/utils/message";
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 import MessageThread from "./MessageThread";
