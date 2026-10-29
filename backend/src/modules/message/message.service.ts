@@ -39,10 +39,15 @@ export class MessageService {
       );
     }
 
-    return await this.messageModel.find({
-      senderId,
-      receiverId,
-    });
+    const messages = await this.messageModel.find();
+
+    return messages.filter(
+      (m) =>
+        (m.senderId.toString() === senderId &&
+          m.receiverId.toString() === receiverId) ||
+        (m.senderId.toString() === receiverId &&
+          m.receiverId.toString() === senderId),
+    );
   }
 
   async getMessagesByUserId(userId: string) {
