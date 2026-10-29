@@ -1,5 +1,19 @@
 import { ACCESS_TOKEN_KEY } from "@/constants";
+import { MessageFile } from "@/interfaces/message";
 import { instance } from "@/utils/axios";
+
+export const sendMessage = async (data: {
+  text: string;
+  files?: Omit<MessageFile, "_id">[];
+  receiverId: string;
+}) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.post(`/message/send`, data, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};
 
 export const getMessageByReceiverId = async (receiverId: string) => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);

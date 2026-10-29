@@ -1,7 +1,8 @@
-import { OnModuleInit, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -9,10 +10,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { AuthGuard } from '../../guards/auth.guard';
+import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, isValidObjectId } from 'mongoose';
 import { User } from '../../schemas/user.schema';
-import { MessageService } from './message.service';
 
 @WebSocketGateway({
   cors: {
@@ -24,20 +25,26 @@ import { MessageService } from './message.service';
     credentials: true,
   },
 })
-export class MessageGateway implements OnModuleInit {
+export class MessageGateway implements OnGatewayConnection {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private messageService: MessageService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @WebSocketServer()
   server: Server;
 
-  onModuleInit() {
-    this.server.on('connection', (socket) => {
-      console.log(socket.id);
-      console.log('Connected');
-    });
+  async handleConnection(client: Socket) {
+    try {
+      const token = client.handshake.auth?.token as string;
+      const payload = await this.jwtService.verifyAsync(token);
+      client.data.user = payload;
+      // Each user joins a room named by their userId so we can emit to them
+      await client.join(payload.userId);
+    } catch {
+      console.log('Socket unauthorized');
+      client.disconnect();
+    }
   }
 
   @UseGuards(AuthGuard)
@@ -64,8 +71,6 @@ export class MessageGateway implements OnModuleInit {
       throw new WsException('Receiver not found');
     }
 
-    this.server.emit('message', body);
-
-    await this.messageService.sendMessage(senderId, receiverId, body);
+    this.server.to(receiverId).emit('receive-message', body);
   }
 }

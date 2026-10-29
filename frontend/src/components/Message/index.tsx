@@ -12,7 +12,7 @@ interface Props {
   users: IUser[];
   messages: IMessage[];
   currentUserId: string;
-  activeId?: string;
+  receiverId: string;
   mobilePane: "list" | "thread";
   onBack: () => void;
 }
@@ -21,7 +21,7 @@ function Message({
   users,
   messages,
   currentUserId,
-  activeId,
+  receiverId,
   mobilePane,
   onBack,
 }: Props) {
@@ -29,15 +29,7 @@ function Message({
 
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const activeUser = useMemo(
-    () => (activeId ? users.find((user) => user._id === activeId) : undefined),
-    [users, activeId],
-  );
-
-  const thread = useMemo(
-    () => getThread(messages, currentUserId, activeId),
-    [messages, currentUserId, activeId],
-  );
+  const receiver = users.find((user) => user._id === receiverId);
 
   return (
     <div
@@ -46,20 +38,20 @@ function Message({
         mobilePane === "list" && "hidden md:flex",
       )}
     >
-      {activeUser ? (
+      {receiver ? (
         <>
           <MessageHeader
-            user={activeUser}
+            user={receiver}
             detailsOpen={detailsOpen}
             onToggleDetails={() => setDetailsOpen((open) => !open)}
             onBack={onBack}
           />
           <MessageThread
-            messages={thread}
-            participant={activeUser}
+            messages={messages}
+            participant={receiver}
             currentUserId={currentUserId}
           />
-          <MessageComposer recipient={activeUser.name} />
+          <MessageComposer receiver={receiver} />
         </>
       ) : (
         <div className="flex flex-1 items-center justify-center px-6 text-center">

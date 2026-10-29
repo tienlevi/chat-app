@@ -28,9 +28,9 @@ function Chat() {
       />
       <Message
         users={users}
-        messages={senderMessages}
+        messages={receiverMessages}
         currentUserId={currentUserId}
-        activeId={receiverId}
+        receiverId={receiverId}
         mobilePane={mobilePane}
         onBack={() => setMobilePane("list")}
       />

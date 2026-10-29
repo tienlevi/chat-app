@@ -10,7 +10,9 @@ function MainContext({ children }: { children: ReactNode }) {
       connectSocket();
     }
 
-    return () => disconnectSocket();
+    return () => {
+      disconnectSocket();
+    };
   }, [user]);
 
   return children;

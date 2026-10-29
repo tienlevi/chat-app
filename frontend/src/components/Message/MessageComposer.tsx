@@ -9,15 +9,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import IUser from "@/interfaces/user";
+import useMessageSocket from "@/hooks/useMessageSocket";
 
 const MAX_HEIGHT = 160;
 
-interface MessageComposerProps {
-  recipient: string;
+interface Props {
+  receiver: IUser;
   className?: string;
 }
 
-function MessageComposer({ recipient, className }: MessageComposerProps) {
+function MessageComposer({ receiver, className }: Props) {
+  const { sendMessageDirect } = useMessageSocket();
   const { t } = useTranslation();
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -34,7 +37,7 @@ function MessageComposer({ recipient, className }: MessageComposerProps) {
     const text = value.trim();
     if (!text) return;
 
-    // TODO: call the send-message endpoint once it is wired up.
+    sendMessageDirect(receiver._id || "", text);
     setValue("");
     textareaRef.current?.focus();
   }, [value]);
@@ -75,8 +78,10 @@ function MessageComposer({ recipient, className }: MessageComposerProps) {
             value={value}
             onChange={(event) => setValue(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={t("chat.composer.placeholder", { name: recipient })}
-            aria-label={t("chat.composer.placeholder", { name: recipient })}
+            placeholder={t("chat.composer.placeholder", {
+              name: receiver.name,
+            })}
+            aria-label={t("chat.composer.placeholder", { name: receiver.name })}
             className="min-h-9 resize-none border-none bg-transparent py-2 text-[14px] shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
 

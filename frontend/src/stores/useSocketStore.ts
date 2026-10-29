@@ -1,15 +1,22 @@
 import { create } from "zustand";
 import { io, Socket } from "socket.io-client";
 import { ACCESS_TOKEN_KEY, socketUrl } from "@/constants";
+import { IMessage } from "@/interfaces/message";
+import { QUERY_KEY } from "@/constants/query-key";
+import { queryClient } from "@/contexts/QueryContext";
 
 interface Store {
   socket: Socket | null;
   connectSocket: () => void;
   disconnectSocket: () => void;
+  messages: IMessage[];
+  setMessages: (messages: IMessage[]) => void;
+  sendMessage: (data: IMessage) => void;
 }
 
 const useSocketStore = create<Store>((set, get) => ({
   socket: null,
+  messages: [],
   connectSocket: () => {
     if (get().socket) return;
 
@@ -28,9 +35,12 @@ const useSocketStore = create<Store>((set, get) => ({
     socket.on("exception", (error: unknown) =>
       console.error("Socket exception:", error),
     );
-    socket.on("message", () => {
-      return;
+
+    socket.on("receive-message", (data: IMessage) => {
+      set({ messages: [...get().messages, data] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MESSAGE] });
     });
+
     socket.connect();
 
     set({ socket });
@@ -42,6 +52,11 @@ const useSocketStore = create<Store>((set, get) => ({
     socket.removeAllListeners();
     socket.disconnect();
     set({ socket: null });
+  },
+  setMessages: (messages) => set({ messages }),
+  sendMessage: (data) => {
+    const { messages } = get();
+    set({ messages: [...messages, data] });
   },
 }));
 

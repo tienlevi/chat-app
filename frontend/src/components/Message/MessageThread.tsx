@@ -24,10 +24,6 @@ const getBreak = (prev: IMessage, curr: IMessage) => {
       formatISODateToTimestamp(curr.createdAt) -
         formatISODateToTimestamp(prev.createdAt),
     ) > GROUP_MESSAGE_MS;
-  console.log(
-    "🚀 ~ getBreak ~ newGroup || :",
-    newDay || tooFar || prev.senderId !== curr.senderId,
-  );
 
   return {
     newDay,
