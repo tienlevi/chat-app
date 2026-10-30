@@ -39,6 +39,26 @@ export class MessageService {
       );
     }
 
+    const unreadMessages = await this.messageModel.find({
+      senderId,
+      receiverId,
+      isRead: false,
+    });
+
+    if (unreadMessages.length > 0) {
+      console.log('Read messsage');
+
+      await this.messageModel.updateMany(
+        {
+          senderId,
+          receiverId,
+        },
+        {
+          isRead: true,
+        },
+      );
+    }
+
     const messages = await this.messageModel.find();
 
     return messages.filter(
