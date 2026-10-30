@@ -3,6 +3,7 @@ import { IMessage } from "@/interfaces/message";
 import { getMessageByReceiverId, getMessageByUser } from "@/services/messages";
 import { formatISODateToTimestamp } from "@/utils/format";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 function useMessages(receiverId: string) {
   const { data, isLoading: loadingReceiverMessages } = useQuery<IMessage[]>({
@@ -19,10 +20,14 @@ function useMessages(receiverId: string) {
     initialData: [],
   });
 
-  const receiverMessages = data.sort(
-    (a, b) =>
-      formatISODateToTimestamp(a.createdAt) -
-      formatISODateToTimestamp(b.createdAt),
+  const receiverMessages = useMemo(
+    () =>
+      data.sort(
+        (a, b) =>
+          formatISODateToTimestamp(a.createdAt) -
+          formatISODateToTimestamp(b.createdAt),
+      ),
+    [data],
   );
 
   return {

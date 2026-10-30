@@ -1,11 +1,12 @@
 import Conversations from "@/components/Conversations";
 import Message from "@/components/Message";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 import useFriends from "@/hooks/useFriends";
 import useMessages from "@/hooks/useMessages";
+import useSocketStore from "@/stores/useSocketStore";
 
 function Chat() {
   const [searchParams] = useSearchParams();
@@ -15,6 +16,11 @@ function Chat() {
   const { receiverMessages, senderMessages } = useMessages(receiverId);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const currentUserId = user?._id || "";
+  const { messages, setMessages } = useSocketStore();
+
+  useEffect(() => {
+    setMessages(receiverMessages);
+  }, [receiverMessages]);
 
   return (
     <div className="flex gap-3.5">
@@ -28,7 +34,7 @@ function Chat() {
       />
       <Message
         users={users}
-        messages={receiverMessages}
+        messages={messages}
         currentUserId={currentUserId}
         receiverId={receiverId}
         mobilePane={mobilePane}
