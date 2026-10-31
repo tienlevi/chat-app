@@ -1,14 +1,18 @@
 import { QUERY_KEY } from "@/constants/query-key";
 import { IMessage } from "@/interfaces/message";
-import { getMessageByReceiverId, getMessageByUser } from "@/services/messages";
+import {
+  getLastestMessage,
+  getMessageByReceiverId,
+  getMessageByUser,
+} from "@/services/messages";
 import { formatISODateToTimestamp } from "@/utils/format";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
-function useMessages(receiverId: string) {
+function useMessages(receiverId?: string) {
   const { data, isLoading: loadingReceiverMessages } = useQuery<IMessage[]>({
     queryKey: [QUERY_KEY.MESSAGE, receiverId],
-    queryFn: async () => getMessageByReceiverId(receiverId),
+    queryFn: async () => getMessageByReceiverId(receiverId || ""),
     initialData: [],
   });
 
@@ -17,6 +21,14 @@ function useMessages(receiverId: string) {
   >({
     queryKey: [QUERY_KEY.MESSAGE],
     queryFn: async () => getMessageByUser(),
+    initialData: [],
+  });
+
+  const { data: latestMessages, isLoading: loadingLatestMessages } = useQuery<
+    IMessage[]
+  >({
+    queryKey: [QUERY_KEY.MESSAGE, "latest"],
+    queryFn: async () => getLastestMessage(),
     initialData: [],
   });
 
@@ -33,8 +45,10 @@ function useMessages(receiverId: string) {
   return {
     receiverMessages,
     senderMessages,
+    latestMessages,
     loadingReceiverMessages,
     loadingSenderMessages,
+    loadingLatestMessages,
   };
 }
 

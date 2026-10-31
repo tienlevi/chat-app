@@ -59,4 +59,12 @@ export class MessageController {
 
     return await this.messageService.getMessagesByUserId(userId);
   }
+
+  @Get('latest')
+  @UseGuards(AuthGuard)
+  async getLatestMessages(@Req() req: AuthenticatedRequest) {
+    const userId = req.user.userId;
+
+    return await this.messageService.getLatestMessage(userId);
+  }
 }

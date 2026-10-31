@@ -1,28 +1,33 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import UserAvatar from "../UserAvatar";
-import { formatListStamp } from "@/utils/datetime";
-import { countUnread, getThread } from "@/utils/message";
+import { countUnread } from "@/utils/message";
 import { cn } from "@/lib/utils";
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
+import { formatListStamp } from "@/utils/datetime";
 
 interface Props {
   user: IUser;
-  messages: IMessage[];
+  receiverMessages: IMessage[];
+  latestMessage: IMessage;
   isActive: boolean;
   currentUserId: string;
 }
 
-function UserMessage({ user, messages, isActive, currentUserId }: Props) {
+function UserMessage({
+  user,
+  receiverMessages,
+  latestMessage,
+  isActive,
+  currentUserId,
+}: Props) {
   const { t, i18n } = useTranslation();
 
-  const thread = getThread(messages, currentUserId, user._id);
-  const lastMessage = thread[thread.length - 1] as IMessage | undefined;
-  const unreadCount = countUnread(messages, currentUserId, user._id);
-  const preview = lastMessage?.isDeleted
+  const unreadCount = countUnread(receiverMessages, currentUserId, user._id);
+  const preview = latestMessage?.isDeleted
     ? t("chat.thread.deleted")
-    : (lastMessage?.text ?? "");
+    : latestMessage?.text;
 
   return (
     <li>
@@ -48,10 +53,10 @@ function UserMessage({ user, messages, isActive, currentUserId }: Props) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
             <span className="truncate text-sm font-semibold">{user.name}</span>
-            {lastMessage ? (
+            {latestMessage ? (
               <span className="ml-auto shrink-0 text-[11px] text-muted-foreground tabular-nums">
                 {formatListStamp(
-                  lastMessage.createdAt,
+                  latestMessage.createdAt,
                   i18n.resolvedLanguage ?? "en",
                 )}
               </span>
@@ -67,7 +72,7 @@ function UserMessage({ user, messages, isActive, currentUserId }: Props) {
                   : "text-muted-foreground",
               )}
             >
-              {lastMessage?.senderId === currentUserId
+              {latestMessage?.senderId === currentUserId
                 ? t("chat.list.youPrefix", { text: preview })
                 : preview}
             </p>

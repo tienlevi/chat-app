@@ -10,6 +10,7 @@ import UserMessage from "./UserMessage";
 
 interface ConversationListProps {
   users: IUser[];
+  latestMessages: IMessage[];
   receiverMessages: IMessage[];
   senderMessages: IMessage[];
   currentUserId: string;
@@ -19,6 +20,7 @@ interface ConversationListProps {
 
 function Conversations({
   users,
+  latestMessages,
   receiverMessages,
   senderMessages,
   currentUserId,
@@ -27,12 +29,19 @@ function Conversations({
 }: ConversationListProps) {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<ConversationFilter>("all");
-  const existMessageFromUsers = users.filter((user) =>
+  const filterUsers = users.filter((user) =>
     senderMessages.some(
       (message) =>
         message.receiverId === user._id || message.senderId === user._id,
     ),
   );
+  const latestMessagesByPartner = filterUsers.map((user) => {
+    const message = latestMessages.find(
+      (m) => m.receiverId === user._id || m.senderId === user._id,
+    );
+
+    return { ...user, message };
+  });
 
   return (
     <section
@@ -45,17 +54,18 @@ function Conversations({
 
       <ScrollArea className="min-h-0 flex-1">
         <ul className="flex flex-col gap-0.5 px-2 pb-3">
-          {existMessageFromUsers.map((user) => (
+          {latestMessagesByPartner.map((user) => (
             <UserMessage
               key={user._id ?? user.email}
               user={user}
-              messages={receiverMessages}
+              receiverMessages={receiverMessages}
+              latestMessage={user.message!}
               isActive={user._id === activeId}
               currentUserId={currentUserId}
             />
           ))}
 
-          {existMessageFromUsers.length === 0 ? (
+          {latestMessagesByPartner.length === 0 ? (
             <li className="px-4 py-12 text-center text-sm text-muted-foreground">
               {t("chat.list.empty")}
             </li>

@@ -13,7 +13,8 @@ function Chat() {
   const receiverId = searchParams.get("receiverId") || "";
   const { data: user } = useAuth();
   const { users } = useFriends();
-  const { receiverMessages, senderMessages } = useMessages(receiverId);
+  const { receiverMessages, senderMessages, latestMessages } =
+    useMessages(receiverId);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const currentUserId = user?._id || "";
   const { messages, setMessages } = useSocketStore();
@@ -26,6 +27,7 @@ function Chat() {
     <div className="flex gap-3.5">
       <Conversations
         users={users}
+        latestMessages={latestMessages}
         receiverMessages={receiverMessages}
         senderMessages={senderMessages}
         currentUserId={currentUserId}

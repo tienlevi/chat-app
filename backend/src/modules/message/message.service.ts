@@ -79,4 +79,33 @@ export class MessageService {
       $or: [{ senderId: userId }, { receiverId: userId }],
     });
   }
+
+  async getLatestMessage(userId: string) {
+    const messages = await this.messageModel.find();
+    const userMessages = messages.filter(
+      (mess) =>
+        mess.senderId.toString() === userId ||
+        mess.receiverId.toString() === userId,
+    );
+
+    const latestByPartner = userMessages
+      .sort(
+        (a, b) =>
+          new Date(b.get('createdAt')).getTime() -
+          new Date(a.get('createdAt')).getTime(),
+      )
+      .reduce((acc, mess) => {
+        const partnerId =
+          mess.senderId.toString() === userId
+            ? mess.receiverId.toString()
+            : mess.senderId.toString();
+
+        if (!acc[partnerId]) {
+          acc[partnerId] = mess;
+        }
+        return acc;
+      }, {});
+
+    return Object.values(latestByPartner);
+  }
 }
