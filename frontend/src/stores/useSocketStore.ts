@@ -11,12 +11,15 @@ interface Store {
   disconnectSocket: () => void;
   messages: IMessage[];
   setMessages: (messages: IMessage[]) => void;
+  activeReceiverId: string;
+  setActiveReceiverId: (id: string) => void;
   sendMessage: (data: IMessage) => void;
 }
 
 const useSocketStore = create<Store>((set, get) => ({
   socket: null,
   messages: [],
+  activeReceiverId: "",
   connectSocket: () => {
     if (get().socket) return;
 
@@ -37,7 +40,11 @@ const useSocketStore = create<Store>((set, get) => ({
     );
 
     socket.on("receive-message", (data: IMessage) => {
-      set({ messages: [...get().messages, data] });
+      const { messages, activeReceiverId } = get();
+
+      if (data.receiverId === activeReceiverId) {
+        set({ messages: [...messages, data] });
+      }
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MESSAGE] });
     });
 
@@ -54,8 +61,10 @@ const useSocketStore = create<Store>((set, get) => ({
     set({ socket: null });
   },
   setMessages: (messages) => set({ messages }),
+  setActiveReceiverId: (id) => set({ activeReceiverId: id }),
   sendMessage: (data) => {
-    const { messages } = get();
+    const { messages, socket } = get();
+    socket?.emit("send-message", data);
     set({ messages: [...messages, data] });
   },
 }));

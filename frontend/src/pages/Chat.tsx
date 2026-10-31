@@ -17,11 +17,12 @@ function Chat() {
     useMessages(receiverId);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const currentUserId = user?._id || "";
-  const { messages, setMessages } = useSocketStore();
+  const { messages, setMessages, setActiveReceiverId } = useSocketStore();
 
   useEffect(() => {
+    setActiveReceiverId(receiverId);
     setMessages(receiverMessages);
-  }, [receiverMessages]);
+  }, [receiverMessages, receiverId]);
 
   return (
     <div className="flex gap-3.5">
