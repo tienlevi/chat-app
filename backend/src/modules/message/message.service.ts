@@ -12,12 +12,8 @@ export class MessageService {
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  async sendMessage(
-    senderId: string,
-    receiverId: string,
-    data: SendMessageDto,
-  ) {
-    const receiver = await this.userModel.findById(receiverId);
+  async sendMessage(senderId: string, userId: string, data: SendMessageDto) {
+    const receiver = await this.userModel.findById(userId);
     if (!receiver) {
       throw new HttpException('Receiver not found', HttpStatus.NOT_FOUND);
     }
@@ -25,37 +21,17 @@ export class MessageService {
     const message = await this.messageModel.create({
       ...data,
       senderId,
-      receiverId,
+      receiverId: userId,
     });
 
     return { message: 'Send message successfully', data: message.toObject() };
   }
 
-  async getMessagesByReceiverId(receiverId: string, senderId: string) {
-    if (!receiverId || !senderId) {
+  async getMessagesByReceiverId(receiverId: string, userId: string) {
+    if (!receiverId || !userId) {
       throw new HttpException(
         'Sender or receiver not found',
         HttpStatus.NOT_FOUND,
-      );
-    }
-
-    const unreadMessages = await this.messageModel.find({
-      senderId,
-      receiverId,
-      isRead: false,
-    });
-
-    if (unreadMessages.length > 0) {
-      console.log('Read messsage');
-
-      await this.messageModel.updateMany(
-        {
-          senderId,
-          receiverId,
-        },
-        {
-          isRead: true,
-        },
       );
     }
 
@@ -63,10 +39,10 @@ export class MessageService {
 
     return messages.filter(
       (m) =>
-        (m.senderId.toString() === senderId &&
+        (m.senderId.toString() === userId &&
           m.receiverId.toString() === receiverId) ||
         (m.senderId.toString() === receiverId &&
-          m.receiverId.toString() === senderId),
+          m.receiverId.toString() === userId),
     );
   }
 

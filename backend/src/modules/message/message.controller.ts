@@ -24,18 +24,14 @@ export class MessageController {
     @Body() data: SendMessageDto,
     @Req() req: AuthenticatedRequest,
   ) {
-    const senderId = req.user.userId;
-    if (data.receiverId === senderId) {
+    const userId = req.user.userId;
+    if (data.receiverId === userId) {
       throw new HttpException(
         "Don't send for yourself",
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
-    return await this.messageService.sendMessage(
-      senderId,
-      data.receiverId,
-      data,
-    );
+    return await this.messageService.sendMessage(userId, data.receiverId, data);
   }
 
   @Get('receiver/:receiverId')
@@ -44,11 +40,11 @@ export class MessageController {
     @Param('receiverId') receiverId: string,
     @Req() req: AuthenticatedRequest,
   ) {
-    const senderId = req.user.userId;
+    const userId = req.user.userId;
 
     return await this.messageService.getMessagesByReceiverId(
       receiverId,
-      senderId,
+      userId,
     );
   }
 
