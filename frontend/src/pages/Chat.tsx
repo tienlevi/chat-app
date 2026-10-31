@@ -29,7 +29,6 @@ function Chat() {
       <Conversations
         users={users}
         latestMessages={latestMessages}
-        receiverMessages={receiverMessages}
         senderMessages={senderMessages}
         currentUserId={currentUserId}
         activeId={receiverId}

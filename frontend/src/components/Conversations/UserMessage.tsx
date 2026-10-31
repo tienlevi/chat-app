@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import UserAvatar from "../UserAvatar";
-import { countUnread } from "@/utils/message";
 import { cn } from "@/lib/utils";
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
@@ -9,7 +8,7 @@ import { formatListStamp } from "@/utils/datetime";
 
 interface Props {
   user: IUser;
-  receiverMessages: IMessage[];
+  unreadMessages: number;
   latestMessage: IMessage;
   isActive: boolean;
   currentUserId: string;
@@ -17,14 +16,13 @@ interface Props {
 
 function UserMessage({
   user,
-  receiverMessages,
+  unreadMessages,
   latestMessage,
   isActive,
   currentUserId,
 }: Props) {
   const { t, i18n } = useTranslation();
 
-  const unreadCount = countUnread(receiverMessages, currentUserId, user._id);
   const preview = latestMessage?.isDeleted
     ? t("chat.thread.deleted")
     : latestMessage?.text;
@@ -67,7 +65,7 @@ function UserMessage({
             <p
               className={cn(
                 "min-w-0 flex-1 truncate text-[13px]",
-                unreadCount > 0
+                unreadMessages > 0
                   ? "font-medium text-foreground"
                   : "text-muted-foreground",
               )}
@@ -77,9 +75,9 @@ function UserMessage({
                 : preview}
             </p>
 
-            {unreadCount > 0 ? (
+            {unreadMessages > 0 ? (
               <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums">
-                {unreadCount}
+                {unreadMessages}
               </span>
             ) : null}
           </div>

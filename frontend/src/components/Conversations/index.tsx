@@ -11,7 +11,6 @@ import UserMessage from "./UserMessage";
 interface ConversationListProps {
   users: IUser[];
   latestMessages: IMessage[];
-  receiverMessages: IMessage[];
   senderMessages: IMessage[];
   currentUserId: string;
   activeId?: string;
@@ -21,7 +20,6 @@ interface ConversationListProps {
 function Conversations({
   users,
   latestMessages,
-  receiverMessages,
   senderMessages,
   currentUserId,
   activeId,
@@ -36,11 +34,16 @@ function Conversations({
     ),
   );
   const latestMessagesByPartner = filterUsers.map((user) => {
-    const message = latestMessages.find(
+    const latestMessage = latestMessages.find(
       (m) => m.receiverId === user._id || m.senderId === user._id,
     );
+    const unreadMessage = senderMessages.filter(
+      (m) =>
+        (m.receiverId === user._id || m.senderId === user._id) &&
+        m.isRead === false,
+    );
 
-    return { ...user, message };
+    return { ...user, unreadMessage: unreadMessage.length, latestMessage };
   });
 
   return (
@@ -58,8 +61,8 @@ function Conversations({
             <UserMessage
               key={user._id ?? user.email}
               user={user}
-              receiverMessages={receiverMessages}
-              latestMessage={user.message!}
+              unreadMessages={user.unreadMessage}
+              latestMessage={user.latestMessage!}
               isActive={user._id === activeId}
               currentUserId={currentUserId}
             />
