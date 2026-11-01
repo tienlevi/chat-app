@@ -1,23 +1,13 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Mic, Paperclip, SendHorizontal, Smile } from "lucide-react";
+import { Mic, SendHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import IUser from "@/interfaces/user";
 import useMessageSocket from "@/hooks/useMessageSocket";
-import { MESSAGE_EMOJIS } from "@/constants/emoji";
+import Emoji from "./Emoji";
+import Attach from "./Attach";
 
 const MAX_HEIGHT = 160;
 
@@ -59,39 +49,13 @@ function MessageComposer({ receiver, className }: Props) {
     [handleSend],
   );
 
-  const handleInsertEmoji = (char: string) => {
-    const textarea = textareaRef.current;
-    const start = textarea?.selectionStart ?? value.length;
-    const end = textarea?.selectionEnd ?? value.length;
-    const caret = start + char.length;
-
-    setValue((prev) => prev.slice(0, start) + char + prev.slice(end));
-
-    requestAnimationFrame(() => {
-      textarea?.focus();
-      textarea?.setSelectionRange(caret, caret);
-    });
-  };
-
   const canSend = value.trim().length > 0;
 
   return (
     <div className={cn("px-4 pb-4 sm:px-6", className)}>
       <div className="mx-auto w-full max-w-3xl">
         <div className="flex items-end gap-1.5 rounded-3xl border border-border bg-secondary/60 p-1.5 transition-colors focus-within:border-ring/60 focus-within:bg-card">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full text-muted-foreground"
-              >
-                <Paperclip />
-                <span className="sr-only">{t("chat.composer.attach")}</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{t("chat.composer.attach")}</TooltipContent>
-          </Tooltip>
+          <Attach />
 
           <Textarea
             ref={textareaRef}
@@ -106,45 +70,7 @@ function MessageComposer({ receiver, className }: Props) {
             className="min-h-9 resize-none border-none bg-transparent py-2 text-[14px] shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
 
-          <DropdownMenu>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full text-muted-foreground"
-                  >
-                    <Smile />
-                    <span className="sr-only">{t("chat.composer.emoji")}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-              </TooltipTrigger>
-              <TooltipContent>{t("chat.composer.emoji")}</TooltipContent>
-            </Tooltip>
-            <DropdownMenuContent
-              side="top"
-              align="end"
-              onCloseAutoFocus={(event) => event.preventDefault()}
-              className="flex gap-1 rounded-2xl p-1.5"
-            >
-              {MESSAGE_EMOJIS.map(({ key, char }) => (
-                <DropdownMenuItem
-                  key={key}
-                  onSelect={() => handleInsertEmoji(char)}
-                  aria-label={t(`chat.emoji.${key}`)}
-                  title={t(`chat.emoji.${key}`)}
-                  className="size-9 justify-center rounded-full p-1.5"
-                >
-                  <img
-                    src={`/emoji/${key}.png`}
-                    alt=""
-                    className="size-6 transition-transform hover:scale-110"
-                  />
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Emoji value={value} setValue={setValue} textareaRef={textareaRef} />
 
           <Button
             type="button"
