@@ -84,4 +84,30 @@ export class MessageService {
 
     return Object.values(latestByPartner);
   }
+
+  async readMessages(receiverId: string, userId: string) {
+    const messages = await this.messageModel.find({
+      isRead: false,
+    });
+    const unreadMessages = messages.filter(
+      (m) =>
+        m.senderId.toString() === receiverId &&
+        m.receiverId.toString() === userId,
+    );
+
+    if (unreadMessages.length > 0) {
+      await this.messageModel.updateMany(
+        {
+          senderId: receiverId,
+          receiverId: userId,
+          isRead: false,
+        },
+        {
+          isRead: true,
+        },
+      );
+    }
+
+    return unreadMessages;
+  }
 }

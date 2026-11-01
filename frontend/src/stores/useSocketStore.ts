@@ -14,6 +14,7 @@ interface Store {
   activeReceiverId: string;
   setActiveReceiverId: (id: string) => void;
   sendMessage: (data: IMessage) => void;
+  readMessage: (receiverId: string) => void;
 }
 
 const useSocketStore = create<Store>((set, get) => ({
@@ -42,9 +43,20 @@ const useSocketStore = create<Store>((set, get) => ({
     socket.on("receive-message", (data: IMessage) => {
       const { messages, activeReceiverId } = get();
 
-      if (data.receiverId === activeReceiverId) {
+      if (data.senderId === activeReceiverId) {
         set({ messages: [...messages, data] });
       }
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MESSAGE] });
+    });
+
+    socket.on("read-message", ({ readerId }: { readerId: string }) => {
+      const { messages } = get();
+
+      set({
+        messages: messages.map((m) =>
+          m.receiverId === readerId ? { ...m, isRead: true } : m,
+        ),
+      });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MESSAGE] });
     });
 
@@ -66,6 +78,15 @@ const useSocketStore = create<Store>((set, get) => ({
     const { messages, socket } = get();
     socket?.emit("send-message", data);
     set({ messages: [...messages, data] });
+  },
+  readMessage: (receiverId) => {
+    const { messages, socket } = get();
+    socket?.emit("read-message", { receiverId });
+    set({
+      messages: messages.map((m) =>
+        m.senderId === receiverId ? { ...m, isRead: true } : m,
+      ),
+    });
   },
 }));
 

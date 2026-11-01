@@ -1,13 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEY } from "@/constants/query-key";
 import useSocketStore from "@/stores/useSocketStore";
-import { sendMessage as sendMessageService } from "@/services/messages";
+import {
+  readMessages,
+  sendMessage as sendMessageService,
+} from "@/services/messages";
 
 function useMessageSocket() {
   const queryClient = useQueryClient();
-  const { sendMessage } = useSocketStore();
+  const { sendMessage, readMessage } = useSocketStore();
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending: isSendingMessage } = useMutation({
     mutationKey: ["send-message"],
     mutationFn: async (data: any) => sendMessageService(data),
     onSuccess: (response) => {
@@ -22,11 +25,22 @@ function useMessageSocket() {
     },
   });
 
+  const { mutate: handleReadMessages } = useMutation({
+    mutationKey: ["read-messages"],
+    mutationFn: async (receiverId?: string) => {
+      return await readMessages(receiverId || "");
+    },
+    onSuccess: (_, receiverId) => {
+      readMessage(receiverId || "");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MESSAGE] });
+    },
+  });
+
   const sendMessageDirect = (receiverId: string, text: string) => {
     mutate({ receiverId, text });
   };
 
-  return { sendMessageDirect, isPending };
+  return { sendMessageDirect, handleReadMessages, isSendingMessage };
 }
 
 export default useMessageSocket;

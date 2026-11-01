@@ -41,3 +41,12 @@ export const getLastestMessage = async () => {
   });
   return response.data;
 };
+
+export const readMessages = async (receiverId: string) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.get(`/message/read/${receiverId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};

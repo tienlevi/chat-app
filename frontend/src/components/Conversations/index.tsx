@@ -38,9 +38,7 @@ function Conversations({
       (m) => m.receiverId === user._id || m.senderId === user._id,
     );
     const unreadMessage = senderMessages.filter(
-      (m) =>
-        (m.receiverId === user._id || m.senderId === user._id) &&
-        m.isRead === false,
+      (m) => m.senderId === user._id && m.isRead === false,
     );
 
     return { ...user, unreadMessage: unreadMessage.length, latestMessage };

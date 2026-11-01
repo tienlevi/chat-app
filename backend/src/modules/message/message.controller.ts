@@ -63,4 +63,15 @@ export class MessageController {
 
     return await this.messageService.getLatestMessage(userId);
   }
+
+  @Get('read/:receiverId')
+  @UseGuards(AuthGuard)
+  async handleReadMessages(
+    @Param('receiverId') receiverId: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.user.userId;
+
+    return await this.messageService.readMessages(receiverId, userId);
+  }
 }

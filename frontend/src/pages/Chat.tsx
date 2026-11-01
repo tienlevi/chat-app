@@ -1,12 +1,13 @@
 import Conversations from "@/components/Conversations";
 import Message from "@/components/Message";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 import useFriends from "@/hooks/useFriends";
 import useMessages from "@/hooks/useMessages";
 import useSocketStore from "@/stores/useSocketStore";
+import useMessageSocket from "@/hooks/useMessageSocket";
 
 function Chat() {
   const [searchParams] = useSearchParams();
@@ -18,6 +19,17 @@ function Chat() {
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const currentUserId = user?._id || "";
   const { messages, setMessages, setActiveReceiverId } = useSocketStore();
+  const { handleReadMessages } = useMessageSocket();
+  const hasUnread = messages.some(
+    (m) => m.isRead === false && m.senderId === receiverId,
+  );
+  const updateMessages = useEffectEvent(() => {
+    handleReadMessages(receiverId);
+  });
+
+  useEffect(() => {
+    if (receiverId && hasUnread) updateMessages();
+  }, [receiverId, hasUnread]);
 
   useEffect(() => {
     setActiveReceiverId(receiverId);

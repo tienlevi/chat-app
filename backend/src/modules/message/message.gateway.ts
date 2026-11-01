@@ -39,7 +39,6 @@ export class MessageGateway implements OnGatewayConnection {
       const token = client.handshake.auth?.token as string;
       const payload = await this.jwtService.verifyAsync(token);
       client.data.user = payload;
-      // Each user joins a room named by their userId so we can emit to them
       await client.join(payload.userId);
     } catch {
       console.log('Socket unauthorized');
@@ -72,5 +71,27 @@ export class MessageGateway implements OnGatewayConnection {
     }
 
     this.server.to(receiverId).emit('receive-message', body);
+  }
+
+  @UseGuards(AuthGuard)
+  @SubscribeMessage('read-message')
+  async readMessage(
+    @MessageBody() body: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const readerId = client.data.user.userId;
+    const { receiverId } = body;
+
+    if (!receiverId || !isValidObjectId(receiverId)) {
+      console.log('Invalid receiverId');
+      throw new WsException('Invalid receiverId');
+    }
+
+    const receiver = await this.userModel.findById(receiverId);
+    if (!receiver) {
+      throw new WsException('Receiver not found');
+    }
+
+    this.server.to(receiverId).emit('read-message', { readerId });
   }
 }
