@@ -9,8 +9,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import IUser from "@/interfaces/user";
 import useMessageSocket from "@/hooks/useMessageSocket";
+import { MESSAGE_EMOJIS } from "@/constants/emoji";
 
 const MAX_HEIGHT = 160;
 
@@ -52,6 +59,20 @@ function MessageComposer({ receiver, className }: Props) {
     [handleSend],
   );
 
+  const handleInsertEmoji = (char: string) => {
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? value.length;
+    const end = textarea?.selectionEnd ?? value.length;
+    const caret = start + char.length;
+
+    setValue((prev) => prev.slice(0, start) + char + prev.slice(end));
+
+    requestAnimationFrame(() => {
+      textarea?.focus();
+      textarea?.setSelectionRange(caret, caret);
+    });
+  };
+
   const canSend = value.trim().length > 0;
 
   return (
@@ -85,19 +106,45 @@ function MessageComposer({ receiver, className }: Props) {
             className="min-h-9 resize-none border-none bg-transparent py-2 text-[14px] shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full text-muted-foreground"
-              >
-                <Smile />
-                <span className="sr-only">{t("chat.composer.emoji")}</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>{t("chat.composer.emoji")}</TooltipContent>
-          </Tooltip>
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full text-muted-foreground"
+                  >
+                    <Smile />
+                    <span className="sr-only">{t("chat.composer.emoji")}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent>{t("chat.composer.emoji")}</TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent
+              side="top"
+              align="end"
+              onCloseAutoFocus={(event) => event.preventDefault()}
+              className="flex gap-1 rounded-2xl p-1.5"
+            >
+              {MESSAGE_EMOJIS.map(({ key, char }) => (
+                <DropdownMenuItem
+                  key={key}
+                  onSelect={() => handleInsertEmoji(char)}
+                  aria-label={t(`chat.emoji.${key}`)}
+                  title={t(`chat.emoji.${key}`)}
+                  className="size-9 justify-center rounded-full p-1.5"
+                >
+                  <img
+                    src={`/emoji/${key}.png`}
+                    alt=""
+                    className="size-6 transition-transform hover:scale-110"
+                  />
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <Button
             type="button"
