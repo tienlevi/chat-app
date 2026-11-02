@@ -82,4 +82,19 @@ export class FriendController {
     const userId = req.user.userId;
     return await this.friendService.unblockFriend(userId, friendId);
   }
+
+  @Post('nickname/:friendId')
+  @UseGuards(AuthGuard)
+  async handleSetNickname(
+    @Req() req: AuthenticatedRequest,
+    @Param('friendId') friendId: string,
+    @Body() data: { nickname: string },
+  ) {
+    const userId = req.user.userId;
+    return await this.friendService.setNickname(
+      userId,
+      friendId,
+      data.nickname,
+    );
+  }
 }

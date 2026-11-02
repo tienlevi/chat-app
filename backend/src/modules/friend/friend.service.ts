@@ -225,4 +225,21 @@ export class FriendService {
 
     return { message: 'Unlock friend successfully' };
   }
+
+  async setNickname(userId: string, friendId: string, nickname: string) {
+    if (typeof nickname !== 'string') {
+      throw new BadRequestException('Nickname must be a string');
+    }
+
+    const user = await this.friendModel.findOne({ userId });
+    const friend = user?.friends.find((f) => f.userId.toString() === friendId);
+    if (!user || !friend) {
+      throw new NotFoundException('Friend not found');
+    }
+
+    friend.nickname = nickname.trim();
+    await user.save();
+
+    return { message: 'Set nickname successfully' };
+  }
 }
