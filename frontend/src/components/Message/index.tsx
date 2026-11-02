@@ -6,9 +6,11 @@ import type IUser from "@/interfaces/user";
 import MessageThread from "./MessageThread";
 import MessageComposer from "./MessageComposer";
 import MessageHeader from "./MessageHeader";
+import { FriendListItem } from "@/interfaces/friend";
 
 interface Props {
   users: IUser[];
+  friend: FriendListItem | null;
   messages: IMessage[];
   currentUserId: string;
   receiverId: string;
@@ -18,6 +20,7 @@ interface Props {
 
 function Message({
   users,
+  friend,
   messages,
   currentUserId,
   receiverId,
@@ -41,6 +44,7 @@ function Message({
         <>
           <MessageHeader
             user={receiver}
+            friend={friend}
             detailsOpen={detailsOpen}
             onToggleDetails={() => setDetailsOpen((open) => !open)}
             onBack={onBack}

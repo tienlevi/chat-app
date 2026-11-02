@@ -29,3 +29,10 @@ export const registerSchema = () =>
     });
 
 export type RegisterFormValues = z.infer<ReturnType<typeof registerSchema>>;
+
+export const nicknameSchema = () =>
+  z.object({
+    nickname: z.string().trim().max(50, i18n.t("chat.nickname.maxLength")),
+  });
+
+export type NicknameFormValues = z.infer<ReturnType<typeof nicknameSchema>>;

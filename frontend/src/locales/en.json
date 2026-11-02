@@ -71,6 +71,16 @@
       "youPrefix": "You: {{text}}",
       "empty": "No conversations found"
     },
+    "nickname": {
+      "action": "Set nickname",
+      "title": "Set nickname",
+      "description": "Only you can see the nickname you give {{name}}.",
+      "label": "Nickname",
+      "hint": "Leave empty to show their name again.",
+      "maxLength": "Nickname must be 50 characters or fewer.",
+      "success": "Nickname updated",
+      "error": "Couldn't update the nickname. Please try again."
+    },
     "header": {
       "back": "Back to conversations",
       "details": "Conversation details",

@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
   BellOff,
   Info,
   MoreVertical,
+  PencilLine,
   Search,
   Trash2,
 } from "lucide-react";
@@ -23,9 +25,12 @@ import {
 } from "@/components/ui/tooltip";
 import UserAvatar from "@/components/UserAvatar";
 import type IUser from "@/interfaces/user";
+import { FriendListItem } from "@/interfaces/friend";
+import SetNicknameDialog from "./SetNicknameDialog";
 
 interface Props {
   user: IUser;
+  friend: FriendListItem | null;
   detailsOpen: boolean;
   onToggleDetails: () => void;
   onBack: () => void;
@@ -34,12 +39,14 @@ interface Props {
 
 function MessageHeader({
   user,
+  friend,
   detailsOpen,
   onToggleDetails,
   onBack,
   className,
 }: Props) {
   const { t } = useTranslation();
+  const [isNicknameOpen, setIsNicknameOpen] = useState(false);
 
   return (
     <header
@@ -64,7 +71,9 @@ function MessageHeader({
         src={user.avatar}
         size="md"
       />
-      <div className="text-[14px]">{user.name}</div>
+      <div className="text-[14px]">
+        {friend?.nickname ? friend?.nickname : user.name}
+      </div>
 
       <div className="flex items-center gap-0.5">
         <Tooltip>
@@ -86,7 +95,7 @@ function MessageHeader({
           <TooltipContent>{t("chat.header.details")}</TooltipContent>
         </Tooltip>
 
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
@@ -98,6 +107,12 @@ function MessageHeader({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
+            {friend && (
+              <DropdownMenuItem onSelect={() => setIsNicknameOpen(true)}>
+                <PencilLine />
+                {t("chat.nickname.action")}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem>
               <BellOff />
               {t("chat.header.mute")}
@@ -114,6 +129,15 @@ function MessageHeader({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {friend && (
+        <SetNicknameDialog
+          user={user}
+          friend={friend}
+          open={isNicknameOpen}
+          onOpenChange={setIsNicknameOpen}
+        />
+      )}
     </header>
   );
 }

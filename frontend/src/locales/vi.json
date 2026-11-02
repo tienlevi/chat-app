@@ -70,6 +70,16 @@
       "youPrefix": "Bạn: {{text}}",
       "empty": "Không tìm thấy cuộc trò chuyện nào"
     },
+    "nickname": {
+      "action": "Đặt biệt danh",
+      "title": "Đặt biệt danh",
+      "description": "Chỉ bạn mới thấy biệt danh đặt cho {{name}}.",
+      "label": "Biệt danh",
+      "hint": "Để trống để hiển thị lại tên của họ.",
+      "maxLength": "Biệt danh không được quá 50 ký tự.",
+      "success": "Đã cập nhật biệt danh",
+      "error": "Không thể cập nhật biệt danh. Vui lòng thử lại."
+    },
     "header": {
       "back": "Quay lại danh sách trò chuyện",
       "details": "Thông tin cuộc trò chuyện",
