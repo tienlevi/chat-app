@@ -20,10 +20,11 @@ import useSetNickname from "@/hooks/useSetNickname";
 import { NicknameFormValues, nicknameSchema } from "@/utils/validations";
 import type IUser from "@/interfaces/user";
 import type { FriendListItem } from "@/interfaces/friend";
+import { toast } from "sonner";
 
 interface Props {
   user: IUser;
-  friend: FriendListItem;
+  friend: FriendListItem | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -31,7 +32,7 @@ interface Props {
 function SetNicknameDialog({ user, friend, open, onOpenChange }: Props) {
   const { t, i18n } = useTranslation();
   const schema = useMemo(() => nicknameSchema(), [i18n.language]);
-  const currentNickname = friend.nickname ?? "";
+  const currentNickname = friend?.nickname ?? "";
   const {
     control,
     handleSubmit,
@@ -50,6 +51,11 @@ function SetNicknameDialog({ user, friend, open, onOpenChange }: Props) {
   }, [open, currentNickname, reset]);
 
   function onSubmit(values: NicknameFormValues) {
+    if (!friend) {
+      toast.warning(t("chat.nickname.notFriend"));
+      return;
+    }
+
     handleSetNickname(
       { friendId: friend.userId, nickname: values.nickname },
       { onSuccess: () => onOpenChange(false) },

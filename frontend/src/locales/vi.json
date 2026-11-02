@@ -78,7 +78,8 @@
       "hint": "Để trống để hiển thị lại tên của họ.",
       "maxLength": "Biệt danh không được quá 50 ký tự.",
       "success": "Đã cập nhật biệt danh",
-      "error": "Không thể cập nhật biệt danh. Vui lòng thử lại."
+      "error": "Không thể cập nhật biệt danh. Vui lòng thử lại.",
+      "notFriend": "Bạn chỉ có thể đặt biệt danh khi đã kết bạn"
     },
     "header": {
       "back": "Quay lại danh sách trò chuyện",

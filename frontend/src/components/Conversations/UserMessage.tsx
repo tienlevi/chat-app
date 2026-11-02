@@ -12,6 +12,7 @@ interface Props {
   latestMessage: IMessage;
   isActive: boolean;
   currentUserId: string;
+  nickname: string;
 }
 
 function UserMessage({
@@ -20,6 +21,7 @@ function UserMessage({
   latestMessage,
   isActive,
   currentUserId,
+  nickname,
 }: Props) {
   const { t, i18n } = useTranslation();
 
@@ -50,7 +52,9 @@ function UserMessage({
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <span className="truncate text-sm font-semibold">{user.name}</span>
+            <span className="truncate text-sm font-semibold">
+              {nickname ? nickname : user.name}
+            </span>
             {latestMessage ? (
               <span className="ml-auto shrink-0 text-[11px] text-muted-foreground tabular-nums">
                 {formatListStamp(

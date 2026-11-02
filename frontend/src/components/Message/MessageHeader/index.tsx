@@ -9,6 +9,7 @@ import {
   Search,
   Trash2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -107,12 +108,18 @@ function MessageHeader({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            {friend && (
-              <DropdownMenuItem onSelect={() => setIsNicknameOpen(true)}>
-                <PencilLine />
-                {t("chat.nickname.action")}
-              </DropdownMenuItem>
-            )}
+            <DropdownMenuItem
+              onSelect={() => {
+                if (!friend) {
+                  toast.warning(t("chat.nickname.notFriend"));
+                  return;
+                }
+                setIsNicknameOpen(true);
+              }}
+            >
+              <PencilLine />
+              {t("chat.nickname.action")}
+            </DropdownMenuItem>
             <DropdownMenuItem>
               <BellOff />
               {t("chat.header.mute")}

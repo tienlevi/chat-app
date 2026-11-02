@@ -8,12 +8,16 @@ import useFriends from "@/hooks/useFriends";
 import useMessages from "@/hooks/useMessages";
 import useSocketStore from "@/stores/useSocketStore";
 import useMessageSocket from "@/hooks/useMessageSocket";
+import { FriendListItem } from "@/interfaces/friend";
 
 function Chat() {
   const [searchParams] = useSearchParams();
   const receiverId = searchParams.get("receiverId") || "";
   const { data: user } = useAuth();
-  const { users } = useFriends();
+  const { users, friend } = useFriends();
+  const friendReceiver = friend?.friends.find(
+    (f) => f.userId === receiverId,
+  ) as FriendListItem | null;
   const { receiverMessages, senderMessages, latestMessages } =
     useMessages(receiverId);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
@@ -40,6 +44,7 @@ function Chat() {
     <div className="flex gap-3.5">
       <Conversations
         users={users}
+        friend={friend}
         latestMessages={latestMessages}
         senderMessages={senderMessages}
         currentUserId={currentUserId}
@@ -48,6 +53,7 @@ function Chat() {
       />
       <Message
         users={users}
+        friend={friendReceiver || null}
         messages={messages}
         currentUserId={currentUserId}
         receiverId={receiverId}

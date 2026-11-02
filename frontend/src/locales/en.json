@@ -79,7 +79,8 @@
       "hint": "Leave empty to show their name again.",
       "maxLength": "Nickname must be 50 characters or fewer.",
       "success": "Nickname updated",
-      "error": "Couldn't update the nickname. Please try again."
+      "error": "Couldn't update the nickname. Please try again.",
+      "notFriend": "You can only set a nickname for friends."
     },
     "header": {
       "back": "Back to conversations",

@@ -66,3 +66,14 @@ export const unblockFriend = async (friendId: string) => {
   });
   return response.data;
 };
+
+export const setNickname = async (friendId: string, nickname: string) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.post(
+    `/friends/nickname/${friendId}`,
+    { nickname },
+    { headers: { Authorization: `Bearer ${accessToken}` } },
+  );
+  return response.data;
+};

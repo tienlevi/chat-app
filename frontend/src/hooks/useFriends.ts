@@ -9,7 +9,7 @@ function useFriends(debounce?: string) {
     queryKey: [QUERY_KEY.FRIENDS],
     queryFn: async () => await getFriendsByUserId(),
   });
-  const friend = friends?.[0];
+  const friend = friends?.[0] as IFriend;
 
   const { data: users, isLoading: isLoadingUsers } = useQuery<IUser[]>({
     queryKey: [QUERY_KEY.FRIENDS, "search", debounce || ""],

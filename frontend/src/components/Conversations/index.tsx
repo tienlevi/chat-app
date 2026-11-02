@@ -7,9 +7,11 @@ import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 import ConversationHeader from "./ConversationHeader";
 import UserMessage from "./UserMessage";
+import { IFriend } from "@/interfaces/friend";
 
 interface ConversationListProps {
   users: IUser[];
+  friend: IFriend;
   latestMessages: IMessage[];
   senderMessages: IMessage[];
   currentUserId: string;
@@ -19,6 +21,7 @@ interface ConversationListProps {
 
 function Conversations({
   users,
+  friend,
   latestMessages,
   senderMessages,
   currentUserId,
@@ -33,15 +36,23 @@ function Conversations({
         message.receiverId === user._id || message.senderId === user._id,
     ),
   );
-  const latestMessagesByPartner = filterUsers.map((user) => {
+  const partners = filterUsers.map((user) => {
     const latestMessage = latestMessages.find(
       (m) => m.receiverId === user._id || m.senderId === user._id,
     );
     const unreadMessage = senderMessages.filter(
       (m) => m.senderId === user._id && m.isRead === false,
     );
+    const nickname = friend.friends.find(
+      (f) => f.userId === user._id,
+    )?.nickname;
 
-    return { ...user, unreadMessage: unreadMessage.length, latestMessage };
+    return {
+      ...user,
+      unreadMessage: unreadMessage.length,
+      nickname,
+      latestMessage,
+    };
   });
 
   return (
@@ -55,10 +66,11 @@ function Conversations({
 
       <ScrollArea className="min-h-0 flex-1">
         <ul className="flex flex-col gap-0.5 px-2 pb-3">
-          {latestMessagesByPartner.map((user) => (
+          {partners.map((user) => (
             <UserMessage
               key={user._id ?? user.email}
               user={user}
+              nickname={user.nickname || ""}
               unreadMessages={user.unreadMessage}
               latestMessage={user.latestMessage!}
               isActive={user._id === activeId}
@@ -66,7 +78,7 @@ function Conversations({
             />
           ))}
 
-          {latestMessagesByPartner.length === 0 ? (
+          {partners.length === 0 ? (
             <li className="px-4 py-12 text-center text-sm text-muted-foreground">
               {t("chat.list.empty")}
             </li>
