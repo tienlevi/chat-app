@@ -30,6 +30,7 @@ function Conversations({
 }: ConversationListProps) {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<ConversationFilter>("all");
+  const [query, setQuery] = useState("");
   const filterUsers = users.filter((user) =>
     senderMessages.some(
       (message) =>
@@ -55,6 +56,10 @@ function Conversations({
     };
   });
 
+  const friends = query
+    ? partners.filter((p) => p.name.includes(query))
+    : partners;
+
   return (
     <section
       className={cn(
@@ -62,11 +67,16 @@ function Conversations({
         className,
       )}
     >
-      <ConversationHeader filter={filter} setFilter={setFilter} />
+      <ConversationHeader
+        query={query}
+        setQuery={setQuery}
+        filter={filter}
+        setFilter={setFilter}
+      />
 
       <ScrollArea className="min-h-0 flex-1">
         <ul className="flex flex-col gap-0.5 px-2 pb-3">
-          {partners.map((user) => (
+          {friends.map((user) => (
             <UserMessage
               key={user._id ?? user.email}
               user={user}

@@ -9,15 +9,15 @@ import { Button } from "@/components/ui/button";
 import { PenSquare, Search } from "lucide-react";
 import { ConversationFilter } from "@/interfaces/chat";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 interface Props {
+  query: string;
+  setQuery: (query: string) => void;
   filter: ConversationFilter;
   setFilter: (filter: ConversationFilter) => void;
 }
 
-function ConversationHeader({ filter, setFilter }: Props) {
-  const [query, setQuery] = useState("");
+function ConversationHeader({ filter, query, setQuery, setFilter }: Props) {
   const { t } = useTranslation();
   const FILTERS: ConversationFilter[] = ["all", "unread"];
 
