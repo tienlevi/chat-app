@@ -37,11 +37,12 @@ function Conversations({
         message.receiverId === user._id || message.senderId === user._id,
     ),
   );
+
   const partners = filterUsers.map((user) => {
     const latestMessage = latestMessages.find(
       (m) => m.receiverId === user._id || m.senderId === user._id,
     );
-    const unreadMessage = senderMessages.filter(
+    const unreadMessages = senderMessages.filter(
       (m) => m.senderId === user._id && m.isRead === false,
     );
     const nickname = friend.friends.find(
@@ -50,15 +51,25 @@ function Conversations({
 
     return {
       ...user,
-      unreadMessage: unreadMessage.length,
+      unreadMessages: unreadMessages.length,
       nickname,
       latestMessage,
     };
   });
 
-  const friends = query
-    ? partners.filter((p) => p.name.includes(query))
-    : partners;
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const friends = partners
+    .filter((p) => {
+      if (filter !== "unread") return true;
+      return p.unreadMessages > 0;
+    })
+    .filter(
+      (p) =>
+        !normalizedQuery ||
+        p.name.toLowerCase().includes(normalizedQuery) ||
+        p.nickname?.toLowerCase().includes(normalizedQuery),
+    );
 
   return (
     <section
@@ -81,14 +92,14 @@ function Conversations({
               key={user._id ?? user.email}
               user={user}
               nickname={user.nickname || ""}
-              unreadMessages={user.unreadMessage}
+              unreadMessages={user.unreadMessages}
               latestMessage={user.latestMessage!}
               isActive={user._id === activeId}
               currentUserId={currentUserId}
             />
           ))}
 
-          {partners.length === 0 ? (
+          {friends.length === 0 ? (
             <li className="px-4 py-12 text-center text-sm text-muted-foreground">
               {t("chat.list.empty")}
             </li>
