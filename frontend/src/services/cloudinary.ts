@@ -1,9 +1,19 @@
 import { cloudinaryApiKey, cloudinaryUploadPreset } from "@/constants";
 import { cloudinaryApi } from "@/utils/axios";
 
-export type FileType = "image" | "video";
+export type FileType = "image" | "video" | "raw";
 
-export const uploadFile = async (file: File, type: FileType = "image") => {
+export interface CloudinaryUploadResponse {
+  secure_url: string;
+  public_id: string;
+  resource_type: string;
+  bytes: number;
+}
+
+export const uploadFile = async (
+  file: File,
+  type: FileType = "image",
+): Promise<CloudinaryUploadResponse> => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("folder", "chat-app");

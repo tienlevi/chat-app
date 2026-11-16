@@ -104,8 +104,14 @@
       "attach": "Đính kèm tệp",
       "emoji": "Thêm biểu tượng cảm xúc",
       "send": "Gửi tin nhắn",
-      "voice": "Ghi âm tin nhắn thoại",
-      "hint": "Nhấn Enter để gửi, Shift + Enter để xuống dòng"
+      "hint": "Nhấn Enter để gửi, Shift + Enter để xuống dòng",
+      "removeFile": "Xóa {{name}}",
+      "previewFile": "Xem trước {{name}}",
+      "noPreview": "Không thể xem trước loại tệp này",
+      "uploading": "Đang tải tệp lên…",
+      "uploadFailed": "Không thể tải tệp lên. Vui lòng thử lại.",
+      "fileTooLarge": "{{name}} lớn hơn {{size}}MB",
+      "tooManyFiles": "Bạn chỉ có thể đính kèm tối đa {{max}} tệp"
     },
     "emoji": {
       "like": "Thích",

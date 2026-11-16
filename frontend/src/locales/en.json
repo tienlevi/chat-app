@@ -105,8 +105,14 @@
       "attach": "Attach a file",
       "emoji": "Add an emoji",
       "send": "Send message",
-      "voice": "Record a voice message",
-      "hint": "Press Enter to send, Shift + Enter for a new line"
+      "hint": "Press Enter to send, Shift + Enter for a new line",
+      "removeFile": "Remove {{name}}",
+      "previewFile": "Preview {{name}}",
+      "noPreview": "Preview isn't available for this file type",
+      "uploading": "Uploading files…",
+      "uploadFailed": "Couldn't upload files. Please try again.",
+      "fileTooLarge": "{{name}} is larger than {{size}}MB",
+      "tooManyFiles": "You can attach up to {{max}} files"
     },
     "emoji": {
       "like": "Like",

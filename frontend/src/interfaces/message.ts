@@ -14,6 +14,12 @@ export interface MessageFile {
   url: string;
 }
 
+export interface PendingFile {
+  id: string;
+  file: File;
+  type: MessageFileType;
+}
+
 export interface IMessage {
   _id: string;
   senderId: string;
