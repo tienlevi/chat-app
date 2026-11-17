@@ -54,7 +54,7 @@ function MessageBubble({
             className={cn(
               "rounded-2xl px-3.5 py-2.5 text-[15px] leading-relaxed",
               isOwn
-                ? "bg-primary text-primary-foreground"
+                ? `${message.text.trim() ? "bg-primary text-primary-foreground" : "bg-transparent"}`
                 : "bg-secondary text-secondary-foreground",
             )}
           >
@@ -62,10 +62,6 @@ function MessageBubble({
               <p className="italic opacity-70">{t("chat.thread.deleted")}</p>
             ) : (
               <>
-                <p className="whitespace-pre-wrap break-words">
-                  {message.text}
-                </p>
-
                 {message.files.length ? (
                   <ul
                     className={cn(
@@ -86,6 +82,9 @@ function MessageBubble({
                     })}
                   </ul>
                 ) : null}
+                <p className="whitespace-pre-wrap break-words">
+                  {message.text}
+                </p>
                 <p
                   className={cn(
                     `text-[10px]`,

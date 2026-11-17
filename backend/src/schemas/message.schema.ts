@@ -22,7 +22,7 @@ export class Message {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   receiverId: string;
 
-  @Prop({ required: true })
+  @Prop({ default: '' })
   text: string;
 
   @Prop({ type: [MessageFileSchema], default: [] })

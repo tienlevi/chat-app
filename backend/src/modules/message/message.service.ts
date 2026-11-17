@@ -18,6 +18,14 @@ export class MessageService {
       throw new HttpException('Receiver not found', HttpStatus.NOT_FOUND);
     }
 
+    const text = data.text?.trim() || '';
+    if (!text && !data.files?.length) {
+      throw new HttpException(
+        'Message must contain text or files',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const message = await this.messageModel.create({
       ...data,
       senderId,
