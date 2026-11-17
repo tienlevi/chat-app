@@ -4,6 +4,7 @@ import useSocketStore from "@/stores/useSocketStore";
 import {
   readMessages,
   sendMessage as sendMessageService,
+  type SendMessagePayload,
 } from "@/services/messages";
 
 function useMessageSocket() {
@@ -12,7 +13,7 @@ function useMessageSocket() {
 
   const { mutate, isPending: isSendingMessage } = useMutation({
     mutationKey: ["send-message"],
-    mutationFn: async (data: any) => sendMessageService(data),
+    mutationFn: async (data: SendMessagePayload) => sendMessageService(data),
     onSuccess: (response) => {
       const message = response.data;
       sendMessage(message);
@@ -36,8 +37,12 @@ function useMessageSocket() {
     },
   });
 
-  const sendMessageDirect = (receiverId: string, text: string) => {
-    mutate({ receiverId, text });
+  const sendMessageDirect = (
+    receiverId: string,
+    text: string,
+    files: SendMessagePayload["files"] = [],
+  ) => {
+    mutate({ receiverId, text, files });
   };
 
   return { sendMessageDirect, handleReadMessages, isSendingMessage };

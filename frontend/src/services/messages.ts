@@ -2,11 +2,13 @@ import { ACCESS_TOKEN_KEY } from "@/constants";
 import { MessageFile } from "@/interfaces/message";
 import { instance } from "@/utils/axios";
 
-export const sendMessage = async (data: {
+export interface SendMessagePayload {
   text: string;
   files?: Omit<MessageFile, "_id">[];
   receiverId: string;
-}) => {
+}
+
+export const sendMessage = async (data: SendMessagePayload) => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
   const response = await instance.post(`/message/send`, data, {
