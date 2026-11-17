@@ -113,6 +113,14 @@
       "fileTooLarge": "{{name}} lớn hơn {{size}}MB",
       "tooManyFiles": "Bạn chỉ có thể đính kèm tối đa {{max}} tệp"
     },
+    "attachment": {
+      "view": "Xem {{name}}",
+      "image": "Hình ảnh đính kèm",
+      "video": "Video đính kèm",
+      "open": "Mở trong tab mới",
+      "download": "Tải xuống",
+      "downloadFile": "Tải xuống {{name}}"
+    },
     "emoji": {
       "like": "Thích",
       "dislike": "Không thích",

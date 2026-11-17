@@ -1,21 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { Check, CheckCheck, FileText, Film, ImageIcon } from "lucide-react";
+import { Check, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import { formatTime } from "@/utils/datetime";
-import type { IMessage, MessageFileType } from "@/interfaces/message";
+import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
-
-const FILE_ICON: Record<MessageFileType, typeof FileText> = {
-  file: FileText,
-  image: ImageIcon,
-  video: Film,
-};
-
-const fileName = (url: string): string => {
-  const segments = url.split("/");
-  return decodeURIComponent(segments[segments.length - 1] || url);
-};
+import MessageFiles from "./MessageFiles";
 
 interface MessageBubbleProps {
   message: IMessage;
@@ -86,32 +76,12 @@ function MessageBubble({
                     )}
                   >
                     {message.files.map((file) => {
-                      const Icon = FILE_ICON[file.type];
-
                       return (
-                        <li key={file._id}>
-                          <a
-                            href={file.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={cn(
-                              "flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-opacity hover:opacity-90",
-                              isOwn ? "bg-black/15" : "bg-background/70",
-                            )}
-                          >
-                            <span
-                              className={cn(
-                                "flex size-8 shrink-0 items-center justify-center rounded-lg",
-                                isOwn ? "bg-black/20" : "bg-secondary",
-                              )}
-                            >
-                              <Icon className="size-4" />
-                            </span>
-                            <span className="min-w-0 truncate text-[13px] font-medium">
-                              {fileName(file.url)}
-                            </span>
-                          </a>
-                        </li>
+                        <MessageFiles
+                          file={file}
+                          isOwn={isOwn}
+                          key={file._id}
+                        />
                       );
                     })}
                   </ul>

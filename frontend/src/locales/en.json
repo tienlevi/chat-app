@@ -114,6 +114,14 @@
       "fileTooLarge": "{{name}} is larger than {{size}}MB",
       "tooManyFiles": "You can attach up to {{max}} files"
     },
+    "attachment": {
+      "view": "View {{name}}",
+      "image": "Image attachment",
+      "video": "Video attachment",
+      "open": "Open in new tab",
+      "download": "Download",
+      "downloadFile": "Download {{name}}"
+    },
     "emoji": {
       "like": "Like",
       "dislike": "Dislike",
