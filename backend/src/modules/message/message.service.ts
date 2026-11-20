@@ -12,8 +12,12 @@ export class MessageService {
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  async sendMessage(senderId: string, userId: string, data: SendMessageDto) {
-    const receiver = await this.userModel.findById(userId);
+  async sendMessage(
+    senderId: string,
+    receiverId: string,
+    data: SendMessageDto,
+  ) {
+    const receiver = await this.userModel.findById(receiverId);
     if (!receiver) {
       throw new HttpException('Receiver not found', HttpStatus.NOT_FOUND);
     }
@@ -29,7 +33,7 @@ export class MessageService {
     const message = await this.messageModel.create({
       ...data,
       senderId,
-      receiverId: userId,
+      receiverId,
     });
 
     return { message: 'Send message successfully', data: message.toObject() };
