@@ -13,6 +13,7 @@ import { MessageService } from './message.service';
 import { AuthGuard } from '../../guards/auth.guard';
 import { AuthenticatedRequest } from '../../interfaces/request';
 import SendMessageDto from './dto/send-message.dto';
+import UnsendMessageDto from './dto/unsend-message.dto';
 
 @Controller('message')
 export class MessageController {
@@ -73,5 +74,20 @@ export class MessageController {
     const userId = req.user.userId;
 
     return await this.messageService.readMessages(receiverId, userId);
+  }
+
+  @Post('unsend')
+  @UseGuards(AuthGuard)
+  async handleUnsendMessage(
+    @Body() data: UnsendMessageDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const userId = req.user.userId;
+
+    return await this.messageService.unsendMessage(
+      userId,
+      data.receiverId,
+      data.messageId,
+    );
   }
 }
