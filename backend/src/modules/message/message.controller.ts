@@ -84,10 +84,6 @@ export class MessageController {
   ) {
     const userId = req.user.userId;
 
-    return await this.messageService.unsendMessage(
-      userId,
-      data.receiverId,
-      data.messageId,
-    );
+    return await this.messageService.unsendMessage(userId, data.messageId);
   }
 }

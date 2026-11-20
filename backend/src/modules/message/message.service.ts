@@ -123,12 +123,9 @@ export class MessageService {
     return unreadMessages;
   }
 
-  async unsendMessage(userId: string, receiverId: string, messageId: string) {
-    if (!receiverId || !userId) {
-      throw new HttpException(
-        'User or receiver not found',
-        HttpStatus.NOT_FOUND,
-      );
+  async unsendMessage(userId: string, messageId: string) {
+    if (!userId) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     if (!messageId) {
@@ -137,10 +134,7 @@ export class MessageService {
 
     const message = await this.messageModel.findById(messageId);
 
-    if (
-      message?.senderId.toString() === userId &&
-      message.receiverId.toString() === receiverId
-    ) {
+    if (message?.senderId.toString() === userId) {
       await this.messageModel.findByIdAndUpdate(
         messageId,
         { isUnsend: true },
