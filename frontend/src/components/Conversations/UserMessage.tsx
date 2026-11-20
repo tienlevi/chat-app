@@ -25,7 +25,7 @@ function UserMessage({
 }: Props) {
   const { t, i18n } = useTranslation();
 
-  const preview = latestMessage?.isDeleted
+  const preview = latestMessage?.isUnsend
     ? t("chat.thread.deleted")
     : latestMessage?.text;
 

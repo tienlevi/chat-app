@@ -128,7 +128,7 @@ backend/src/
 | `User`     | `name`, `email`, `password` (bcrypt), `isAuthenticated`, `avatar`, timestamps                                              |
 | `Otp`      | `code` (bcrypt), `email`, `type` (`verify` / `reset-otp` / `reset-password`), `expiresAt` (epoch ms), `isUsed`, timestamps |
 | `Token`    | `refreshToken`, `userId` (ref `User`), timestamps — one document per user, upserted                                        |
-| `Message`  | `senderId`, `receiverId`, `text`, `files[]` (`type`: file/image/video, `url`), `isDeleted`, timestamps                     |
+| `Message`  | `senderId`, `receiverId`, `text`, `files[]` (`type`: file/image/video, `url`), `isUnsend`, timestamps                      |
 
 ### Error codes
 

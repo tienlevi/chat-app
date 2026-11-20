@@ -12,7 +12,13 @@
 
 ```typescript
 // interfaces/message.ts
-export type MessageEmoji = "like" | "dislike" | "heart" | "smile" | "sad" | "angry";
+export type MessageEmoji =
+  | "like"
+  | "dislike"
+  | "heart"
+  | "smile"
+  | "sad"
+  | "angry";
 export type MessageFileType = "file" | "image" | "video";
 
 export interface MessageFile {
@@ -27,7 +33,7 @@ export interface IMessage {
   receiverId: string;
   text: string;
   files: MessageFile[];
-  isDeleted: boolean;
+  isUnsend: boolean;
   isRead: boolean;
   emoji?: MessageEmoji;
   createdAt: string; // ISO string from backend
@@ -58,7 +64,10 @@ import type { IMessage } from "@/interfaces/message";
 ## Generics on Queries
 
 ```typescript
-useQuery<IFriend[]>({ queryKey: [QUERY_KEY.FRIENDS], queryFn: getFriendsByUserId });
+useQuery<IFriend[]>({
+  queryKey: [QUERY_KEY.FRIENDS],
+  queryFn: getFriendsByUserId,
+});
 instance.get<IUser[]>("/users");
 ```
 

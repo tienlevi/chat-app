@@ -88,7 +88,7 @@ function MessageBubble({
                 : "bg-secondary text-secondary-foreground",
             )}
           >
-            {message.isDeleted ? (
+            {message.isUnsend ? (
               <p className="italic opacity-70">{t("chat.thread.deleted")}</p>
             ) : (
               <>
@@ -128,7 +128,7 @@ function MessageBubble({
           </div>
         </div>
 
-        {message.emoji && !message.isDeleted ? (
+        {message.emoji && !message.isUnsend ? (
           <div className="px-1">
             <span className="flex items-center rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5">
               <img

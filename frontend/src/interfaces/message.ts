@@ -26,7 +26,7 @@ export interface IMessage {
   receiverId: string;
   text: string;
   files: MessageFile[];
-  isDeleted: boolean;
+  isUnsend: boolean;
   isRead: boolean;
   emoji?: MessageEmoji;
   createdAt: string;

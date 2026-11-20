@@ -29,7 +29,7 @@ export class Message {
   files: MessageFile[];
 
   @Prop({ default: false })
-  isDeleted: boolean;
+  isUnsend: boolean;
 
   @Prop({ default: false })
   isRead: boolean;
