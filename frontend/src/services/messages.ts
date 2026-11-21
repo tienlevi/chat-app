@@ -8,6 +8,10 @@ export interface SendMessagePayload {
   receiverId: string;
 }
 
+export interface UnsendMessagePayload {
+  messageId: string;
+}
+
 export const sendMessage = async (data: SendMessagePayload) => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
@@ -48,6 +52,15 @@ export const readMessages = async (receiverId: string) => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
   const response = await instance.get(`/message/read/${receiverId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data;
+};
+
+export const unsendMessage = async (data: UnsendMessagePayload) => {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+
+  const response = await instance.post(`/message/unsend`, data, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   return response.data;

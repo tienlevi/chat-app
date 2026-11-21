@@ -4,12 +4,14 @@ import useSocketStore from "@/stores/useSocketStore";
 import {
   readMessages,
   sendMessage as sendMessageService,
+  unsendMessage as unsendMessageService,
+  UnsendMessagePayload,
   type SendMessagePayload,
 } from "@/services/messages";
 
 function useMessageSocket() {
   const queryClient = useQueryClient();
-  const { sendMessage, readMessage } = useSocketStore();
+  const { sendMessage, readMessage, unsendMessage } = useSocketStore();
 
   const { mutate, isPending: isSendingMessage } = useMutation({
     mutationKey: ["send-message"],
@@ -37,6 +39,19 @@ function useMessageSocket() {
     },
   });
 
+  const { mutate: handleUnsendMessage } = useMutation({
+    mutationKey: ["unsead-messages"],
+    mutationFn: async (data: UnsendMessagePayload) => {
+      return await unsendMessageService(data);
+    },
+    onSuccess: (_, data) => {
+      unsendMessage(data.messageId);
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.MESSAGE, data.messageId],
+      });
+    },
+  });
+
   const sendMessageDirect = (
     receiverId: string,
     text: string,
@@ -45,7 +60,12 @@ function useMessageSocket() {
     mutate({ receiverId, text, files });
   };
 
-  return { sendMessageDirect, handleReadMessages, isSendingMessage };
+  return {
+    sendMessageDirect,
+    handleReadMessages,
+    handleUnsendMessage,
+    isSendingMessage,
+  };
 }
 
 export default useMessageSocket;

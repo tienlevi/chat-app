@@ -15,6 +15,7 @@ interface Store {
   setActiveReceiverId: (id: string) => void;
   sendMessage: (data: IMessage) => void;
   readMessage: (receiverId: string) => void;
+  unsendMessage: (messageId: string) => void;
 }
 
 const useSocketStore = create<Store>((set, get) => ({
@@ -46,6 +47,17 @@ const useSocketStore = create<Store>((set, get) => ({
       if (data.senderId === activeReceiverId) {
         set({ messages: [...messages, data] });
       }
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MESSAGE] });
+    });
+
+    socket.on("unsend-message", ({ messageId }: { messageId: string }) => {
+      const { messages } = get();
+
+      set({
+        messages: messages.map((m) =>
+          m._id === messageId ? { ...m, isUnsend: true } : m,
+        ),
+      });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.MESSAGE] });
     });
 
@@ -85,6 +97,16 @@ const useSocketStore = create<Store>((set, get) => ({
     set({
       messages: messages.map((m) =>
         m.senderId === receiverId ? { ...m, isRead: true } : m,
+      ),
+    });
+  },
+  unsendMessage: (messageId: string) => {
+    const { messages, socket } = get();
+    socket?.emit("unsend-message", { messageId });
+
+    set({
+      messages: messages.map((m) =>
+        m._id === messageId ? { ...m, isUnsend: true } : m,
       ),
     });
   },

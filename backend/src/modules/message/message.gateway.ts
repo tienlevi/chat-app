@@ -14,6 +14,8 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, isValidObjectId } from 'mongoose';
 import { User } from '../../schemas/user.schema';
+import UnsendMessageDto from './dto/unsend-message.dto';
+import { Message } from '../../schemas/message.schema';
 
 @WebSocketGateway({
   cors: {
@@ -28,6 +30,7 @@ import { User } from '../../schemas/user.schema';
 export class MessageGateway implements OnGatewayConnection {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Message.name) private messageModel: Model<Message>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -71,6 +74,32 @@ export class MessageGateway implements OnGatewayConnection {
     }
 
     this.server.to(receiverId).emit('receive-message', body);
+  }
+
+  @UseGuards(AuthGuard)
+  @SubscribeMessage('unsend-message')
+  async unsendMessage(
+    @MessageBody() body: UnsendMessageDto,
+    @ConnectedSocket() client: Socket,
+  ) {
+    const userId = client.data.user.userId;
+    const { messageId } = body;
+
+    if (!messageId || !isValidObjectId(messageId)) {
+      throw new WsException('Invalid messageId');
+    }
+
+    const message = await this.messageModel.findById(messageId);
+    if (!message) {
+      throw new WsException('Message not found');
+    }
+    if (message.senderId.toString() !== userId) {
+      throw new WsException('You can only unsend your own messages');
+    }
+
+    this.server
+      .to(message.receiverId.toString())
+      .emit('unsend-message', { messageId });
   }
 
   @UseGuards(AuthGuard)

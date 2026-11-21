@@ -8,6 +8,7 @@ import type IUser from "@/interfaces/user";
 import MessageFiles from "./MessageFiles";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
+import useMessageSocket from "@/hooks/useMessageSocket";
 
 interface MessageBubbleProps {
   message: IMessage;
@@ -28,6 +29,7 @@ function MessageBubble({
   const locale = i18n.resolvedLanguage ?? "en";
   const StatusIcon = message.isRead ? CheckCheck : Check;
   const statusKey = message.isRead ? "read" : "sent";
+  const { handleUnsendMessage } = useMessageSocket();
 
   return (
     <div
@@ -65,17 +67,22 @@ function MessageBubble({
           )}
         >
           {isHover && (
-            <div className="relative cursor-pointer">
-              <Ellipsis onClick={() => setToggle(!toggle)} />
+            <div className="absolute -left-10 cursor-pointer">
+              {!message.isUnsend && isOwn && (
+                <Ellipsis onClick={() => setToggle(!toggle)} />
+              )}
               {toggle && (
                 <Card
                   className={cn(
                     isOwn ? "right-0" : " left-0",
                     "absolute text-destructive flex-row! gap-2! px-5 py-2!",
                   )}
+                  onClick={() =>
+                    handleUnsendMessage({ messageId: message._id })
+                  }
                 >
                   <Trash size={18} />
-                  <div className="text-xs">Delete</div>
+                  <div className="text-xs">Unsend</div>
                 </Card>
               )}
             </div>
@@ -101,15 +108,33 @@ function MessageBubble({
                         : "text-secondary-foreground",
                     )}
                   >
-                    {message.files.map((file) => {
-                      return (
-                        <MessageFiles
-                          file={file}
-                          isOwn={isOwn}
-                          key={file._id}
-                        />
-                      );
-                    })}
+                    {message.files.some((file) => file.type === "image") ? (
+                      <div
+                        className={cn(
+                          `grid gap-1 grid-cols-${message.files.filter((f) => f.type === "image").length}`,
+                        )}
+                      >
+                        {message.files.map((file) => {
+                          return (
+                            <MessageFiles
+                              file={file}
+                              isOwn={isOwn}
+                              key={file._id}
+                            />
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      message.files.map((file) => {
+                        return (
+                          <MessageFiles
+                            file={file}
+                            isOwn={isOwn}
+                            key={file._id}
+                          />
+                        );
+                      })
+                    )}
                   </ul>
                 ) : null}
                 <p className="whitespace-pre-wrap break-words">

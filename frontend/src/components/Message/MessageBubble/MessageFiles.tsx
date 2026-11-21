@@ -45,7 +45,7 @@ function MediaDialog({
         <button
           type="button"
           aria-label={t("chat.attachment.view", { name })}
-          className="group relative block overflow-hidden rounded-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="group relative overflow-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           {trigger}
         </button>
@@ -99,7 +99,7 @@ function MessageFiles({ file, isOwn }: Props) {
                 src={file.url}
                 alt={name}
                 loading="lazy"
-                className="max-h-60 w-full max-w-80 object-cover transition-opacity group-hover:opacity-90"
+                className="h-full w-full max-w-80 object-cover transition-opacity group-hover:opacity-90"
               />
             }
           >
