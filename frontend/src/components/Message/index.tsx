@@ -6,11 +6,11 @@ import type IUser from "@/interfaces/user";
 import MessageThread from "./MessageThread";
 import MessageComposer from "./MessageComposer";
 import MessageHeader from "./MessageHeader";
-import { FriendListItem } from "@/interfaces/friend";
+import { IFriend } from "@/interfaces/friend";
 
 interface Props {
   users: IUser[];
-  friend: FriendListItem | null;
+  friend: IFriend;
   messages: IMessage[];
   currentUserId: string;
   receiverId: string;

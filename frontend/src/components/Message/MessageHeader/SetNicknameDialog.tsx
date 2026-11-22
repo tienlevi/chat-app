@@ -19,12 +19,12 @@ import UserAvatar from "@/components/UserAvatar";
 import useSetNickname from "@/hooks/useSetNickname";
 import { NicknameFormValues, nicknameSchema } from "@/utils/validations";
 import type IUser from "@/interfaces/user";
-import type { FriendListItem } from "@/interfaces/friend";
 import { toast } from "sonner";
+import { FriendListItem } from "@/interfaces/friend";
 
 interface Props {
   user: IUser;
-  friend: FriendListItem | null;
+  friend: FriendListItem;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }

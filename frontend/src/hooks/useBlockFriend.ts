@@ -8,13 +8,13 @@ function useBlockFriend(type: "block" | "unblock") {
   return type === "block"
     ? useMutation({
         mutationKey: ["block-friend"],
-        mutationFn: async (friendId: string) => blockFriend(friendId),
+        mutationFn: async (userId: string) => blockFriend(userId),
         onSuccess: () =>
           queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FRIENDS] }),
       })
     : useMutation({
         mutationKey: ["unblock-friend"],
-        mutationFn: async (friendId: string) => unblockFriend(friendId),
+        mutationFn: async (userId: string) => unblockFriend(userId),
         onSuccess: () =>
           queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FRIENDS] }),
       });
