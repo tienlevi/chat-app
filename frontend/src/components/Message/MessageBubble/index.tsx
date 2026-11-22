@@ -10,6 +10,12 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import useMessageSocket from "@/hooks/useMessageSocket";
 
+const GRID_COLS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-2",
+  3: "grid-cols-3",
+};
+
 interface MessageBubbleProps {
   message: IMessage;
   author?: IUser;
@@ -30,6 +36,10 @@ function MessageBubble({
   const StatusIcon = message.isRead ? CheckCheck : Check;
   const statusKey = message.isRead ? "read" : "sent";
   const { handleUnsendMessage } = useMessageSocket();
+  const mediaFiles = message.files.filter(
+    (file) => file.type === "image" || file.type === "video",
+  );
+  const documentFiles = message.files.filter((file) => file.type === "file");
 
   return (
     <div
@@ -99,7 +109,19 @@ function MessageBubble({
               <p className="italic opacity-70">{t("chat.thread.deleted")}</p>
             ) : (
               <>
-                {message.files.length ? (
+                {mediaFiles.length ? (
+                  <div
+                    className={cn(
+                      "mt-2 grid gap-1 overflow-hidden rounded-xl",
+                      GRID_COLS[Math.min(mediaFiles.length, 3)],
+                    )}
+                  >
+                    {mediaFiles.map((file) => (
+                      <MessageFiles file={file} isOwn={isOwn} key={file._id} />
+                    ))}
+                  </div>
+                ) : null}
+                {documentFiles.length ? (
                   <ul
                     className={cn(
                       "mt-2 flex flex-col gap-1.5",
@@ -108,33 +130,9 @@ function MessageBubble({
                         : "text-secondary-foreground",
                     )}
                   >
-                    {message.files.some((file) => file.type === "image") ? (
-                      <div
-                        className={cn(
-                          `grid gap-1 grid-cols-${message.files.filter((f) => f.type === "image").length}`,
-                        )}
-                      >
-                        {message.files.map((file) => {
-                          return (
-                            <MessageFiles
-                              file={file}
-                              isOwn={isOwn}
-                              key={file._id}
-                            />
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      message.files.map((file) => {
-                        return (
-                          <MessageFiles
-                            file={file}
-                            isOwn={isOwn}
-                            key={file._id}
-                          />
-                        );
-                      })
-                    )}
+                    {documentFiles.map((file) => (
+                      <MessageFiles file={file} isOwn={isOwn} key={file._id} />
+                    ))}
                   </ul>
                 ) : null}
                 <p className="whitespace-pre-wrap break-words">
