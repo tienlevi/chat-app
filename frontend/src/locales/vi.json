@@ -132,6 +132,10 @@
     "empty": {
       "title": "Chưa chọn cuộc trò chuyện",
       "subtitle": "Chọn một cuộc trò chuyện trong danh sách để bắt đầu nhắn tin."
+    },
+    "blocked": {
+      "byMe": "Bạn đã chặn người dùng này. Bỏ chặn để gửi tin nhắn.",
+      "byThem": "Bạn không thể trả lời cuộc trò chuyện này."
     }
   },
 

@@ -64,8 +64,8 @@ function InfoDialog({
           <Button
             onClick={() =>
               isBlocked
-                ? handleBlock(user._id || "")
-                : handleUnblock(user._id || "")
+                ? handleUnblock(user._id || "")
+                : handleBlock(user._id || "")
             }
             variant={"destructive"}
             className="cursor-pointer"

@@ -7,6 +7,8 @@ import MessageThread from "./MessageThread";
 import MessageComposer from "./MessageComposer";
 import MessageHeader from "./MessageHeader";
 import { IFriend } from "@/interfaces/friend";
+import useBlockFriend from "@/hooks/useBlockFriend";
+import { Button } from "../ui/button";
 
 interface Props {
   users: IUser[];
@@ -28,10 +30,11 @@ function Message({
   onBack,
 }: Props) {
   const { t } = useTranslation();
-
   const [detailsOpen, setDetailsOpen] = useState(false);
-
   const receiver = users.find((user) => user._id === receiverId);
+  const isBlockedByMe = friend?.blockFriends.some((f) => f === receiver?._id);
+  const isBlockedByThem = friend?.blockedBy.some((f) => f === receiver?._id);
+  const { mutate: handleUnblock } = useBlockFriend("unblock");
 
   return (
     <div
@@ -54,7 +57,22 @@ function Message({
             participant={receiver}
             currentUserId={currentUserId}
           />
-          <MessageComposer receiver={receiver} />
+          {isBlockedByMe || isBlockedByThem ? (
+            <div className="flex items-center justify-center gap-2 border-t border-border px-4 py-4 sm:px-6">
+              <div className="text-center text-sm text-muted-foreground">
+                {isBlockedByMe
+                  ? t("chat.blocked.byMe")
+                  : t("chat.blocked.byThem")}
+              </div>
+              {isBlockedByMe && (
+                <Button onClick={() => handleUnblock(receiver._id || "")}>
+                  {t("friends.blocked.unblock")}
+                </Button>
+              )}
+            </div>
+          ) : (
+            <MessageComposer receiver={receiver} />
+          )}
         </>
       ) : (
         <div className="flex flex-1 items-center justify-center px-6 text-center">

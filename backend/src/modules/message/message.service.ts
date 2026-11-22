@@ -4,12 +4,14 @@ import { Model, isValidObjectId } from 'mongoose';
 import { Message } from '../../schemas/message.schema';
 import SendMessageDto from './dto/send-message.dto';
 import { User } from '../../schemas/user.schema';
+import { Friend } from '../../schemas/friend.schema';
 
 @Injectable()
 export class MessageService {
   constructor(
     @InjectModel(Message.name) private messageModel: Model<Message>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Friend.name) private friendModel: Model<Friend>,
   ) {}
 
   async sendMessage(
@@ -17,6 +19,18 @@ export class MessageService {
     receiverId: string,
     data: SendMessageDto,
   ) {
+    const friendByUser = await this.friendModel.findOne({ userId: senderId });
+    const isBlockByMe = friendByUser?.blockFriends.some(
+      (f) => f === receiverId,
+    );
+    const isBlockByThem = friendByUser?.blockedBy.some((f) => f === receiverId);
+
+    if (isBlockByMe || isBlockByThem) {
+      throw new HttpException(
+        'You cant send message because you block them or them block you',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
     const receiver = await this.userModel.findById(receiverId);
     if (!receiver) {
       throw new HttpException('Receiver not found', HttpStatus.NOT_FOUND);
