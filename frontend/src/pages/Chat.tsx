@@ -14,8 +14,12 @@ function Chat() {
   const receiverId = searchParams.get("receiverId") || "";
   const { data: user } = useAuth();
   const { users, friend } = useFriends();
-  const { receiverMessages, senderMessages, latestMessages } =
-    useMessages(receiverId);
+  const {
+    receiverMessages,
+    senderMessages,
+    latestMessages,
+    fetchOlderMessages,
+  } = useMessages(receiverId);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const currentUserId = user?._id || "";
   const { messages, setMessages, setActiveReceiverId } = useSocketStore();
@@ -55,6 +59,7 @@ function Chat() {
         receiverId={receiverId}
         mobilePane={mobilePane}
         onBack={() => setMobilePane("list")}
+        onFetchMessages={fetchOlderMessages}
       />
     </div>
   );

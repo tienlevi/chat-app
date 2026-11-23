@@ -8,6 +8,7 @@ import {
   Req,
   UseGuards,
   Post,
+  Query,
 } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { AuthGuard } from '../../guards/auth.guard';
@@ -40,12 +41,14 @@ export class MessageController {
   async getMessagesByReceiverId(
     @Param('receiverId') receiverId: string,
     @Req() req: AuthenticatedRequest,
+    @Query('limit') limit: number,
   ) {
     const userId = req.user.userId;
 
     return await this.messageService.getMessagesByReceiverId(
       receiverId,
       userId,
+      limit,
     );
   }
 

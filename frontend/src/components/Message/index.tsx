@@ -18,6 +18,7 @@ interface Props {
   receiverId: string;
   mobilePane: "list" | "thread";
   onBack: () => void;
+  onFetchMessages: () => void;
 }
 
 function Message({
@@ -28,6 +29,7 @@ function Message({
   receiverId,
   mobilePane,
   onBack,
+  onFetchMessages,
 }: Props) {
   const { t } = useTranslation();
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -56,6 +58,7 @@ function Message({
             messages={messages}
             participant={receiver}
             currentUserId={currentUserId}
+            onFetchMessages={onFetchMessages}
           />
           {isBlockedByMe || isBlockedByThem ? (
             <div className="flex items-center justify-center gap-2 border-t border-border px-4 py-4 sm:px-6">

@@ -53,7 +53,11 @@ export class MessageService {
     return { message: 'Send message successfully', data: message.toObject() };
   }
 
-  async getMessagesByReceiverId(receiverId: string, userId: string) {
+  async getMessagesByReceiverId(
+    receiverId: string,
+    userId: string,
+    limit: number = 10,
+  ) {
     if (!receiverId || !userId) {
       throw new HttpException(
         'Sender or receiver not found',
@@ -61,15 +65,14 @@ export class MessageService {
       );
     }
 
-    const messages = await this.messageModel.find();
-
-    return messages.filter(
-      (m) =>
-        (m.senderId.toString() === userId &&
-          m.receiverId.toString() === receiverId) ||
-        (m.senderId.toString() === receiverId &&
-          m.receiverId.toString() === userId),
-    );
+    return await this.messageModel
+      .find()
+      .or([
+        { senderId: userId, receiverId },
+        { senderId: receiverId, receiverId: userId },
+      ])
+      .limit(limit)
+      .sort({ createdAt: -1 });
   }
 
   async getMessagesByUserId(userId: string) {

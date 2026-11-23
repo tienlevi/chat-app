@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import {
@@ -10,6 +10,7 @@ import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 import MessageBubble from "./MessageBubble";
 import { formatISODateToTimestamp } from "@/utils/format";
+import useInView from "@/hooks/useInView";
 
 const GROUP_MESSAGE_MS = 5 * 60 * 1000;
 
@@ -36,6 +37,7 @@ interface MessageThreadProps {
   participant: IUser;
   currentUserId: string;
   className?: string;
+  onFetchMessages: () => void;
 }
 
 function MessageThread({
@@ -43,9 +45,13 @@ function MessageThread({
   participant,
   currentUserId,
   className,
+  onFetchMessages,
 }: MessageThreadProps) {
   const { t } = useTranslation();
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(topRef);
+  const scrolledForRef = useRef<string | undefined>("");
 
   const dayLabel = (iso: string): string => {
     const days = daysAgo(iso);
@@ -60,20 +66,35 @@ function MessageThread({
   );
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ block: "end" });
-  }, [participant._id]);
+    if (inView) {
+      onFetchMessages();
+    }
+  }, [inView]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages.length]);
+  useLayoutEffect(() => {
+    const el = scrollRef.current;
+    if (!el || messages.length === 0) return;
+
+    const belongsToCurrent = messages.some(
+      (m) => m.senderId === participant._id || m.receiverId === participant._id,
+    );
+    if (!belongsToCurrent) return;
+
+    if (scrolledForRef.current === participant._id) return;
+
+    el.scrollTop = el.scrollHeight;
+    scrolledForRef.current = participant._id;
+  }, [messages, participant._id]);
 
   return (
     <div
+      ref={scrollRef}
       className={cn(
         "min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4 sm:px-6",
         className,
       )}
     >
+      <div ref={topRef} />
       <div className="mx-auto flex w-full max-w-3xl flex-col">
         {messages.map((message, index) => {
           const isOwn = message.senderId === currentUserId;
@@ -102,8 +123,6 @@ function MessageThread({
             </div>
           );
         })}
-
-        <div ref={bottomRef} className="h-1" />
       </div>
     </div>
   );

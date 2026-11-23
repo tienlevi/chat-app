@@ -21,11 +21,15 @@ export const sendMessage = async (data: SendMessagePayload) => {
   return response.data;
 };
 
-export const getMessageByReceiverId = async (receiverId: string) => {
+export const getMessageByReceiverId = async (
+  receiverId: string,
+  limit = 10,
+) => {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
   const response = await instance.get(`/message/receiver/${receiverId}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
+    params: { limit },
   });
   return response.data;
 };
