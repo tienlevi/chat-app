@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
@@ -68,16 +68,6 @@ function MessageHeader({
           user={user}
           setIsNicknameOpen={setIsNicknameOpen}
         />
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          className={cn(
-            "rounded-full text-muted-foreground cursor-pointer",
-            detailsOpen && "bg-secondary text-foreground",
-          )}
-        >
-          <Search />
-        </Button>
       </div>
 
       {friend && (
