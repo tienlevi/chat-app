@@ -86,7 +86,7 @@ function MessageComposer({ receiver, className }: Props) {
       const files = await Promise.all(
         pendingFiles.map(async ({ file, type }) => {
           const result = await uploadFile(file, getCloudinaryType(type));
-          return { type, url: result.secure_url as string };
+          return { type, url: result.secure_url, name: file.name };
         }),
       );
 

@@ -10,6 +10,9 @@ class MessageFile {
 
   @Prop({ required: true })
   url: string;
+
+  @Prop({ default: '' })
+  name: string;
 }
 
 const MessageFileSchema = SchemaFactory.createForClass(MessageFile);

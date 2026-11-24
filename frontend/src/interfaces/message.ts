@@ -12,6 +12,7 @@ export interface MessageFile {
   _id: string;
   type: MessageFileType;
   url: string;
+  name?: string;
 }
 
 export interface PendingFile {

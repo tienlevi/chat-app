@@ -82,7 +82,7 @@ function MediaDialog({
 
 function MessageFiles({ file, isOwn }: Props) {
   const { t } = useTranslation();
-  const name = fileName(file.url);
+  const name = file.name || fileName(file.url);
 
   const renderFile = () => {
     const Icon = FILE_ICON[file.type];
@@ -130,6 +130,9 @@ function MessageFiles({ file, isOwn }: Props) {
                     <Play className="size-5 fill-current" />
                   </span>
                 </span>
+                <span className="absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/70 to-transparent px-2.5 pt-4 pb-1.5 text-left text-xs font-medium text-white">
+                  {name}
+                </span>
               </>
             }
           >
@@ -148,7 +151,6 @@ function MessageFiles({ file, isOwn }: Props) {
             <button
               type="button"
               onClick={() => downloadFile(file.url, name)}
-              aria-label={t("chat.attachment.downloadFile", { name })}
               className={cn(
                 "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-opacity hover:opacity-90",
                 isOwn ? "bg-black/15" : "bg-background/70",
