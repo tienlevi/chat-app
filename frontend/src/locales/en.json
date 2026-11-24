@@ -68,7 +68,8 @@
         "all": "All",
         "unread": "Unread"
       },
-      "youPrefix": "You: {{text}}",
+      "youPrefix": "You: ",
+      "youPrefixFile": "Send file",
       "empty": "No conversations found"
     },
     "nickname": {

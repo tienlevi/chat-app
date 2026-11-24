@@ -67,7 +67,8 @@
         "all": "Tất cả",
         "unread": "Chưa đọc"
       },
-      "youPrefix": "Bạn: {{text}}",
+      "youPrefix": "Bạn: ",
+      "youPrefixFile": "Gửi file",
       "empty": "Không tìm thấy cuộc trò chuyện nào"
     },
     "nickname": {

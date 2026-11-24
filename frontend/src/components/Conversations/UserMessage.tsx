@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import type { IMessage } from "@/interfaces/message";
 import type IUser from "@/interfaces/user";
 import { formatListStamp } from "@/utils/datetime";
+import { File } from "lucide-react";
 
 interface Props {
   user: IUser;
@@ -25,9 +26,21 @@ function UserMessage({
 }: Props) {
   const { t, i18n } = useTranslation();
 
-  const preview = latestMessage?.isUnsend
-    ? t("chat.thread.deleted")
-    : latestMessage?.text;
+  const preview = (latestMessage: IMessage) => {
+    if (latestMessage?.isUnsend) {
+      return t("chat.thread.deleted");
+    }
+    if (latestMessage?.text === "" && latestMessage.files) {
+      return (
+        <div className="flex items-center gap-1">
+          <File size={16} />
+          {t("chat.list.youPrefixFile")}
+        </div>
+      );
+    }
+
+    return latestMessage.text;
+  };
 
   return (
     <li>
@@ -66,7 +79,7 @@ function UserMessage({
           </div>
 
           <div className="mt-1 flex items-center gap-2">
-            <p
+            <div
               className={cn(
                 "min-w-0 flex-1 truncate text-[13px]",
                 unreadMessages > 0
@@ -74,10 +87,15 @@ function UserMessage({
                   : "text-muted-foreground",
               )}
             >
-              {latestMessage?.senderId === currentUserId
-                ? t("chat.list.youPrefix", { text: preview })
-                : preview}
-            </p>
+              {latestMessage?.senderId === currentUserId ? (
+                <div className="flex items-center gap-1">
+                  {t("chat.list.youPrefix")}
+                  <div>{preview(latestMessage)}</div>
+                </div>
+              ) : (
+                preview(latestMessage)
+              )}
+            </div>
 
             {unreadMessages > 0 ? (
               <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums">
