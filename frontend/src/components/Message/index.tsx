@@ -34,8 +34,8 @@ function Message({
   const { t } = useTranslation();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const receiver = users.find((user) => user._id === receiverId);
-  const isBlockedByMe = friend?.blockFriends.some((f) => f === receiver?._id);
-  const isBlockedByThem = friend?.blockedBy.some((f) => f === receiver?._id);
+  const isBlockedByMe = friend.blockFriends.some((f) => f === receiver?._id);
+  const isBlockedByThem = friend.blockedBy.some((f) => f === receiver?._id);
   const { mutate: handleUnblock } = useBlockFriend("unblock");
 
   return (

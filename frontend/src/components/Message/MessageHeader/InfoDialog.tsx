@@ -18,7 +18,7 @@ import { toast } from "sonner";
 
 interface Props {
   user: IUser;
-  friendDetail: FriendListItem;
+  friendDetail?: FriendListItem;
   isBlocked: boolean;
   detailsOpen: boolean;
   setIsNicknameOpen: (open: boolean) => void;

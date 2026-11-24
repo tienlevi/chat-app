@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/UserAvatar";
 import type IUser from "@/interfaces/user";
-import { FriendListItem, IFriend } from "@/interfaces/friend";
+import { IFriend } from "@/interfaces/friend";
 import SetNicknameDialog from "./SetNicknameDialog";
 import InfoDialog from "./InfoDialog";
 
@@ -28,9 +28,7 @@ function MessageHeader({
   const { t } = useTranslation();
   const [isNicknameOpen, setIsNicknameOpen] = useState(false);
 
-  const friendDetail = friend.friends.find(
-    (f) => f.userId === user._id,
-  ) as FriendListItem;
+  const friendDetail = friend.friends.find((f) => f.userId === user._id);
   const isBlocked = friend.blockFriends.some((f) => f === user._id);
 
   return (
@@ -70,7 +68,7 @@ function MessageHeader({
         />
       </div>
 
-      {friend && (
+      {friendDetail && (
         <SetNicknameDialog
           user={user}
           friend={friendDetail}

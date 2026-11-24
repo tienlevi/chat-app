@@ -4,12 +4,24 @@ import IUser from "@/interfaces/user";
 import { getFriendsByUserId, searchFriends } from "@/services/friends";
 import { useQuery } from "@tanstack/react-query";
 
+const EMPTY_FRIEND: IFriend = {
+  _id: "",
+  userId: "",
+  friends: [],
+  friendRequests: [],
+  friendRequestsSend: [],
+  blockFriends: [],
+  blockedBy: [],
+  createdAt: "",
+  updatedAt: "",
+};
+
 function useFriends(debounce?: string) {
   const { data: friends, isLoading: isLoadingFriend } = useQuery<IFriend[]>({
     queryKey: [QUERY_KEY.FRIENDS],
     queryFn: async () => await getFriendsByUserId(),
   });
-  const friend = friends?.[0] as IFriend;
+  const friend = friends?.[0] || EMPTY_FRIEND;
 
   const { data: users, isLoading: isLoadingUsers } = useQuery<IUser[]>({
     queryKey: [QUERY_KEY.FRIENDS, "search", debounce || ""],
