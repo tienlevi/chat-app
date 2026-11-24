@@ -26,6 +26,8 @@ const useSocketStore = create<Store>((set, get) => ({
     if (get().socket) return;
 
     const socket = io(socketUrl, {
+      path: "/socket.io",
+      transports: ["websocket"],
       autoConnect: false,
       auth: (cb) => cb({ token: localStorage.getItem(ACCESS_TOKEN_KEY) }),
     });
