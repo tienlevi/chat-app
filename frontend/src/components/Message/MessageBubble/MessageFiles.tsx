@@ -123,7 +123,7 @@ function MessageFiles({ file, isOwn }: Props) {
                   src={file.url}
                   preload="metadata"
                   muted
-                  className="max-h-60 w-full max-w-80 object-cover"
+                  className="max-h-60 w-full max-w-80 object-cover aspect-[9/16]"
                 />
                 <span className="absolute inset-0 flex items-center justify-center bg-black/25 transition-colors group-hover:bg-black/35">
                   <span className="flex size-11 items-center justify-center rounded-full bg-black/60 text-white">

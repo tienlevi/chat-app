@@ -39,7 +39,7 @@ function UserMessage({
       );
     }
 
-    return latestMessage.text;
+    return latestMessage?.text;
   };
 
   return (
