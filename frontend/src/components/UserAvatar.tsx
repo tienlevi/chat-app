@@ -26,6 +26,7 @@ const SIZES = {
   md: "size-10",
   lg: "size-12",
   xl: "size-16",
+  "2xl": "size-24",
 } as const;
 
 const TEXT_SIZES = {
@@ -33,6 +34,7 @@ const TEXT_SIZES = {
   md: "text-sm",
   lg: "text-base",
   xl: "text-lg",
+  "2xl": "text-2xl",
 } as const;
 
 const DOT_SIZES = {
@@ -40,6 +42,7 @@ const DOT_SIZES = {
   md: "size-2.5",
   lg: "size-3",
   xl: "size-3.5",
+  "2xl": "size-4",
 } as const;
 
 export const getInitials = (name: string): string =>

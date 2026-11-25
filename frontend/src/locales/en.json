@@ -3,6 +3,8 @@
     "appName": "ChatApp",
     "cancel": "Cancel",
     "save": "Save",
+    "back": "Back",
+    "apply": "Apply",
     "zoom": "Zoom"
   },
   "auth": {
@@ -82,6 +84,17 @@
       "success": "Nickname updated",
       "error": "Couldn't update the nickname. Please try again.",
       "notFriend": "You can only set a nickname for friends."
+    },
+    "profile": {
+      "open": "Edit profile",
+      "title": "Edit profile",
+      "description": "Update your name and avatar. Your friends will see the changes.",
+      "nameLabel": "Display name",
+      "nameMax": "Name must be 50 characters or fewer.",
+      "changeAvatar": "Change avatar",
+      "invalidImage": "Please choose a valid image file.",
+      "success": "Profile updated",
+      "error": "Couldn't update your profile. Please try again."
     },
     "header": {
       "back": "Back to conversations",

@@ -3,6 +3,8 @@
     "appName": "ChatApp",
     "cancel": "Hủy",
     "save": "Lưu",
+    "back": "Quay lại",
+    "apply": "Áp dụng",
     "zoom": "Thu phóng"
   },
   "auth": {
@@ -81,6 +83,17 @@
       "success": "Đã cập nhật biệt danh",
       "error": "Không thể cập nhật biệt danh. Vui lòng thử lại.",
       "notFriend": "Bạn chỉ có thể đặt biệt danh khi đã kết bạn"
+    },
+    "profile": {
+      "open": "Chỉnh sửa hồ sơ",
+      "title": "Chỉnh sửa hồ sơ",
+      "description": "Cập nhật tên và ảnh đại diện. Bạn bè của bạn sẽ thấy thay đổi.",
+      "nameLabel": "Tên hiển thị",
+      "nameMax": "Tên không được quá 50 ký tự.",
+      "changeAvatar": "Đổi ảnh đại diện",
+      "invalidImage": "Vui lòng chọn một tệp ảnh hợp lệ.",
+      "success": "Đã cập nhật hồ sơ",
+      "error": "Không thể cập nhật hồ sơ. Vui lòng thử lại."
     },
     "header": {
       "back": "Quay lại danh sách trò chuyện",
