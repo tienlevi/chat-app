@@ -36,3 +36,14 @@ export const nicknameSchema = () =>
   });
 
 export type NicknameFormValues = z.infer<ReturnType<typeof nicknameSchema>>;
+
+export const profileSchema = () =>
+  z.object({
+    name: z
+      .string()
+      .trim()
+      .min(2, i18n.t("auth.validation.nameMin"))
+      .max(50, i18n.t("chat.profile.nameMax")),
+  });
+
+export type ProfileFormValues = z.infer<ReturnType<typeof profileSchema>>;
